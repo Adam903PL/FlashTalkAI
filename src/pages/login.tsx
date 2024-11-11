@@ -19,10 +19,24 @@ function Login() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedFormData),
+    })      .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json(); 
     })
-      .catch((error) => console.error("Błąd:", error));
-  };
-
+    .then((data: any) => {
+      console.log(data, "sadas");
+  
+      if (data.success) {
+        console.log("Zalogowano pomyślnie:", data.message);
+        window.location.href = "/home"; 
+      } else {
+        console.log("Błąd logowania:", data.message);
+      }
+    })
+    .catch((error) => console.error("Błąd:", error));
+};
   return (
     <div className='loginBody'>
         <div className="container">

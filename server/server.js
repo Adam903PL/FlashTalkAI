@@ -50,8 +50,8 @@ app.post("/loginData", async (req, res) => {
                 userid: databseResp,
                 role: 'user'
             };
-            console.log(databseResp);
-            res.redirect("/loginsucces");
+            console.log(databseResp,'asdasd');
+            res.json({ success: true, message: "Zalogowano pomyślnie", user: req.session.user });
         } else {
             res.json({ success: false, message: "Błąd logowania - złe dane" });
         }
@@ -71,6 +71,37 @@ app.get("/loginsucces", (req, res) => {
         res.json({ success: false, message: "Błąd podczas logowania" });
     }
 });
+
+
+app.post("/registerData", async (req, res) => {
+    console.log("Otrzymano dane:", req.body);
+    let datas = {
+        email: req.body.email,
+        password: CryptoJS.SHA256(req.body.password).toString(),
+    };
+
+    try {
+        const client = await pool.connect();
+
+
+        const query = 'SELECT create_user($1, $2)';
+        const values = [datas.email, datas.password];
+        const response = await client.query(query, values);
+
+        if (response.rows[0].create_user === true) {
+            console.log("Użytkownik dodany pomyślnie");
+            res.json({ success: true, message: "Dodano użytkownika pomyślnie" });
+        } else {
+            res.json({ success: false, message: "Błąd podczas rejestracji użytkownika" });
+        }
+
+        client.release();  
+    } catch (err) {
+        console.error("Błąd podczas połączenia z bazą danych:", err);
+        res.json({ success: false, message: "Błąd serwera" });
+    }
+});
+
 
 app.get("/logout", (req, res) => {
     req.session.destroy((err) => {
