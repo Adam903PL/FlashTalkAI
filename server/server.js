@@ -35,8 +35,6 @@ const client = new Client({
 
 
 
-
-
     app.get('/', (req, res) => {
         res.sendFile(path.join(__dirname, '../dist', 'index.html'));
     });
@@ -48,7 +46,7 @@ const client = new Client({
             email: req.body.email,
             password: CryptoJS.SHA256(req.body.password).toString(),
         };
-        res.json(datas)
+        res.json(datas);
         try{
             client.connect()
             const query = 'SELECT check_user_credentials($1, $2)';
