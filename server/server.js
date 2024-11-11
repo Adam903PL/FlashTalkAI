@@ -13,7 +13,8 @@ const pool = new Pool({
     password: 'HgFSozb5BSqc6EZDDau4uJy0gLV9uPTU',
     port: 5432,
     ssl: {
-        rejectUnauthorized: false  
+        rejectUnauthorized: false
+        
     }
 });
 
@@ -21,7 +22,7 @@ app.use(session({
     secret: "secret-key",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }  
+    cookie: { secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 }  
 }));
 
 app.use(express.json());
@@ -50,7 +51,7 @@ app.post("/loginData", async (req, res) => {
                 userid: databseResp,
                 role: 'user'
             };
-            console.log(databseResp,'asdasd');
+            console.log(databseResp);
             res.json({ success: true, message: "Zalogowano pomyślnie", user: req.session.user });
         } else {
             res.json({ success: false, message: "Błąd logowania - złe dane" });
@@ -108,9 +109,42 @@ app.get("/logout", (req, res) => {
         if (err) {
             return res.json({ success: false, message: "Błąd podczas wylogowywania" });
         }
-        res.json({ success: true, message: "Wylogowano pomyślnie" });
+        res.redirect('/login');
     });
 });
+
+app.use("/login",(req,res,next)=>{
+    if (req.session.user && req.session.user.userid) {
+        return res.redirect('/home');
+    } else {
+        return next()
+    }
+})
+
+
+
+app.use("/home",(req,res,next)=>{
+    if (req.session.user && req.session.user.userid) {
+        return next()
+    } else {
+        return res.redirect('/login');
+    }
+})
+
+app.use("/home/flashcards",(req,res,next)=>{
+    if (req.session.user && req.session.user.userid) {
+        return next()
+    } else {
+        return res.redirect('/login');
+    }
+})
+
+
+
+
+
+
+
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist', 'index.html'));
