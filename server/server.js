@@ -5,6 +5,7 @@ const path = require("path");
 const CryptoJS = require("crypto-js");
 const { Pool } = require('pg');
 const session = require('express-session');
+const fs = require('fs');
 
 const pool = new Pool({
     user: 'flashtalkai_user',
@@ -31,6 +32,43 @@ app.use(express.static(path.join(__dirname, "../dist")));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
+
+
+
+function generateFlashcardEndpoints(directory = './flashcards') {
+    try {
+        const files = fs.readdirSync(directory);
+        const fileList = files.filter(file => fs.statSync(path.join(directory, file)).isFile());
+
+        fileList.forEach(file => {
+            const filePath = path.join(directory, file);
+            console.log(file,filePath)
+            app.get(`/api/flashcards/${file}`, (req, res) => {
+                fs.readFile(filePath, 'utf-8', (err, data) => {
+                    if (err) {
+                        return res.status(404).json({ error: 'Plik nie znaleziony' });
+                    }
+                    try {
+                        const jsonData = JSON.parse(data);
+                        res.json(jsonData);
+                    } catch (parseError) {
+                        return res.status(500).json({ error: 'Błąd przy przetwarzaniu pliku JSON' });
+                    }
+                });
+
+            });
+
+        });
+    } catch (err) {
+        console.error(`Error reading directory: ${err}`);
+    }
+}
+
+generateFlashcardEndpoints(path.join(__dirname, 'flashcards'));
+
+
+
+
 
 app.post("/loginData", async (req, res) => {
     console.log("Otrzymano dane:", req.body);

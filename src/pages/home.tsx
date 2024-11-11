@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './css/home.css'; 
-
+import './css/headerNav.css'
 const Home: React.FC = () => {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
 
