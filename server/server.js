@@ -34,6 +34,21 @@ app.get('/', (req, res) => {
 });
 
 
+function getFlashcardFiles(directory = './flashcards') {
+    try {
+        const files = fs.readdirSync(directory);
+        const fileList = files.filter(file => fs.statSync(path.join(directory, file)).isFile());
+        return fileList;
+    } catch (err) {
+        console.error(`Error reading directory: ${err}`);
+        return [];
+    }
+}
+
+app.get('/api/flashcards', (req, res) => {
+    const files = getFlashcardFiles(path.join(__dirname, 'flashcards'));
+    res.json(files);
+});
 
 function generateFlashcardEndpoints(directory = './flashcards') {
     try {
@@ -42,7 +57,6 @@ function generateFlashcardEndpoints(directory = './flashcards') {
 
         fileList.forEach(file => {
             const filePath = path.join(directory, file);
-            console.log(file,filePath)
             app.get(`/api/flashcards/${file}`, (req, res) => {
                 fs.readFile(filePath, 'utf-8', (err, data) => {
                     if (err) {
