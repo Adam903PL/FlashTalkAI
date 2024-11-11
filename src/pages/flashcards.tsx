@@ -1,17 +1,35 @@
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import "./css/headerNav.css"
-
-
+import Card from "./card";
+import "./css/card.css"
 
 function Flashcards(){
     const [userMenuVisible, setUserMenuVisible] = useState(false);
+    const [units,setUnits] = useState([])
+    
     const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
 
-    // const [flashCards,setFlashCards] = useState([])
+    useEffect(() => {
+        fetch('/api/flashcards')
+          .then(resp => resp.json())  
+          .then(data => {
+            console.log(data);  
+            setUnits(data);  
+          })
+          .catch(error => {
+            console.error('Błąd przy ładowaniu danych:', error);
+          });
+      },[]);
+
+    useEffect(() => {
+        console.log('Stan units zmieniony:', units);  
+    }, [units]);
+    
 
 
 
     return (
+        <>
         <div className="homeContainer">
           {/* Header */}
           <header className="header">
@@ -41,10 +59,11 @@ function Flashcards(){
           <li onClick={() => { window.location.href = "/home/test"; }}>Test</li>
         </ul>
       </nav>
-    </div> 
-    
-
-
+        </div>
+        <div className="flashcards">
+            {units.map((data:string,index) => <Card key={index} unit={data}/>)}  
+        </div>
+        </>
 
 
 );
