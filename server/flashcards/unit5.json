@@ -1,4 +1,5 @@
 [
+    {"description":"The words cover topics like education, objects, actions, and descriptions in German. They form basic vocabulary for everyday communication."},
     { "id": 1, "word": "Schüler, der, –", "translation": "(noun) pupil, student (primary and secondary level)" },
     { "id": 2, "word": "Bedeutung, die, -en", "translation": "(noun) meaning" },
     { "id": 3, "word": "Text, der, -e", "translation": "(noun) text" },

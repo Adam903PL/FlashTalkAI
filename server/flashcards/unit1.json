@@ -1,4 +1,5 @@
 [
+  { "description":"A list of 100 essential German words covering key parts of speech to help build basic vocabulary and improve language skills."},
   { "id": 1, "word": "der / die / das", "translation": "(def. art.) the; (dem. pron.) that, those; (rel. pron) who, that" },
   { "id": 2, "word": "und", "translation": "(conj.) and" },
   { "id": 3, "word": "sein", "translation": "(verb) to be; (aux./perfect tense)" },

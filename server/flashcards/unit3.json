@@ -1,4 +1,5 @@
 [
+    {"description":"This section covers key German words for daily life, travel, and basic conversations."},
     { "id": 1, "word": "brauchen", "translation": "(verb) to need" },
     { "id": 2, "word": "folgen", "translation": "(verb) to follow" },
     { "id": 3, "word": "lernen", "translation": "(verb) to learn" },

@@ -1,4 +1,5 @@
 [
+    { "description":"This section contains 100 common German words with translations and their parts of speech, designed to help learners expand their vocabulary and improve language skills."},
     { "id": 1, "word": "drei", "translation": "(num.) three" },
     { "id": 2, "word": "wenig", "translation": "(adj.) few; (pron.) little, few" },
     { "id": 3, "word": "Frau, die, -en", "translation": "(noun) woman, wife, Mrs." },
