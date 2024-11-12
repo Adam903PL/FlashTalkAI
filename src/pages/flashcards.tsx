@@ -61,7 +61,7 @@ function Flashcards(){
       </nav>
         </div>
         <div className="flashcards">
-            {units.map((data:string,index) => <Card key={index} unit={data}/>)}  
+            {units.map((data:string,index) => <Card key={index} unit={data}/> )}  
         </div>
         </>
 

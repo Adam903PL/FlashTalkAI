@@ -1,0 +1,60 @@
+/* Główne ustawienia kontenera */
+.cardLearnContainer {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    height: 100vh;
+}
+
+/* Karta z zawartością */
+.cardLearn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;  
+    height: 60%; 
+    background-color: #333; 
+    color: #fff;  /* Biały kolor tekstu */
+    border-radius: 15px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);  /* Silniejszy cień dla ciemnego tła */
+    padding: 30px;
+    font-family: 'Arial', sans-serif;
+    transition: transform 0.5s ease;
+    position: relative;
+}
+
+/* Kiedy karta jest na hover, delikatnie powiększa się */
+.cardLearn:hover {
+    transform: scale(1.05);
+}
+
+/* Strzałki */
+.arrow {
+    font-size: 8vw;  /* Zmiana rozmiaru na 8% szerokości ekranu */
+    background-color: #333;
+    color: #fff;
+    border-radius: 50%;
+    width: 12vw;  /* Szerokość strzałki 12% szerokości ekranu */
+    height: 12vw; /* Wysokość strzałki 12% szerokości ekranu */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.arrow:hover {
+    background-color: #1e90ff;
+    transform: scale(1.1);  /* Powiększenie strzałki przy hover */
+}
+
+/* Słowo */
+.word {
+    font-size: 7vw;  /* Duże litery - 10% szerokości ekranu */
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    flex-grow: 1;
+    transition: opacity 0.3s ease;
+    margin: 0 30px;
+}
