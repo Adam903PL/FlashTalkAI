@@ -1,17 +1,26 @@
-import { useState } from 'react';
+
+import { useForm } from "react-hook-form"
 import './css/login.css';
+
+
+type FormData = {
+  "email":string,
+  "password":string
+}
 
 function Login() {
 
 
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  formData
-  const sendData = () => {
-    const emailVal = (document.getElementById("email") as HTMLInputElement).value;
-    const passVal = (document.getElementById("pass") as HTMLInputElement).value;
+  // const [formData, setFormData] = useState({ email: "", password: "" });
 
-    const updatedFormData = { email: emailVal, password: passVal };
-    setFormData(updatedFormData);
+  const {register,handleSubmit} = useForm<FormData>({})
+
+
+  const sendData = (data:any) => {
+
+    const updatedFormData = { email: data.email, password:data.password  };
+    
+
 
     fetch("/loginData", {
       method: "POST",
@@ -19,7 +28,7 @@ function Login() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedFormData),
-    })      .then((response) => {
+    }).then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -41,9 +50,12 @@ function Login() {
     <div className='loginBody'>
         <div className="container">
             <h1>Login</h1>
-            <input type="text" placeholder="Type Email" id="email" />
-            <input type="password" placeholder="Type Password" id="pass" />
-            <button onClick={sendData}>Send Data</button>
+            <form onSubmit={handleSubmit(sendData)}>
+            <input type="text" placeholder="Type Email" id="email"  {...register("email")} />
+            
+            <input type="password" placeholder="Type Password" id="pass"  {...register("password")} />
+            <button type='submit'>Send Data</button>
+            </form>
         </div>
     </div>
     

@@ -27,7 +27,7 @@ const Card: React.FC<CardProps> = ({ unit }) => {
     }, [unit]); 
 
     return (
-        <div className="card">
+        <div className="card" onClick={()=>{window.location.href = `/home/flashcards/${unit.replace('.json', '')}`}}>
             <h2>{unit.replace('.json', '')}</h2> 
             <p className='description'>Description: {description}</p>
         </div>
