@@ -1,6 +1,6 @@
 
 import { useForm } from "react-hook-form"
-import './css/login.css';
+import loginStyles from './css/login.module.css';
 
 
 type FormData = {
@@ -47,8 +47,8 @@ function Login() {
     .catch((error) => console.error("Błąd:", error));
 };
   return (
-    <div className='loginBody'>
-        <div className="container">
+    <div className={loginStyles.loginBody}>
+        <div className={loginStyles.container}>
             <h1>Login</h1>
             <form onSubmit={handleSubmit(sendData)}>
             <input type="text" placeholder="Type Email" id="email"  {...register("email")} />

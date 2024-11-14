@@ -1,72 +1,70 @@
-import {useEffect, useState } from "react";
-import "./css/headerNav.css"
+import { useEffect, useState } from "react";
+import navStyles from "./css/headerNav.module.css";
+import cardStyles from "./css/card.module.css";
 import Card from "./card";
-import "./css/card.css"
 
-function Flashcards(){
-    const [userMenuVisible, setUserMenuVisible] = useState(false);
-    const [units,setUnits] = useState([])
-    
-    const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
+function Flashcards() {
+  const [userMenuVisible, setUserMenuVisible] = useState(false);
+  const [units, setUnits] = useState<string[]>([]);
 
-    useEffect(() => {
-        fetch('/api/flashcards')
-          .then(resp => resp.json())  
-          .then(data => {
-            console.log(data);  
-            setUnits(data);  
-          })
-          .catch(error => {
-            console.error('Błąd przy ładowaniu danych:', error);
-          });
-      },[]);
+  const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
 
-    useEffect(() => {
-        console.log('Stan units zmieniony:', units);  
-    }, [units]);
-    
+  useEffect(() => {
+    fetch('/api/flashcards')
+      .then(resp => resp.json())
+      .then(data => {
+        console.log(data);
+        setUnits(data);
+      })
+      .catch(error => {
+        console.error('Błąd przy ładowaniu danych:', error);
+      });
+  }, []);
 
+  useEffect(() => {
+    console.log('Stan units zmieniony:', units);
+  }, [units]);
 
-
-    return (
-        <>
-        <div className="homeContainer">
-          {/* Header */}
-          <header className="header">
-            <div className="logo">FlashTalkAI</div>
-            <div className="searchBar">
-              <input type="text" placeholder="Wyszukaj..." className="scherch" />
+  return (
+    <>
+      <div className={navStyles.homeContainer}>
+        {/* Header */}
+        <header className={navStyles.header}>
+          <div className={navStyles.logo}>FlashTalkAI</div>
+          <div className={navStyles.searchBar}>
+            <input type="text" placeholder="Wyszukaj..." className={navStyles.scherch} />
+          </div>
+          <div className={navStyles.userIcon} onClick={toggleUserMenu}>
+            <i className="fas fa-user"></i>
+          </div>
+          {userMenuVisible && (
+            <div className={navStyles.userMenu}>
+              <ul>
+                <li>Ustawienia</li>
+                <li>Wyloguj się</li>
+                <li>Opcje strony</li>
+              </ul>
             </div>
-            <div className="userIcon" onClick={toggleUserMenu}>
-              <i className="fas fa-user"></i>
-            </div>
-            {userMenuVisible && (
-              <div className="userMenu">
-                <ul>
-                  <li>Ustawienia</li>
-                  <li>Wyloguj się</li>
-                  <li>Opcje strony</li>
-                </ul>
-              </div>
-            )}
-          </header>
-      {/* Navigation Menu */}
-      <nav className="navigationMenu">
-        <ul>
-          <li onClick={() => { window.location.href = "/home/learn"; }}>Ucz się AI</li>
-          <li onClick={() => { window.location.href = "/home/voice-practice"; }}>Praktyka Głosowa</li>
-          <li onClick={() => { window.location.href = "/home/flashcards"; }}>Fiszki</li>
-          <li onClick={() => { window.location.href = "/home/test"; }}>Test</li>
-        </ul>
-      </nav>
-        </div>
-        <div className="flashcards">
-            {units.map((data:string,index) => <Card key={index} unit={data}/> )}  
-        </div>
-        </>
+          )}
+        </header>
 
+        {/* Navigation Menu */}
+        <nav className={navStyles.navigationMenu}>
+          <ul>
+            <li onClick={() => { window.location.href = "/home/learn"; }}>Ucz się AI</li>
+            <li onClick={() => { window.location.href = "/home/voice-practice"; }}>Praktyka Głosowa</li>
+            <li onClick={() => { window.location.href = "/home/flashcards"; }}>Fiszki</li>
+            <li onClick={() => { window.location.href = "/home/test"; }}>Test</li>
+          </ul>
+        </nav>
+      </div>
 
-);
+      {/* Flashcards */}
+      <div className={cardStyles.flashcards}>
+        {units.map((data: string, index) => <Card key={index} unit={data} />)}
+      </div>
+    </>
+  );
 }
 
 export default Flashcards;
