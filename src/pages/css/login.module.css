@@ -1,8 +1,8 @@
 
-body{
+:global(body){
   margin: 0;
 }
-* {
+:global(*) {
 
     padding: 0;
     box-sizing: border-box;

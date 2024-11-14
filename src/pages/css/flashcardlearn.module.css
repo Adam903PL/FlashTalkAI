@@ -50,11 +50,12 @@
 
 /* Słowo */
 .word {
-    font-size: 7vw;  /* Duże litery - 10% szerokości ekranu */
+    font-size: 6vw;  /* Duże litery - 10% szerokości ekranu */
     font-weight: 700;
     color: white;
     text-align: center;
     flex-grow: 1;
     transition: opacity 0.3s ease;
     margin: 0 30px;
+    cursor: pointer;
 }

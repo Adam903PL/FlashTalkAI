@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import './css/registration.css';
+import registerStyles from './css/registration.module.css';
 
 type FormData = {
   email: string;
@@ -42,8 +42,8 @@ function Registration() {
   };
 
   return (
-    <div className="registrationBody">
-      <div className="container">
+    <div className={registerStyles.registrationBody}>
+      <div className={registerStyles.container}>
         <h1>Register</h1>
         <form onSubmit={handleSubmit(sendData)}>
           <input type="text" placeholder="Type Email" id="email" {...register("email")} />
