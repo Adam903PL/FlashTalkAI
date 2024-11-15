@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import cardStyles from "./css/card.module.css";
 
 interface CardProps {
     unit: string;
@@ -27,9 +28,9 @@ const Card: React.FC<CardProps> = ({ unit }) => {
     }, [unit]); 
 
     return (
-        <div className="card" onClick={()=>{window.location.href = `/home/flashcards/${unit.replace('.json', '')}`}}>
+        <div className={cardStyles.card} onClick={()=>{window.location.href = `/home/flashcards/${unit.replace('.json', '')}`}}>
             <h2>{unit.replace('.json', '')}</h2> 
-            <p className='description'>Description: {description}</p>
+            <p className={cardStyles.description}>Description: {description}</p>
         </div>
     );
 };
