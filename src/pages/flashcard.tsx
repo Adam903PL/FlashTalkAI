@@ -1,34 +1,43 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importuj useNavigate z React Router
-import './css/headerNav.css';
-import './css/flashcardlearn.css'
+import { useNavigate } from 'react-router-dom';
+import navStyles from './css/headerNav.module.css';
+import flashcardStyles from './css/flashcardlearn.module.css';
 
-type wordsType ={
-    "id":number,
-    "word":string,
-    "translation":string
-}
+type wordsType = {
+    id: number;
+    word: string;
+    translation: string;
+};
 
+type FlashcardProps = {
+    unit: number | string;  
+};
 
-function Flashcard(unit:any) {
-
-
+function Flashcard(unit:FlashcardProps) {
+    const [wordIndex, setWordIndex] = useState(0);
+    const [words, setWords] = useState<wordsType[]>([]);
     const [userMenuVisible, setUserMenuVisible] = useState(false);
+    const [showTranslation, setShowTranslation] = useState(false);
+    const [countWords,setCountWords] = useState(0)
     const navigate = useNavigate(); 
 
     const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
     const handleWordClick = () => {
-        setWordIndex((prevIndex) => (prevIndex + 1) % words.length);
-
+        setShowTranslation((prev) => !prev);
     };
 
-    const [wordIndex, setWordIndex] = useState(0);
-    const [words, setWords] = useState<wordsType[]>([]);
+    // const showTranslationNextCard = () => {
+    //     setShowTranslation((prev) => !prev);
+    // };
+
+
+
     useEffect(() => {
         fetch(`/api/flashcards/${unit.unit}`)
           .then((resp) => resp.json())
           .then((data) => {
             const selectedWords = data.slice(1, 101); 
+            setCountWords(selectedWords.length)
             setWords(selectedWords);  
           })
           .catch((error) => {
@@ -36,65 +45,78 @@ function Flashcard(unit:any) {
           });
       }, [unit.unit]); 
 
+    return (
+        <>
+            <div className={navStyles.homeContainer}>
+                {/* Header */}
+                <header className={navStyles.header}>
+                    <div className={navStyles.logo}>FlashTalkAI</div>
+                    <div className={navStyles.searchBar}>
+                        <input type="text" placeholder="Wyszukaj..." className={navStyles.scherch} />
+                    </div>
+                    <div className={navStyles.userIcon} onClick={toggleUserMenu}>
+                        <i className="fas fa-user"></i>
+                    </div>
+                    {userMenuVisible && (
+                        <div className={navStyles.userMenu}>
+                            <ul>
+                                <li onClick={() => navigate('/settings')}>Ustawienia</li>
+                                <li onClick={() => navigate('/logout')}>Wyloguj się</li>
+                                <li onClick={() => navigate('/options')}>Opcje strony</li>
+                            </ul>
+                        </div>
+                    )}
+                </header>
 
-    
+                {/* Navigation Menu */}
+                <nav className={navStyles.navigationMenu}>
+                    <ul>
+                        <li onClick={() => navigate('/home/learn')}>Ucz się AI</li>
+                        <li onClick={() => navigate('/home/voice-practice')}>Praktyka Głosowa</li>
+                        <li onClick={() => navigate('/home/flashcards')}>Fiszki</li>
+                        <li onClick={() => navigate('/home/test')}>Test</li>
+                    </ul>
+                </nav>
+            </div>
 
+            {/* Flashcard Content */}
+            <div className={flashcardStyles.cardLearnContainer}>
+                <div className={flashcardStyles.cardLearn}>
+                    <div
+                        className={flashcardStyles.arrow}
+                        onClick={() => {
+                            setWordIndex((wordIndex - 1 + words.length) % words.length);
+                            setShowTranslation(true)
+                            handleWordClick()
+                        }}
+                    >
+                        {"<"}
+                    </div>
 
+                    <div className={flashcardStyles.word} onClick={handleWordClick}>
+                    {words.length > 0
+                            ? showTranslation
+                                ? words[wordIndex]?.translation
+                                : words[wordIndex]?.word
+                            : "Loading..."}
+                    <h5> {wordIndex+1}/{countWords}</h5>
+                    </div>
+                    
 
-
-
-  return (
-    <>
-        <div className="homeContainer">
-      {/* Header */}
-      <header className="header">
-        <div className="logo">FlashTalkAI</div>
-        <div className="searchBar">
-          <input type="text" placeholder="Wyszukaj..." className="scherch" />
-        </div>
-        <div className="userIcon" onClick={toggleUserMenu}>
-          <i className="fas fa-user"></i>
-        </div>
-        {userMenuVisible && (
-          <div className="userMenu">
-            <ul>
-              <li onClick={() => navigate('/settings')}>Ustawienia</li> {/* Przykład nawigacji */}
-              <li onClick={() => navigate('/logout')}>Wyloguj się</li> {/* Przykład nawigacji */}
-              <li onClick={() => navigate('/options')}>Opcje strony</li> {/* Przykład nawigacji */}
-            </ul>
-          </div>
-        )}
-      </header>
-
-      {/* Navigation Menu */}
-      <nav className="navigationMenu">
-        <ul>
-          <li onClick={() => navigate('/home/learn')}>Ucz się AI</li>
-          <li onClick={() => navigate('/home/voice-practice')}>Praktyka Głosowa</li>
-          <li onClick={() => navigate('/home/flashcards')}>Fiszki</li>
-          <li onClick={() => navigate('/home/test')}>Test</li>
-        </ul>
-      </nav>
-    </div>
-    {/*  */}
-    <div className="cardLearnContainer">
-            <div className="cardLearn">
-                <div className="arrow" onClick={() => setWordIndex((wordIndex - 1 + words.length) % words.length)}>
-                    {"<"} {/* Strzałka w lewo */}
-                </div>
-
-                <div className="word" onClick={handleWordClick}>
-                    {words.length > 0 ? words[wordIndex]?.word : "Loading..."}
-                </div>
-
-                <div className="arrow" onClick={() => setWordIndex((wordIndex + 1) % words.length)}>
-                    {">"} {/* Strzałka w prawo */}
+                    <div
+                        className={flashcardStyles.arrow}
+                        onClick={() => {
+                            setWordIndex((wordIndex + 1) % words.length);
+                            setShowTranslation(true)
+                            handleWordClick()
+                        }}
+                    >
+                        {">"}
+                    </div>
                 </div>
             </div>
-        </div>
-    </>
-
-  );
+        </>
+    );
 }
 
 export default Flashcard;
