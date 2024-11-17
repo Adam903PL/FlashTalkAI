@@ -9,7 +9,7 @@ const Card: React.FC<CardProps> = ({ unit }) => {
     const [description, setDescription] = useState<string>("");
 
     useEffect(() => {
-        fetch(`/api/flashcards/${unit}`)
+        fetch(`http://localhost:4444/api/flashcards/${unit}`)
             .then((resp) => {
                 console.log(unit,"lsl")
                 if (!resp.ok) {

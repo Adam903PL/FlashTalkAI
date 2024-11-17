@@ -22,7 +22,7 @@ function Login() {
     
 
 
-    fetch("/loginData", {
+    fetch("http://localhost:4444/loginData", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
