@@ -14,7 +14,7 @@ function Registration() {
   
     const updatedFormData = { email: data.email, password: data.password };
 
-    fetch("/registerData", {
+    fetch("http://localhost:4444/registerData", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

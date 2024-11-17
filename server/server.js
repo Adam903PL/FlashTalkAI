@@ -6,7 +6,7 @@ const CryptoJS = require("crypto-js");
 const { Pool } = require('pg');
 const session = require('express-session');
 const fs = require('fs');
-
+const cors =require('cors')
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
@@ -24,6 +24,11 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false, maxAge: 7 * 24 * 60 * 60 * 1000 }  
+}));
+
+
+app.use(cors({
+    origin: 'http://localhost:5173', 
 }));
 
 app.use(express.json());
@@ -136,7 +141,6 @@ app.post("/registerData", async (req, res) => {
     try {
         const client = await pool.connect();
 
-
         const query = 'SELECT create_user($1, $2)';
         const values = [datas.email, datas.password];
         const response = await client.query(query, values);
@@ -154,6 +158,43 @@ app.post("/registerData", async (req, res) => {
         res.json({ success: false, message: "Błąd serwera" });
     }
 });
+
+
+app.post("/changeKnown", async (req, res) => {
+    if (!req.body.wordId) {
+        return res.status(400).json({ success: false, message: "Brak wordId w danych" });
+    }
+
+    try {
+        const client = await pool.connect();
+        const query = 'SELECT toggle_known_status($1, $2)';
+        const values = [req.body.wordId, req.session.user.userid];
+        const response = await client.query(query, values);
+
+        console.log(response)
+
+
+        if(response){
+            res.status(200).json({ success: true, message: "Status słowa został zaktualizowany.",known: response.rows[0] });
+        }
+
+        client.release(); 
+
+
+
+    } catch (err) {
+        console.error("Database error:", err);
+        res.status(500).json({ success: false, message: "Wystąpił błąd podczas przetwarzania zapytania." });
+    }
+});
+
+
+
+
+
+
+
+
 
 
 app.get("/logout", (req, res) => {

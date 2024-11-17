@@ -10,7 +10,7 @@ function Flashcards() {
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
 
   useEffect(() => {
-    fetch('/api/flashcards')
+    fetch('http://localhost:4444/api/flashcards')
       .then(resp => resp.json())
       .then(data => {
         console.log(data);
