@@ -23,7 +23,7 @@ function Flashcard({ unit }: FlashcardProps) {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [countWords, setCountWords] = useState(0);
-  
+
   const navigate = useNavigate();
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -43,7 +43,9 @@ function Flashcard({ unit }: FlashcardProps) {
   };
 
   useEffect(() => {
-    fetch(`http://localhost:4444/api/flashcards/${unit}`)
+    fetch(`http://localhost:4444/api/flashcards/${unit}`, {
+      credentials: "include",
+    })
       .then((resp) => resp.json())
       .then((data) => {
         const selectedWords = data.slice(1, 101);
@@ -55,30 +57,41 @@ function Flashcard({ unit }: FlashcardProps) {
       });
   }, [unit]);
 
-
   const changeIsKnown = (wordId: number) => {
-    console.log("Datas to send:",wordId)
-    fetch('http://localhost:4444/changeKnown', {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ wordId }),  
+    console.log("Datas to send:", wordId);
+    fetch("http://localhost:4444/changeKnown", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ wordId }),
     })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data: ResponseData) => {
-            console.log(data);
-        })
-        .catch((error) => {
-            console.error("Błąd:", error);
-        });
-};
-
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data: ResponseData) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Błąd:", error);
+      });
+  };
+  useEffect(() => {
+    fetch("http://localhost:4444/loginSucces", {
+      credentials: "include",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.succes == false) {
+          window.location.href = "/login";
+          // navigate("/home");
+        }
+      });
+  }, []);
   return (
     <>
       <div className={navStyles.homeContainer}>
@@ -153,14 +166,20 @@ function Flashcard({ unit }: FlashcardProps) {
       {/* chciałem tu dac odzienego tsx ale coś wypierdala bład jak dodaje w odzienym tsx style i się nie ładuja */}
       <div className={flashcardStyles.words}>
         {words.map((word) => (
-          <div className={flashcardStyles.box}>
+          <div className={flashcardStyles.box} key={word.id}>
             <div className={flashcardStyles.wordContect}>
               <p>{word.word}</p>
               <div className={flashcardStyles.linie}></div>
               <p>{word.translation}</p>
             </div>
             <div className={flashcardStyles.wordEmoji}>
-              <button onClick={()=>{changeIsKnown(word.id)} }>{"<3"}</button>
+              <button
+                onClick={() => {
+                  changeIsKnown(word.id);
+                }}
+              >
+                {"<3"}
+              </button>
               <img alt="volumeMax" src={volumeMax} />
             </div>
           </div>
