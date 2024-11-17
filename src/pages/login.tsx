@@ -24,6 +24,8 @@ function Login() {
 
     fetch("http://localhost:4444/loginData", {
       method: "POST",
+      credentials: 'include',
+
       headers: {
         "Content-Type": "application/json",
       },
@@ -35,7 +37,7 @@ function Login() {
       return response.json(); 
     })
     .then((data: any) => {
-      console.log(data, "sadas");
+      console.log(data);
   
       if (data.success) {
         console.log("Zalogowano pomyślnie:", data.message);

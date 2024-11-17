@@ -16,6 +16,7 @@ function Registration() {
 
     fetch("http://localhost:4444/registerData", {
       method: "POST",
+      credentials: 'include',
       headers: {
         "Content-Type": "application/json",
       },

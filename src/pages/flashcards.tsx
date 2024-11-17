@@ -8,21 +8,32 @@ function Flashcards() {
   const [units, setUnits] = useState<string[]>([]);
 
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
-
   useEffect(() => {
-    fetch('http://localhost:4444/api/flashcards')
-      .then(resp => resp.json())
-      .then(data => {
+    fetch("http://localhost:4444/loginSucces", {
+      credentials: "include",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.succes == false) {
+          window.location.href = "/login";
+          // navigate("/home");
+        }
+      });
+  }, []);
+  useEffect(() => {
+    fetch("http://localhost:4444/api/flashcards", { credentials: "include" })
+      .then((resp) => resp.json())
+      .then((data) => {
         console.log(data);
         setUnits(data);
       })
-      .catch(error => {
-        console.error('Błąd przy ładowaniu danych:', error);
+      .catch((error) => {
+        console.error("Błąd przy ładowaniu danych:", error);
       });
   }, []);
 
   useEffect(() => {
-    console.log('Stan units zmieniony:', units);
+    console.log("Stan units zmieniony:", units);
   }, [units]);
 
   return (
@@ -32,7 +43,11 @@ function Flashcards() {
         <header className={navStyles.header}>
           <div className={navStyles.logo}>FlashTalkAI</div>
           <div className={navStyles.searchBar}>
-            <input type="text" placeholder="Wyszukaj..." className={navStyles.scherch} />
+            <input
+              type="text"
+              placeholder="Wyszukaj..."
+              className={navStyles.scherch}
+            />
           </div>
           <div className={navStyles.userIcon} onClick={toggleUserMenu}>
             <i className="fas fa-user"></i>
@@ -51,17 +66,43 @@ function Flashcards() {
         {/* Navigation Menu */}
         <nav className={navStyles.navigationMenu}>
           <ul>
-            <li onClick={() => { window.location.href = "/home/learn"; }}>Ucz się AI</li>
-            <li onClick={() => { window.location.href = "/home/voice-practice"; }}>Praktyka Głosowa</li>
-            <li onClick={() => { window.location.href = "/home/flashcards"; }}>Fiszki</li>
-            <li onClick={() => { window.location.href = "/home/test"; }}>Test</li>
+            <li
+              onClick={() => {
+                window.location.href = "/home/learn";
+              }}
+            >
+              Ucz się AI
+            </li>
+            <li
+              onClick={() => {
+                window.location.href = "/home/voice-practice";
+              }}
+            >
+              Praktyka Głosowa
+            </li>
+            <li
+              onClick={() => {
+                window.location.href = "/home/flashcards";
+              }}
+            >
+              Fiszki
+            </li>
+            <li
+              onClick={() => {
+                window.location.href = "/home/test";
+              }}
+            >
+              Test
+            </li>
           </ul>
         </nav>
       </div>
 
       {/* Flashcards */}
       <div className={cardStyles.flashcards}>
-        {units.map((data: string, index) => <Card key={index} unit={data} />)}
+        {units.map((data: string, index) => (
+          <Card key={index} unit={data} />
+        ))}
       </div>
     </>
   );

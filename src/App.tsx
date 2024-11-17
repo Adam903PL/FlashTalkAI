@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Login from "./pages/login";
 import Home from "./pages/home";
@@ -12,9 +12,10 @@ interface Unit {
 
 function App() {
   const [units, setUnits] = useState<Unit[]>([]);
-
   useEffect(() => {
-    fetch("http://localhost:4444/api/flashcards")
+    fetch("http://localhost:4444/api/flashcards",{
+      credentials: 'include' 
+    })
       .then((resp) => resp.json())
       .then((data) => {
         setUnits(data); 
