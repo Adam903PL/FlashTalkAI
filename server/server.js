@@ -32,7 +32,7 @@ app.use(session({
 
 // Konfiguracja CORS
 app.use(cors({
-    origin: ['http://localhost:5173'],
+    origin: 'http://localhost:5173',
     credentials: true
 }));
 
@@ -114,8 +114,7 @@ app.post("/loginData", async (req, res) => {
 
 
 app.get("/loginsucces", async (req, res) => {
-    try {
-        console.log('Sesja w /loginsucces:', req.session);  
+    try { 
         if (req.session.user) { 
             res.json({ succes:true, message: req.session });
         } else {
@@ -204,7 +203,34 @@ app.post("/changeKnown", async (req, res) => {
     }
 });
 
+app.post('/getAllWords', async (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
 
+    const { from, to } = req.body; 
+
+    try {
+        const client = await pool.connect();
+        const query = "SELECT * FROM user_flashcards WHERE user_id = $1 AND flashcard_id BETWEEN $2 AND $3";
+        const values = [req.session.user.userid, from, to];
+        
+        console.log("Wykonane zapytanie:", query);
+        console.log("Wartości:", values);
+
+        const response = await client.query(query, values);
+
+        console.log("Wyniki zapytania:", response.rows);
+
+        res.json({ success: true, data: response.rows });
+        
+        client.release(); 
+
+    } catch (err) {
+        console.error("Błąd bazy danych:", err);
+        res.status(500).json({ success: false, message: "Wystąpił błąd podczas przetwarzania zapytania." });
+    }
+});
 
 
 

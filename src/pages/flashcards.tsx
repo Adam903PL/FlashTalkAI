@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import navStyles from "./css/headerNav.module.css";
 import cardStyles from "./css/card.module.css";
 import Card from "./card";
-
+import NavBar from "./navbar";
 function Flashcards() {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [units, setUnits] = useState<string[]>([]);
@@ -37,70 +37,14 @@ function Flashcards() {
   }, [units]);
 
   return (
-    <>
-      <div className={navStyles.homeContainer}>
-        {/* Header */}
-        <header className={navStyles.header}>
-          <div className={navStyles.logo}>FlashTalkAI</div>
-          <div className={navStyles.searchBar}>
-            <input
-              type="text"
-              placeholder="Wyszukaj..."
-              className={navStyles.scherch}
-            />
-          </div>
-          <div className={navStyles.userIcon} onClick={toggleUserMenu}>
-            <i className="fas fa-user"></i>
-          </div>
-          {userMenuVisible && (
-            <div className={navStyles.userMenu}>
-              <ul>
-                <li>Ustawienia</li>
-                <li>Wyloguj się</li>
-                <li>Opcje strony</li>
-              </ul>
-            </div>
-          )}
-        </header>
+    <> 
+      <NavBar></NavBar>
 
-        {/* Navigation Menu */}
-        <nav className={navStyles.navigationMenu}>
-          <ul>
-            <li
-              onClick={() => {
-                window.location.href = "/home/learn";
-              }}
-            >
-              Ucz się AI
-            </li>
-            <li
-              onClick={() => {
-                window.location.href = "/home/voice-practice";
-              }}
-            >
-              Praktyka Głosowa
-            </li>
-            <li
-              onClick={() => {
-                window.location.href = "/home/flashcards";
-              }}
-            >
-              Fiszki
-            </li>
-            <li
-              onClick={() => {
-                window.location.href = "/home/test";
-              }}
-            >
-              Test
-            </li>
-          </ul>
-        </nav>
-      </div>
 
       {/* Flashcards */}
       <div className={cardStyles.flashcards}>
         {units.map((data: string, index) => (
+          
           <Card key={index} unit={data} />
         ))}
       </div>
