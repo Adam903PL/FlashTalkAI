@@ -182,7 +182,7 @@ function Flashcard({ unit }: FlashcardProps) {
             (mainW) => mainW.id === word.flashcard_id && word.known === true
           );
           if (main !== undefined) {
-            return <WordContainer key={main.id} word={main} onReload={handleReload}/>;
+            return <WordContainer key={main.id} word={main} onReload={handleReload} known={true}/>;
           } else {
             return null;
           }
@@ -196,7 +196,7 @@ function Flashcard({ unit }: FlashcardProps) {
             (mainW) => mainW.id === word.flashcard_id && word.known === false
           );
           if (main !== undefined) {
-            return <WordContainer key={main.id} word={main} onReload={handleReload} />;
+            return <WordContainer key={main.id} word={main} onReload={handleReload} known={false} />;
           } else {
             return null;
           }

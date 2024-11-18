@@ -85,8 +85,37 @@
 
 
 
-
+/* 
 .box {
+  width: 80%;
+  margin: 20px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  transition: all 0.3s ease;
+} */
+
+.box_true {
+  width: 80%;
+  margin: 20px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+.box_false {
   width: 80%;
   margin: 20px auto;
   display: flex;
@@ -101,9 +130,14 @@
   transition: all 0.3s ease;
 }
 
-.box:hover {
-  border-color: #0099ff;
-  box-shadow: 0 4px 16px rgba(0, 153, 255, 0.5);
+.box_true:hover {
+  border-color: rgb(0, 255, 34);
+  box-shadow: 0 4px 16px rgba(51, 255, 78, 0.5);
+}
+
+.box_false:hover {
+  border-color: red;
+  box-shadow: 0 4px 16px rgba(255, 39, 39, 0.5);
 }
 
 .wordContect {
