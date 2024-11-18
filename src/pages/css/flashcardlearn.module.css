@@ -155,4 +155,9 @@
 
 
 
-
+.linie{
+  width: 80%;
+  margin: 0 10% 0 10%;
+  height: 2px;
+  background-color: #333;
+}

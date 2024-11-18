@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import navStyles from "./css/headerNav.module.css";
 import flashcardStyles from "./css/flashcardlearn.module.css";
-import volumeMax from "../assets/volume-max.svg";
+
+import WordContainer from "./wordContainer";
 import NavBar from "./navbar";
 type wordsType = {
   id: number;
@@ -13,20 +14,22 @@ type wordsType = {
 type FlashcardProps = {
   unit: number | string;
 };
-type ResponseData = {
-  success: boolean;
-  message: string;
+
+type Word = {
+  id: number;
+  word: string;
+  translation: string;
+  known: boolean;
 };
 
-function Flashcard({ unit,index }: FlashcardProps) {
+function Flashcard({ unit }: FlashcardProps) {
   const [wordIndex, setWordIndex] = useState(0);
   const [words, setWords] = useState<wordsType[]>([]);
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [countWords, setCountWords] = useState(0);
 
-  const [knownWords, setknownWords] = useState([]);
-  const [unknownWords, setunknownWords] = useState([]);
+  const [knownWords, setKnownWords] = useState<Word[]>([]);
 
   const navigate = useNavigate();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -61,29 +64,6 @@ function Flashcard({ unit,index }: FlashcardProps) {
       });
   }, [unit]);
 
-  const changeIsKnown = (wordId: number) => {
-    console.log("Datas to send:", wordId);
-    fetch("http://localhost:4444/changeKnown", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ wordId }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data: ResponseData) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error("Błąd:", error);
-      });
-  };
   useEffect(() => {
     fetch("http://localhost:4444/loginSucces", {
       credentials: "include",
@@ -97,12 +77,12 @@ function Flashcard({ unit,index }: FlashcardProps) {
       .catch((error) => {
         console.error("Error during login check:", error);
       });
-    
+
     fetch("http://localhost:4444/getAllWords", {
       credentials: "include",
       method: "POST",
       headers: {
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ from: 1, to: 100 }),
     })
@@ -112,14 +92,54 @@ function Flashcard({ unit,index }: FlashcardProps) {
         }
         return resp.json();
       })
-      .then((data) => {
-        console.log("Dane z backendu:", data);
+      .then((data: any) => {
+        let known: any[] = [];
+        if (data.success && Array.isArray(data.data)) {
+          data.data.map((val: any) => {
+            known.push(val);
+          });
+
+          setKnownWords(known);
+        } else {
+          console.error("Unexpected response format:", data);
+        }
       })
       .catch((error) => {
         console.error("Błąd przy pobieraniu słów:", error);
       });
   }, []);
 
+  const handleReload = () => {
+    fetch("http://localhost:4444/getAllWords", {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ from: 1, to: 100 }),
+    })
+      .then((resp) => {
+        if (!resp.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return resp.json();
+      })
+      .then((data: any) => {
+        let known: any[] = [];
+        if (data.success && Array.isArray(data.data)) {
+          data.data.map((val: any) => {
+            known.push(val);
+          });
+          setKnownWords(known);
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Błąd przy pobieraniu słów:", error);
+      });
+  };
+  
   return (
     <>
       <NavBar></NavBar>
@@ -154,28 +174,33 @@ function Flashcard({ unit,index }: FlashcardProps) {
         </div>
       </div>
       {/* Mapujemy przez słowa i renderujemy komponent Word */}
-
-      {/* chciałem tu dac odzienego tsx ale coś wypierdala bład jak dodaje w odzienym tsx style i się nie ładuja */}
-      <div className={flashcardStyles.words}>
-        {words.map((word) => (
-          <div className={flashcardStyles.box} key={word.id}>
-            <div className={flashcardStyles.wordContect}>
-              <p>{word.word}</p>
-              <div className={flashcardStyles.linie}></div>
-              <p>{word.translation}</p>
-            </div>
-            <div className={flashcardStyles.wordEmoji}>
-              <button
-                onClick={() => {
-                  changeIsKnown(word.id);
-                }}
-              >
-                {"<3"}
-              </button>
-              <img alt="volumeMax" src={volumeMax} />
-            </div>
-          </div>
-        ))}
+      <h1 style={{ margin: "0 0 0 10%" }}>Known Words</h1>
+      <div className={flashcardStyles.linie}></div>
+      <div>
+        {knownWords.map((word, index) => {
+          const main = words.find(
+            (mainW) => mainW.id === word.flashcard_id && word.known === true
+          );
+          if (main !== undefined) {
+            return <WordContainer key={main.id} word={main} onReload={handleReload}/>;
+          } else {
+            return null;
+          }
+        })}
+      </div>
+      <h1 style={{ margin: "0 0 0 10%" }}>UnKnown Words</h1>
+      <div className={flashcardStyles.linie}></div>
+      <div>
+        {knownWords.map((word, index) => {
+          const main = words.find(
+            (mainW) => mainW.id === word.flashcard_id && word.known === false
+          );
+          if (main !== undefined) {
+            return <WordContainer key={main.id} word={main} onReload={handleReload} />;
+          } else {
+            return null;
+          }
+        })}
       </div>
     </>
   );

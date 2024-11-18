@@ -22,9 +22,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        // secure: false,  // Ustaw na true w produkcji (HTTPS)
-        // httpOnly: true,
-        // sameSite: 'None',
+
         domain: 'localhost',
         maxAge: 7 * 24 * 60 * 60 * 1000,
     }
@@ -36,13 +34,7 @@ app.use(cors({
     credentials: true
 }));
 
-// app.options('*', (req, res) => {
-//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-//     res.setHeader('Access-Control-Allow-Credentials', 'true');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     res.status(200).end();
-// });
+
 app.use(express.json());
 
 function getFlashcardFiles(directory = './flashcards') {
@@ -220,7 +212,6 @@ app.post('/getAllWords', async (req, res) => {
 
         const response = await client.query(query, values);
 
-        console.log("Wyniki zapytania:", response.rows);
 
         res.json({ success: true, data: response.rows });
         
