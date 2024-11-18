@@ -1,99 +1,208 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importuj useNavigate z React Router
-import './css/headerNav.css';
-import './css/flashcardlearn.css'
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import navStyles from "./css/headerNav.module.css";
+import flashcardStyles from "./css/flashcardlearn.module.css";
 
-type wordsType ={
-    "id":number,
-    "word":string,
-    "translation":string
-}
+import WordContainer from "./wordContainer";
+import NavBar from "./navbar";
+type wordsType = {
+  id: number;
+  word: string;
+  translation: string;
+};
 
+type FlashcardProps = {
+  unit: number | string;
+};
 
-function Flashcard(unit:any) {
+type Word = {
+  id: number;
+  word: string;
+  translation: string;
+  known: boolean;
+};
 
+function Flashcard({ unit }: FlashcardProps) {
+  const [wordIndex, setWordIndex] = useState(0);
+  const [words, setWords] = useState<wordsType[]>([]);
+  const [userMenuVisible, setUserMenuVisible] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(false);
+  const [countWords, setCountWords] = useState(0);
 
-    const [userMenuVisible, setUserMenuVisible] = useState(false);
-    const navigate = useNavigate(); 
+  const [knownWords, setKnownWords] = useState<Word[]>([]);
 
-    const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
-    const handleWordClick = () => {
-        setWordIndex((prevIndex) => (prevIndex + 1) % words.length);
+  const navigate = useNavigate();
+  const cardRef = useRef<HTMLDivElement>(null);
 
-    };
+  const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
 
-    const [wordIndex, setWordIndex] = useState(0);
-    const [words, setWords] = useState<wordsType[]>([]);
-    useEffect(() => {
-        fetch(`/api/flashcards/${unit.unit}`)
-          .then((resp) => resp.json())
-          .then((data) => {
-            const selectedWords = data.slice(1, 101); 
-            setWords(selectedWords);  
-          })
-          .catch((error) => {
-            console.error('Error fetching data:', error);
+  const handleWordClick = () => {
+    setShowTranslation((prev) => !prev);
+  };
+
+  const handleArrowClick = (direction: "next" | "prev") => {
+    if (direction === "next") {
+      setWordIndex((wordIndex + 1) % words.length);
+    } else {
+      setWordIndex((wordIndex - 1 + words.length) % words.length);
+    }
+    setShowTranslation(false);
+  };
+
+  useEffect(() => {
+    fetch(`http://localhost:4444/api/flashcards/${unit}`, {
+      credentials: "include",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        const selectedWords = data.slice(1, 101);
+        setCountWords(selectedWords.length);
+        setWords(selectedWords);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, [unit]);
+
+  useEffect(() => {
+    fetch("http://localhost:4444/loginSucces", {
+      credentials: "include",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.succes === false) {
+          window.location.href = "/login";
+        }
+      })
+      .catch((error) => {
+        console.error("Error during login check:", error);
+      });
+
+    fetch("http://localhost:4444/getAllWords", {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ from: 1, to: 100 }),
+    })
+      .then((resp) => {
+        if (!resp.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return resp.json();
+      })
+      .then((data: any) => {
+        let known: any[] = [];
+        if (data.success && Array.isArray(data.data)) {
+          data.data.map((val: any) => {
+            known.push(val);
           });
-      }, [unit.unit]); 
 
+          setKnownWords(known);
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Błąd przy pobieraniu słów:", error);
+      });
+  }, []);
 
-    
-
-
-
-
-
+  const handleReload = () => {
+    fetch("http://localhost:4444/getAllWords", {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ from: 1, to: 100 }),
+    })
+      .then((resp) => {
+        if (!resp.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return resp.json();
+      })
+      .then((data: any) => {
+        let known: any[] = [];
+        if (data.success && Array.isArray(data.data)) {
+          data.data.map((val: any) => {
+            known.push(val);
+          });
+          setKnownWords(known);
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Błąd przy pobieraniu słów:", error);
+      });
+  };
+  
   return (
     <>
-        <div className="homeContainer">
-      {/* Header */}
-      <header className="header">
-        <div className="logo">FlashTalkAI</div>
-        <div className="searchBar">
-          <input type="text" placeholder="Wyszukaj..." className="scherch" />
-        </div>
-        <div className="userIcon" onClick={toggleUserMenu}>
-          <i className="fas fa-user"></i>
-        </div>
-        {userMenuVisible && (
-          <div className="userMenu">
-            <ul>
-              <li onClick={() => navigate('/settings')}>Ustawienia</li> {/* Przykład nawigacji */}
-              <li onClick={() => navigate('/logout')}>Wyloguj się</li> {/* Przykład nawigacji */}
-              <li onClick={() => navigate('/options')}>Opcje strony</li> {/* Przykład nawigacji */}
-            </ul>
+      <NavBar></NavBar>
+
+      {/* Flashcard Content */}
+      <div className={flashcardStyles.cardLearnContainer}>
+        <div ref={cardRef} className={flashcardStyles.cardLearn}>
+          <div
+            className={flashcardStyles.arrow}
+            onClick={() => handleArrowClick("prev")}
+          >
+            {"<"}
           </div>
-        )}
-      </header>
 
-      {/* Navigation Menu */}
-      <nav className="navigationMenu">
-        <ul>
-          <li onClick={() => navigate('/home/learn')}>Ucz się AI</li>
-          <li onClick={() => navigate('/home/voice-practice')}>Praktyka Głosowa</li>
-          <li onClick={() => navigate('/home/flashcards')}>Fiszki</li>
-          <li onClick={() => navigate('/home/test')}>Test</li>
-        </ul>
-      </nav>
-    </div>
-    {/*  */}
-    <div className="cardLearnContainer">
-            <div className="cardLearn">
-                <div className="arrow" onClick={() => setWordIndex((wordIndex - 1 + words.length) % words.length)}>
-                    {"<"} {/* Strzałka w lewo */}
-                </div>
+          <div className={flashcardStyles.word} onClick={handleWordClick}>
+            {words.length > 0
+              ? showTranslation
+                ? words[wordIndex]?.translation
+                : words[wordIndex]?.word
+              : "Loading..."}
+            <h5>
+              {wordIndex + 1}/{countWords}
+            </h5>
+          </div>
 
-                <div className="word" onClick={handleWordClick}>
-                    {words.length > 0 ? words[wordIndex]?.word : "Loading..."}
-                </div>
-
-                <div className="arrow" onClick={() => setWordIndex((wordIndex + 1) % words.length)}>
-                    {">"} {/* Strzałka w prawo */}
-                </div>
-            </div>
+          <div
+            className={flashcardStyles.arrow}
+            onClick={() => handleArrowClick("next")}
+          >
+            {">"}
+          </div>
         </div>
+      </div>
+      {/* Mapujemy przez słowa i renderujemy komponent Word */}
+      <h1 style={{ margin: "0 0 0 10%" }}>Known Words</h1>
+      <div className={flashcardStyles.linie}></div>
+      <div>
+        {knownWords.map((word, index) => {
+          const main = words.find(
+            (mainW) => mainW.id === word.flashcard_id && word.known === true
+          );
+          if (main !== undefined) {
+            return <WordContainer key={main.id} word={main} onReload={handleReload}/>;
+          } else {
+            return null;
+          }
+        })}
+      </div>
+      <h1 style={{ margin: "0 0 0 10%" }}>UnKnown Words</h1>
+      <div className={flashcardStyles.linie}></div>
+      <div>
+        {knownWords.map((word, index) => {
+          const main = words.find(
+            (mainW) => mainW.id === word.flashcard_id && word.known === false
+          );
+          if (main !== undefined) {
+            return <WordContainer key={main.id} word={main} onReload={handleReload} />;
+          } else {
+            return null;
+          }
+        })}
+      </div>
     </>
-
   );
 }
 
