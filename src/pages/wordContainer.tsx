@@ -13,13 +13,13 @@ type ResponseData = {
   message: string;
 };
 
-
 type WordContainerProps = {
-  word: any; 
-  onReload: () => void; 
+  word: any;
+  onReload: () => void;
+  known: boolean;
 };
 
-function WordContainer({ word, onReload }: WordContainerProps) {
+function WordContainer({ word, onReload, known }: WordContainerProps) {
   const changeIsKnown = (wordId: number) => {
     console.log("Datas to send:", wordId);
     fetch("http://localhost:4444/changeKnown", {
@@ -45,7 +45,7 @@ function WordContainer({ word, onReload }: WordContainerProps) {
   };
 
   return (
-    <div className={flashcardStyles.box} key={word.id}>
+    <div className={known ? flashcardStyles.box_true : flashcardStyles.box_false} key={word.id}>
       <div className={flashcardStyles.wordContect}>
         <p>{word.word}</p>
         <div className={flashcardStyles.linie}></div>
@@ -54,11 +54,11 @@ function WordContainer({ word, onReload }: WordContainerProps) {
       <div className={flashcardStyles.wordEmoji}>
         <button
           onClick={() => {
-            changeIsKnown(word.id); 
-            onReload(); 
+            changeIsKnown(word.id);
+            onReload();
           }}
         >
-          {"<3"}
+          {"❤️"}
         </button>
         <img alt="volumeMax" src={volumeMax} />
       </div>
