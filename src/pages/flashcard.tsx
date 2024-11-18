@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import navStyles from "./css/headerNav.module.css";
 import flashcardStyles from "./css/flashcardlearn.module.css";
 import volumeMax from "../assets/volume-max.svg";
+import NavBar from "./navbar";
 type wordsType = {
   id: number;
   word: string;
@@ -17,12 +18,15 @@ type ResponseData = {
   message: string;
 };
 
-function Flashcard({ unit }: FlashcardProps) {
+function Flashcard({ unit,index }: FlashcardProps) {
   const [wordIndex, setWordIndex] = useState(0);
   const [words, setWords] = useState<wordsType[]>([]);
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [countWords, setCountWords] = useState(0);
+
+  const [knownWords, setknownWords] = useState([]);
+  const [unknownWords, setunknownWords] = useState([]);
 
   const navigate = useNavigate();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -86,51 +90,39 @@ function Flashcard({ unit }: FlashcardProps) {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        if (data.succes == false) {
+        if (data.succes === false) {
           window.location.href = "/login";
-          // navigate("/home");
         }
+      })
+      .catch((error) => {
+        console.error("Error during login check:", error);
+      });
+    
+    fetch("http://localhost:4444/getAllWords", {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", 
+      },
+      body: JSON.stringify({ from: 1, to: 100 }),
+    })
+      .then((resp) => {
+        if (!resp.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return resp.json();
+      })
+      .then((data) => {
+        console.log("Dane z backendu:", data);
+      })
+      .catch((error) => {
+        console.error("Błąd przy pobieraniu słów:", error);
       });
   }, []);
+
   return (
     <>
-      <div className={navStyles.homeContainer}>
-        {/* Header */}
-        <header className={navStyles.header}>
-          <div className={navStyles.logo}>FlashTalkAI</div>
-          <div className={navStyles.searchBar}>
-            <input
-              type="text"
-              placeholder="Wyszukaj..."
-              className={navStyles.scherch}
-            />
-          </div>
-          <div className={navStyles.userIcon} onClick={toggleUserMenu}>
-            <i className="fas fa-user"></i>
-          </div>
-          {userMenuVisible && (
-            <div className={navStyles.userMenu}>
-              <ul>
-                <li onClick={() => navigate("/settings")}>Ustawienia</li>
-                <li onClick={() => navigate("/logout")}>Wyloguj się</li>
-                <li onClick={() => navigate("/options")}>Opcje strony</li>
-              </ul>
-            </div>
-          )}
-        </header>
-
-        {/* Navigation Menu */}
-        <nav className={navStyles.navigationMenu}>
-          <ul>
-            <li onClick={() => navigate("/home/learn")}>Ucz się AI</li>
-            <li onClick={() => navigate("/home/voice-practice")}>
-              Praktyka Głosowa
-            </li>
-            <li onClick={() => navigate("/home/flashcards")}>Fiszki</li>
-            <li onClick={() => navigate("/home/test")}>Test</li>
-          </ul>
-        </nav>
-      </div>
+      <NavBar></NavBar>
 
       {/* Flashcard Content */}
       <div className={flashcardStyles.cardLearnContainer}>
