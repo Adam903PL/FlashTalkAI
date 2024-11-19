@@ -224,6 +224,19 @@ app.post('/getAllWords', async (req, res) => {
 });
 
 
+app.get("/api/tematData", async (req, res) => {
+  try {
+    const client = await pool.connect();
+    const query = "select * from public.conversation_topics";
+    const response = await client.query(query);
+    res.json({ data: response.rows });
+
+    client.release();
+  } catch (err) {
+    res.json({ messsage: err });
+  }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);

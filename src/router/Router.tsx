@@ -9,6 +9,8 @@ import Flashcards from "../pages/flashcards";
 import Flashcard from "../pages/flashcard";
 import Login from "../pages/login";
 import Registration from "../pages/registration";
+import {Levels} from "../SpeakingWithAI/SpeakingLevels";
+import { SpeakingAi } from "../SpeakingWithAI/SpeakingAi";
 
 function Router() {
   const [units, setUnits] = useState<string[]>([]);
@@ -40,7 +42,7 @@ function Router() {
       path: "/home/flashcards",
       element: <Flashcards />,
     },
-    ...unitRoutes, 
+    ...unitRoutes,
     {
       path: "/login",
       element: <Login />,
@@ -48,6 +50,14 @@ function Router() {
     {
       path: "/register",
       element: <Registration />,
+    },
+    {
+      path: "/Speaking",
+      element: <Levels />,
+    },
+    {
+      path: "/SpeakingAi",
+      element: <SpeakingAi />,
     },
   ];
 
