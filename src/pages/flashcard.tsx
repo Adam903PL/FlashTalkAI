@@ -110,6 +110,18 @@ function Flashcard({ unit }: FlashcardProps) {
   }, []);
 
   const handleReload = () => {
+    fetch(`http://localhost:4444/api/flashcards/${unit}`, {
+      credentials: "include",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        const selectedWords = data.slice(1, 101);
+        setCountWords(selectedWords.length);
+        setWords(selectedWords);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
     fetch("http://localhost:4444/getAllWords", {
       credentials: "include",
       method: "POST",
@@ -130,6 +142,7 @@ function Flashcard({ unit }: FlashcardProps) {
           data.data.map((val: any) => {
             known.push(val);
           });
+
           setKnownWords(known);
         } else {
           console.error("Unexpected response format:", data);
@@ -139,7 +152,7 @@ function Flashcard({ unit }: FlashcardProps) {
         console.error("Błąd przy pobieraniu słów:", error);
       });
   };
-  
+
   return (
     <>
       <NavBar></NavBar>
@@ -182,7 +195,14 @@ function Flashcard({ unit }: FlashcardProps) {
             (mainW) => mainW.id === word.flashcard_id && word.known === true
           );
           if (main !== undefined) {
-            return <WordContainer key={main.id} word={main} onReload={handleReload} known={true}/>;
+            return (
+              <WordContainer
+                key={main.id}
+                word={main}
+                onReload={handleReload}
+                known={true}
+              />
+            );
           } else {
             return null;
           }
@@ -196,7 +216,14 @@ function Flashcard({ unit }: FlashcardProps) {
             (mainW) => mainW.id === word.flashcard_id && word.known === false
           );
           if (main !== undefined) {
-            return <WordContainer key={main.id} word={main} onReload={handleReload} known={false} />;
+            return (
+              <WordContainer
+                key={main.id}
+                word={main}
+                onReload={handleReload}
+                known={false}
+              />
+            );
           } else {
             return null;
           }

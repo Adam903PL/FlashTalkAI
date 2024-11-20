@@ -1,93 +1,135 @@
-
-:global(body){
+/* Global styles */
+:global(body) {
   margin: 0;
+  font-family: 'Arial', sans-serif;
 }
-:global(*) {
 
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .loginBody{
-    background-color: #121212; 
-    color: #fff; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-  }
-  
-  
+:global(*) {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.loginBody {
+  background: linear-gradient(135deg, #0099ff, #121212);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(30, 30, 30, 0.8);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+  border: 1px solid #333;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #2c2c2c;
+  color: #fff;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #0099ff;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  background-color: #333;
+  color: #fff;
+  font-size: 16px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #0099ff;
+  border-color: #0099ff;
+}
+
+button:focus {
+  outline: none;
+}
+
+input[type="text"]:hover,
+input[type="password"]:hover {
+  border-color: #0099ff;
+}
+
+.forgotPassword {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #0099ff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forgotPassword:hover {
+  color: #66ccff;
+}
+
+/* Responsive Design */
+@media (max-width: 500px) {
   .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #1e1e1e; 
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    width: 100%;
-    max-width: 400px;
+    width: 90%;
   }
-  
-  
-  input[type="text"],
-  input[type="password"] {
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    border: 1px solid #333;
-    border-radius: 8px;
-    background-color: #2c2c2c;
-    color: #fff;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-  }
-  
-  input[type="text"]:focus,
-  input[type="password"]:focus {
-    border-color: #0099ff; 
-    outline: none;
-  }
-  
-  
-  button {
-    width: 100%;
-    padding: 15px;
-    background-color: #333;
-    color: #fff;
-    font-size: 16px;
-    border: 1px solid #333;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 10px;
-  }
-  
-  
-  button:hover {
-    background-color: #0099ff; 
-    border-color: #0099ff;
-  }
-  
-  button:focus {
-    outline: none;
-  }
-  
-  
-  input[type="text"]:hover,
-  input[type="password"]:hover {
-    border-color: #0099ff; 
-  }
-  
-  @media (max-width: 500px) {
-    .container {
-      padding: 15px;
-      width: 90%;
-    }
-  }
-  
+}
+
+
+.forgotPasswordButton {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.forgotPasswordButton:hover {
+  background-color: rgba(0, 153, 255, 0.2);
+  color: #66ccff;
+  transform: scale(1.05);
+}
+
+.forgotPasswordButton:focus {
+  outline: none;
+}
