@@ -1,21 +1,28 @@
 import React, { useEffect, useState, useRef } from "react";
 import NavBar from "../navbar";
+import CSS from "../css/learnAI.module.css";
 
 function Learn() {
-  const [serverMessage, setServerMessage] = useState("");
-  const [message, setMessage] = useState("");
-  const socketRef = useRef<WebSocket | null>(null); // Używamy useRef, by nie tworzyć nowego WebSocket na każdym renderze
+  const topic = "Do you have any animals";
+
+  const [conversation, setConversation] = useState<
+    { message: string; maker: string }[]
+  >([]);
+  const [serverMessage, setServerMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    // Tworzenie WebSocket tylko raz przy pierwszym renderze
     socketRef.current = new WebSocket("ws://localhost:8080");
 
     socketRef.current.onopen = () => {
-      console.log("Połączono z serverem websocket");
+      console.log("Połączono z serwerem WebSocket");
+      socketRef.current?.send(JSON.stringify({type:"topic",topic}))
     };
 
     socketRef.current.onmessage = (event) => {
-      setServerMessage(event.data);
+      const datas = JSON.parse(event.data);
+      setConversation((prev) => [...prev, datas]);
     };
 
     socketRef.current.onerror = (error) => {
@@ -27,26 +34,51 @@ function Learn() {
     };
 
     return () => {
-      socketRef.current?.close(); // Zamknięcie połączenia przy odmontowaniu komponentu
+      socketRef.current?.close();
     };
   }, []);
 
+  useEffect(() => {
+    if (serverMessage) {
+      setConversation((prev) => [
+        ...prev,
+        {type:"message", message: serverMessage, maker: "FlashAI" },
+      ]);
+    }
+  }, [serverMessage]);
+
   const handleSendMessage = () => {
     if (socketRef.current && message) {
-      console.log(message);
-      socketRef.current.send(message); // Używanie istniejącego połączenia
-      setMessage(""); // Czyszczenie pola wiadomości
+      const messageObj = {type:"message" ,message, maker: "user" };
+      setConversation((prev) => [...prev, messageObj]);
+      socketRef.current.send(JSON.stringify(messageObj));
+      setMessage("");
     }
   };
-
+  useEffect(() => {
+    console.log("conv", conversation);
+  }, [conversation]);
   return (
     <div>
       <NavBar />
-      <p>{serverMessage}</p>
+      <div className={CSS.conversation}>
+        {conversation.map((msg, index) => (
+          <p
+            key={index}
+            className={
+              msg.maker === "user" ? CSS.userMessage : CSS.serverMessage
+            }
+          >
+            <strong>{msg.maker}: </strong>
+            {msg.message}
+          </p>
+        ))}
+      </div>
       <input
         id="messs"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
+        placeholder="Wpisz wiadomość..."
       />
       <button onClick={handleSendMessage}>Send Mess</button>
     </div>
