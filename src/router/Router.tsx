@@ -9,6 +9,8 @@ import Flashcards from "../pages/flashcards";
 import Flashcard from "../pages/flashcard";
 import Login from "../pages/login";
 import Registration from "../pages/registration";
+import LearnTopics from "../pages/LearnWithAI/learnTopics";
+
 
 function Router() {
   const [units, setUnits] = useState<string[]>([]);
@@ -49,6 +51,10 @@ function Router() {
       path: "/register",
       element: <Registration />,
     },
+    {
+      path: "/home/learn",
+      element: <LearnTopics/>
+    }
   ];
 
   const router = createBrowserRouter(routes);

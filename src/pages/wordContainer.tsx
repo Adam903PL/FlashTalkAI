@@ -34,6 +34,21 @@ function WordContainer({ word, onReload, known }: WordContainerProps) {
       });
   };
 
+  // const rotatediv = () => {
+  //   const card = document.querySelector(`.${flashcardStyles.box}`);
+
+  //   if (!card) return;
+
+  //   if (!card.classList.contains('rotated-180')) {
+  //     card.classList.add('rotated-180');
+  //   } else if (card.classList.contains('rotated-180')) {
+  //     card.classList.remove('rotated-180');
+  //     card.classList.add('rotated-360');
+  //   } else {
+  //     card.classList.remove('rotated-360');
+  //   }
+  // };
+
   return (
     <div
       className={`${flashcardStyles.box} ${
@@ -41,7 +56,7 @@ function WordContainer({ word, onReload, known }: WordContainerProps) {
       }`}
     >
       <div className={flashcardStyles.wordContect}>
-        <p>{word.word}</p>
+        <p onClick={() => {return 0 }}>{word.word}</p>
         <div className={flashcardStyles.linie2}></div>
         <p>{word.translation}</p>
       </div>
