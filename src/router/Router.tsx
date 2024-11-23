@@ -10,7 +10,7 @@ import Flashcard from "../pages/flashcard";
 import Login from "../pages/login";
 import Registration from "../pages/registration";
 import LearnTopics from "../pages/LearnWithAI/learnTopics";
-
+import LearnAi from "../pages/LearnWithAI/learnAi"
 
 function Router() {
   const [units, setUnits] = useState<string[]>([]);
@@ -53,7 +53,11 @@ function Router() {
     },
     {
       path: "/home/learn",
-      element: <LearnTopics/>
+      element: <LearnTopics/>,
+    },
+    {
+      path: "/home/learn/:lesson", 
+      element: <LearnAi /> 
     }
   ];
 

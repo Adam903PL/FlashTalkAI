@@ -1,88 +1,68 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import NavBar from "../navbar";
 import CSS from "../css/learnAI.module.css";
-
-function Learn() {
-  const topic = "Do you have any animals";
-
-  const [conversation, setConversation] = useState<
-    { message: string; maker: string }[]
-  >([]);
-  const [serverMessage, setServerMessage] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
-  const socketRef = useRef<WebSocket | null>(null);
-
+import { Navigate, useNavigate } from "react-router-dom";
+function LearnTopics() {
+  const [topics, setTopics] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
-    socketRef.current = new WebSocket("ws://localhost:8080");
-
-    socketRef.current.onopen = () => {
-      console.log("Połączono z serwerem WebSocket");
-      socketRef.current?.send(JSON.stringify({type:"topic",topic}))
-    };
-
-    socketRef.current.onmessage = (event) => {
-      const datas = JSON.parse(event.data);
-      setConversation((prev) => [...prev, datas]);
-    };
-
-    socketRef.current.onerror = (error) => {
-      console.error("Błąd WebSocket:", error);
-    };
-
-    socketRef.current.onclose = () => {
-      console.log("Połączenie WebSocket zostało zamknięte.");
-    };
-
-    return () => {
-      socketRef.current?.close();
-    };
+    fetch("http://localhost:4444/getAllTopics")
+      .then((resp) => resp.json())
+      .then((data) => {
+        setTopics(data.data);
+      })
+      .catch((err) => console.error("Error fetching topics:", err));
   }, []);
 
-  useEffect(() => {
-    if (serverMessage) {
-      setConversation((prev) => [
-        ...prev,
-        {type:"message", message: serverMessage, maker: "FlashAI" },
-      ]);
-    }
-  }, [serverMessage]);
+  const renderTopicsByLevel = (level, start, end) => {
+    return (
+      <>
+        <h2 className={CSS.levelTitle}>Level {level}</h2>
+        <div className={CSS.levelSection}>
+          {topics.slice(start, end).map((topic, index) => {
+            let topicIndex;
 
-  const handleSendMessage = () => {
-    if (socketRef.current && message) {
-      const messageObj = {type:"message" ,message, maker: "user" };
-      setConversation((prev) => [...prev, messageObj]);
-      socketRef.current.send(JSON.stringify(messageObj));
-      setMessage("");
-    }
-  };
-  useEffect(() => {
-    console.log("conv", conversation);
-  }, [conversation]);
-  return (
-    <div>
-      <NavBar />
-      <div className={CSS.conversation}>
-        {conversation.map((msg, index) => (
-          <p
-            key={index}
-            className={
-              msg.maker === "user" ? CSS.userMessage : CSS.serverMessage
+            // Warunkowe obliczenie indeksu na podstawie poziomu
+            if (level === 1) {
+              topicIndex = index + 1;
+            } else if (level === 2) {
+              topicIndex = index + 1 + 25;
+            } else if (level === 3) {
+              topicIndex = index + 1 + 50;
+            } else if (level === 4) {
+              topicIndex = index + 1 + 75;
             }
-          >
-            <strong>{msg.maker}: </strong>
-            {msg.message}
-          </p>
-        ))}
+
+            return (
+              <div
+                className={CSS.topicCard}
+                key={index}
+                onClick={() => {
+                  if (topicIndex !== undefined) {
+                    navigate(`/home/learn/${topicIndex}`);
+                  }
+                }}
+              >
+                <p>{topic.topicdescription}</p>
+              </div>
+            );
+          })}
+        </div>
+      </>
+    );
+  };
+
+  return (
+    <>
+      <NavBar />
+      <div className={CSS.container}>
+        {renderTopicsByLevel(1, 0, 25)}
+        {renderTopicsByLevel(2, 25, 50)}
+        {renderTopicsByLevel(3, 50, 75)}
+        {renderTopicsByLevel(4, 75, 100)}
       </div>
-      <input
-        id="messs"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Wpisz wiadomość..."
-      />
-      <button onClick={handleSendMessage}>Send Mess</button>
-    </div>
+    </>
   );
 }
 
-export default Learn;
+export default LearnTopics;
