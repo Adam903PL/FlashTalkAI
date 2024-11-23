@@ -21,16 +21,25 @@
     font-family: 'Arial', sans-serif;
     transition: transform 0.5s ease;
     position: relative;
+    animation: rotate360 0.5s ease-in-out forwards;
 }
 
 .cardLearn:hover {
     transform: scale(1.05);
 }
-.cardLearn.rotate {
-    animation: rotateToScreen 0.6s ease-out; /* Wywołanie animacji */
+
+
+@keyframes rotate360 {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50% {
+    transform: rotateX(180deg);
+  }
+  100% {
+    transform: rotateX(360deg);
+  }
 }
-
-
 
 /* Strzałki */
 .arrow {
@@ -86,6 +95,7 @@
 
 
 
+/* Styl dla głównego kontenera */
 .box {
   width: 80%;
   margin: 20px auto;
@@ -93,7 +103,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: #1e1e1e;
-  border: 1px solid #333;
+  border: 2px solid #333;
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -101,36 +111,28 @@
   transition: all 0.3s ease;
 }
 
-.box:hover {
-  border-color: #0099ff;
-  box-shadow: 0 4px 16px rgba(0, 153, 255, 0.5);
+/* Obramowanie dla znanego słówka */
+.box.known {
+  border-color: #28a745; /* Zielony */
+  box-shadow: 0 4px 16px rgba(40, 167, 69, 0.5);
 }
 
-.wordContect {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: 70%;
-  word-wrap: break-word;
+/* Obramowanie dla nieznanego słówka */
+.box.unknown {
+  border-color: #dc3545; /* Czerwony */
+  box-shadow: 0 4px 16px rgba(220, 53, 69, 0.5);
 }
 
-.wordContect p {
-  margin: 8px 0;
-  font-size: 16px;
-  color: #fff;
+.wordEmoji button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.linie {
-  width: 100%;
-  height: 1px;
-  background-color: #333;
-  margin: 8px 0;
-}
-
-.wordEmoji {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+.wordEmoji button:hover {
+  transform: scale(1.1);
 }
 
 .wordEmoji img {
@@ -140,6 +142,7 @@
   transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
   filter: brightness(0.8);
 }
+
 
 .wordEmoji img:hover {
   transform: scale(1.1);
@@ -154,10 +157,15 @@
 }
 
 
-
 .linie{
   width: 80%;
   margin: 0 10% 0 10%;
   height: 2px;
   background-color: #333;
+}
+.linie2 {
+  width: 100%;
+  height: 1px;
+  background-color: #333;
+  margin: 8px 0;
 }

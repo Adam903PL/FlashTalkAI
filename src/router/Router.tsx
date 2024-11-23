@@ -11,6 +11,8 @@ import Login from "../pages/login";
 import Registration from "../pages/registration";
 import {Levels} from "../SpeakingWithAI/SpeakingLevels";
 import { SpeakingAi } from "../SpeakingWithAI/SpeakingAi";
+import LearnTopics from "../pages/LearnWithAI/learnTopics";
+
 
 function Router() {
   const [units, setUnits] = useState<string[]>([]);
@@ -51,6 +53,10 @@ function Router() {
       path: "/register",
       element: <Registration />,
     },
+    {
+      path: "/home/learn",
+      element: <LearnTopics/>
+    }
     {
       path: "/Speaking",
       element: <Levels />,

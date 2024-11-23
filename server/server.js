@@ -8,6 +8,14 @@ const session = require('express-session');
 const fs = require('fs');
 const cors = require('cors');
 const { default: axios } = require("axios");
+
+
+
+
+
+
+  
+
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
@@ -195,6 +203,9 @@ app.post("/changeKnown", async (req, res) => {
     }
 });
 
+
+
+
 app.post('/getAllWords', async (req, res) => {
     if (!req.session.user || !req.session.user.userid) {
         return res.status(401).json({ success: false, message: "Brak autoryzacji" });
@@ -204,7 +215,7 @@ app.post('/getAllWords', async (req, res) => {
 
     try {
         const client = await pool.connect();
-        const query = "SELECT * FROM user_flashcards WHERE user_id = $1 AND flashcard_id BETWEEN $2 AND $3";
+        const query = "SELECT * FROM user_flashcards WHERE user_id = $1 AND flashcard_id BETWEEN $2 AND $3 ORDER BY flashcard_id ASC";
         const values = [req.session.user.userid, from, to];
         
         console.log("Wykonane zapytanie:", query);
@@ -224,21 +235,43 @@ app.post('/getAllWords', async (req, res) => {
 });
 
 
-app.get("/api/tematData", async (req, res) => {
-  try {
-    const client = await pool.connect();
-    const query = "select * from public.conversation_topics";
-    const response = await client.query(query);
-    res.json({ data: response.rows });
+app.get('/api/tematData', async (req,res)=>{
+    try{
+        const client = await pool.connect();
+        const query = "select * from public.conversation_topics"
+        const response = await client.query(query);
+        res.json({data:response.rows})
 
-    client.release();
-  } catch (err) {
-    res.json({ messsage: err });
-  }
-});
+        client.release(); 
+    } catch (err){
+        res.json({messsage:err})
+    }
+} )
+
+
+
+app.post('/api/learn_with_ai', async (req,res)=>{
+    try{
+        
+
+        
+    } catch (err){
+        console.log("Error during AI proces:",err)
+    }
+})
+
+
+
+
+
+
+
+
 
 
 
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
+
+

@@ -1,27 +1,17 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import volumeMax from "../assets/volume-max.svg";
 import flashcardStyles from "./css/flashcardlearn.module.css";
 
-type Word = {
-  id: number;
-  word: string;
-  translation: string;
-};
-
-type ResponseData = {
-  success: boolean;
-  message: string;
-};
-
-
 type WordContainerProps = {
-  word: any; 
-  onReload: () => void; 
+  word: { id: number; word: string; translation: string };
+  onReload: () => void;
+  known: boolean;
 };
 
-function WordContainer({ word, onReload }: WordContainerProps) {
+function WordContainer({ word, onReload, known }: WordContainerProps) {
+  const [isKnown, setIsKnown] = useState(known);
+
   const changeIsKnown = (wordId: number) => {
-    console.log("Datas to send:", wordId);
     fetch("http://localhost:4444/changeKnown", {
       method: "POST",
       credentials: "include",
@@ -36,32 +26,46 @@ function WordContainer({ word, onReload }: WordContainerProps) {
         }
         return response.json();
       })
-      .then((data: ResponseData) => {
-        console.log(data);
+      .then(() => {
+        setIsKnown((prev) => !prev);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
+  // const rotatediv = () => {
+  //   const card = document.querySelector(`.${flashcardStyles.box}`);
+
+  //   if (!card) return;
+
+  //   if (!card.classList.contains('rotated-180')) {
+  //     card.classList.add('rotated-180');
+  //   } else if (card.classList.contains('rotated-180')) {
+  //     card.classList.remove('rotated-180');
+  //     card.classList.add('rotated-360');
+  //   } else {
+  //     card.classList.remove('rotated-360');
+  //   }
+  // };
+
   return (
-    <div className={flashcardStyles.box} key={word.id}>
+    <div
+      className={`${flashcardStyles.box} ${
+        isKnown ? flashcardStyles.known : flashcardStyles.unknown
+      }`}
+    >
       <div className={flashcardStyles.wordContect}>
-        <p>{word.word}</p>
-        <div className={flashcardStyles.linie}></div>
+        <p onClick={() => {return 0 }}>{word.word}</p>
+        <div className={flashcardStyles.linie2}></div>
         <p>{word.translation}</p>
       </div>
       <div className={flashcardStyles.wordEmoji}>
-        <button
-          onClick={() => {
-            changeIsKnown(word.id); 
-            onReload(); 
-          }}
-        >
-          {"<3"}
+        <button onClick={() => changeIsKnown(word.id)}>
+          {isKnown ? "✔️" : "❌"}
         </button>
-        <img alt="volumeMax" src={volumeMax} />
       </div>
+      {/* <img alt="volumeMax" src={volumeMax} /> */}
     </div>
   );
 }
