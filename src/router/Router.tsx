@@ -56,7 +56,7 @@ function Router() {
     {
       path: "/home/learn",
       element: <LearnTopics/>
-    }
+    },
     {
       path: "/Speaking",
       element: <Levels />,
