@@ -3,13 +3,22 @@ const dotenv = require("dotenv");
 const readline = require("readline");
 const WebSocket = require("ws");
 const server = new WebSocket.Server({ port: 8080 });
+const { Pool } = require('pg');
+const pool = new Pool({
+    user: 'flashtalkai_user',
+    host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
+    database: 'flashtalkai',
+    password: 'HgFSozb5BSqc6EZDDau4uJy0gLV9uPTU',
+    port: 5432,
+    ssl: { rejectUnauthorized: false }
+});
 
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
 
 const chatFunction = `
 1 You are a chatbot that talks and learns German.
-2.At the beginning of the conversation, you will be given a topic and level 1-5, which you are to use in the form of “Topic:” “Level:”. The topic can be about anything, the idea is for the user to practice writing in English.
+2.At the beginning of the conversation, you will be given a topic and level 1-5, which you are to use in the form of “Topic:” “Level:”. The topic can be about anything, the idea is for the use. Level is optional
 3.When you receive a topic, you determine its curiosity, and then choose how long you want the conversation to last (10-20 messages). Return “Messages-count:” followed by the number of messages.
 4. calculate (number of messages * 0.4) rounded up, and this will be the number of errors the user can make.
 5. grammatical error is +1 point to errors, if the user responds completely off topic +3 points to errors.
@@ -18,6 +27,11 @@ const chatFunction = `
 8. if the user reaches the end of the test, return “Test passed”.
 9. check if the user sticks to the topic, return “Please stick to the topic of conversation” if not. If the user goes off topic 3 times, return “Test not passed”.
 10. only in the first answer you have to give the basic information such as messages-count and how many mistakes the user can make, and then you have to send only the question to which the user has opd nothing more question to the user and ask questions in German.
+11.Never write level
+Allways answer in this format:
+Messages_count: {remaining messages}
+Errors: {remaining errors}
+Question: {next question}
 `;
 
 async function callChatGPT(messages) {
@@ -37,6 +51,7 @@ async function callChatGPT(messages) {
         const result = response.data.choices[0].message.content;
         const usage = response.data.usage;
         console.log(`Tokens used: ${usage.total_tokens} (Prompt: ${usage.prompt_tokens}, Completion: ${usage.completion_tokens})`);
+        console.log(result)
         return result;
     } catch (error) {
         console.error("Error calling ChatGPT API:", error.response ? error.response.data : error.message);
@@ -54,16 +69,30 @@ server.on("connection", (socket) => {
         console.log("Wiadomość po konwersji:", message);
 
         if (message.type === "topic") {
-            console.log("Conversaton topic:", message.topic);
+            try{
+                const client = await pool.connect();
+                const query = "select topicdescription from learn_ai_topics where topicid = $1"
+                const values = [message.topic.lesson]
+                const responseDB = await client.query(query,values);
+                console.log("Topic from DB:",responseDB.rows)
 
-            // Send the topic to the ChatGPT system
-            messages.push({ role: "user", content: `Topic: ${message.topic}` });
-            const botResponse = await callChatGPT(messages);
-            const response = { message: botResponse, maker: "FlashAI" };
-            socket.send(JSON.stringify(response));
+                const mainTopic = responseDB.rows[0].topicdescription
+        
+                client.release(); 
+
+
+                console.log("Conversaton topic:", mainTopic);
+
+                messages.push({ role: "user", content: `Topic: ${mainTopic}` });
+                const botResponse = await callChatGPT(messages);
+                const response = { message: botResponse, maker: "FlashAI" };
+                socket.send(JSON.stringify(response));
+            } catch (err){
+                console.log("Eroro during select topic from DB:",err)
+            }
+
 
         } else if (message.type === "message") {
-            // Forward the user message to ChatGPT
             messages.push({ role: "user", content: message.message });
             const botResponse = await callChatGPT(messages);
             const response = { message: botResponse, maker: "FlashAI" };
@@ -79,3 +108,4 @@ server.on("connection", (socket) => {
 server.on("listening", () => {
     console.log("Serwer nasłuchuje na porcie 8080");
 });
+ 

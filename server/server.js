@@ -249,20 +249,18 @@ app.get('/api/tematData', async (req,res)=>{
 } )
 
 
-
-app.post('/api/learn_with_ai', async (req,res)=>{
+app.get('/getAllTopics', async (req,res)=>{
     try{
-        
+        const client = await pool.connect();
+        const query = "select * from learn_ai_topics"
+        const response = await client.query(query);
+        res.json({data:response.rows})
 
-        
-    } catch (err){
-        console.log("Error during AI proces:",err)
+        client.release(); 
+    } catch(err){
+        console.log(err)
     }
 })
-
-
-
-
 
 
 
