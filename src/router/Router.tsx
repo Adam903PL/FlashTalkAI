@@ -12,7 +12,7 @@ import Registration from "../pages/registration";
 import {Levels} from "../SpeakingWithAI/SpeakingLevels";
 import { SpeakingAi } from "../SpeakingWithAI/SpeakingAi";
 import LearnTopics from "../pages/LearnWithAI/learnTopics";
-
+import LearnAi from "../pages/LearnWithAI/learnAi"
 
 function Router() {
   const [units, setUnits] = useState<string[]>([]);
