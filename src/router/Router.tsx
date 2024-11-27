@@ -57,6 +57,10 @@ function Router() {
       path: "/home/learn",
       element: <LearnTopics/>
     },
+     {
+      path: "/home/learn/:lesson", 
+      element: <LearnAi /> 
+    },
     {
       path: "/Speaking",
       element: <Levels />,

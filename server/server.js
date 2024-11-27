@@ -248,6 +248,12 @@ app.get('/api/tematData', async (req,res)=>{
     }
 } )
 
+app.post("/api/forwardToAi", (req, res) => {
+  console.log(req.body); // Zaloguj dane przesyłane przez klienta
+  res.json({ success: true, message: "Pytanie przesłane!" });
+});
+
+
 
 app.get('/getAllTopics', async (req,res)=>{
     try{

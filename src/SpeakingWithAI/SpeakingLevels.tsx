@@ -27,7 +27,7 @@ export const Levels = () => {
       {subjects.length > 0 ? (
         <ul>
           {subjects.map((subject) => (
-            <ChooseLevel data={subject.question}/>
+            <ChooseLevel key={subject.id} data={subject.question}/>
           ))}
         </ul>
       ) : (
