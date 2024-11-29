@@ -1,6 +1,6 @@
 import { useState } from "react";
 import volumeMax from "../assets/volume-max.svg";
-import flashcardStyles from "./css/flashcardlearn.module.css";
+import "./css/flashcardlearn.css";
 
 type WordContainerProps = {
   word: { id: number; word: string; translation: string };
@@ -51,16 +51,16 @@ function WordContainer({ word, onReload, known }: WordContainerProps) {
 
   return (
     <div
-      className={`${flashcardStyles.box} ${
-        isKnown ? flashcardStyles.known : flashcardStyles.unknown
+      className={`"box" ${
+        isKnown ? "known" : "unknown"
       }`}
     >
-      <div className={flashcardStyles.wordContect}>
+      <div className="wordContect">
         <p onClick={() => {return 0 }}>{word.word}</p>
-        <div className={flashcardStyles.linie2}></div>
+        <div className="linie2"></div>
         <p>{word.translation}</p>
       </div>
-      <div className={flashcardStyles.wordEmoji}>
+      <div className="wordEmoji">
         <button onClick={() => changeIsKnown(word.id)}>
           {isKnown ? "✔️" : "❌"}
         </button>

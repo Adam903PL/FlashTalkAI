@@ -1,9 +1,11 @@
 const axios = require("axios");
 const dotenv = require("dotenv");
-const readline = require("readline");
 const WebSocket = require("ws");
-const server = new WebSocket.Server({ port: 8080 });
-const { Pool } = require('pg');
+const { Pool } = require("pg");
+
+dotenv.config();
+// const apiKey = process.env.OPENAI_API_KEY;
+
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
@@ -13,26 +15,7 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
-dotenv.config();
-const apiKey = process.env.OPENAI_API_KEY;
-
-const chatFunction = `
-1 You are a chatbot that talks and learns German.
-2.At the beginning of the conversation, you will be given a topic and level 1-5, which you are to use in the form of “Topic:” “Level:”. The topic can be about anything, the idea is for the use. Level is optional
-3.When you receive a topic, you determine its curiosity, and then choose how long you want the conversation to last (10-20 messages). Return “Messages-count:” followed by the number of messages.
-4. calculate (number of messages * 0.4) rounded up, and this will be the number of errors the user can make.
-5. grammatical error is +1 point to errors, if the user responds completely off topic +3 points to errors.
-6.If the user exhausts the number of available errors, the chat will return “Test failed” and nothing more.
-7.After calculating the errors, start a conversation on the topic, ask only questions.
-8. if the user reaches the end of the test, return “Test passed”.
-9. check if the user sticks to the topic, return “Please stick to the topic of conversation” if not. If the user goes off topic 3 times, return “Test not passed”.
-10. only in the first answer you have to give the basic information such as messages-count and how many mistakes the user can make, and then you have to send only the question to which the user has opd nothing more question to the user and ask questions in German.
-11.Never write level
-Allways answer in this format:
-Messages_count: {remaining messages}
-Errors: {remaining errors}
-Question: {next question}
-`;
+const server = new WebSocket.Server({ port: 8080 });
 
 async function callChatGPT(messages) {
     const url = "https://api.openai.com/v1/chat/completions";
@@ -48,11 +31,7 @@ async function callChatGPT(messages) {
 
     try {
         const response = await axios.post(url, data, { headers });
-        const result = response.data.choices[0].message.content;
-        const usage = response.data.usage;
-        console.log(`Tokens used: ${usage.total_tokens} (Prompt: ${usage.prompt_tokens}, Completion: ${usage.completion_tokens})`);
-        console.log(result)
-        return result;
+        return response.data.choices[0].message.content;
     } catch (error) {
         console.error("Error calling ChatGPT API:", error.response ? error.response.data : error.message);
         throw error;
@@ -60,52 +39,118 @@ async function callChatGPT(messages) {
 }
 
 server.on("connection", (socket) => {
-    console.log("Połączono");
+    console.log("Client connected");
 
-    let messages = [{ role: "system", content: chatFunction }];
-    
+    let messagesCount = 0;
+    let errors = 0;
+    let conversationHistory = [];
+
     socket.on("message", async (data) => {
         const message = JSON.parse(data.toString("utf-8"));
-        console.log("Wiadomość po konwersji:", message);
 
         if (message.type === "topic") {
-            try{
+            try {
                 const client = await pool.connect();
-                const query = "select topicdescription from learn_ai_topics where topicid = $1"
-                const values = [message.topic.lesson]
-                const responseDB = await client.query(query,values);
-                console.log("Topic from DB:",responseDB.rows)
+                const query = "SELECT topicdescription FROM learn_ai_topics WHERE topicid = $1";
+                const values = [message.topic.lesson];
+                const responseDB = await client.query(query, values);
+                client.release();
 
-                const mainTopic = responseDB.rows[0].topicdescription
-        
-                client.release(); 
+                if (responseDB.rows.length === 0) {
+                    socket.send(JSON.stringify({ error: "No topic found for this ID" }));
+                    return;
+                }
 
+                const topicDescription = responseDB.rows[0].topicdescription;
 
-                console.log("Conversaton topic:", mainTopic);
+                const chatFunction = `
+                    You are a chatbot that initiates a German learning test.
+                    1. The user provides a topic.
+                    2. Determine "Messages_count" (number of messages for the conversation between 5 and 15).
+                    3. Calculate "Errors" as Messages_count * 0.4, rounded up.
+                    4. Return the Messages_count and Errors in the format:
+                       Messages_count: {number}
+                       Errors: {number}
+                       Question: {first question in German}.
+                    5. Only provide the above data, without extra explanation.
+                `;
 
-                messages.push({ role: "user", content: `Topic: ${mainTopic}` });
+                const messages = [{ role: "assistant", content: chatFunction }, { role: "user", content: `Topic: ${topicDescription}` }];
                 const botResponse = await callChatGPT(messages);
-                const response = { message: botResponse, maker: "FlashAI" };
-                socket.send(JSON.stringify(response));
-            } catch (err){
-                console.log("Eroro during select topic from DB:",err)
+
+                // Extract Messages_count and Errors
+                const match = botResponse.match(/Messages_count:\s*(\d+)\s*Errors:\s*(\d+)/);
+                if (match) {
+                    messagesCount = parseInt(match[1], 10);
+                    errors = parseInt(match[2], 10);
+                }
+
+                // Send response back to the client
+                conversationHistory.push(`Question: ${botResponse.split("Question: ")[1]}`);
+                socket.send(JSON.stringify({ message: botResponse, maker: "FlashAI" }));
+            } catch (error) {
+                console.error("Error fetching topic or calling ChatGPT:", error);
             }
-
-
         } else if (message.type === "message") {
-            messages.push({ role: "user", content: message.message });
-            const botResponse = await callChatGPT(messages);
-            const response = { message: botResponse, maker: "FlashAI" };
-            socket.send(JSON.stringify(response));
+            try {
+                const chatFunction = `
+                    You are a chatbot that continues a German learning conversation.
+                    1. Receive the user's most recent answer and evaluate it:
+                       - Add 1 to Errors if the answer contains a grammatical mistake.
+                       - Add 3 to Errors if the answer is off-topic.
+                    2. Always ensure the conversation sticks to the topic. If the user's response is off-topic, return:
+                       "Please stick to the topic of conversation."
+                    3. Use the history of the conversation (previous questions) to generate a new, related question in German.
+                    4. Respond in the format:
+                       Errors_counter: {number}
+                       Question: {new question based on the conversation history}.
+                    5. If Errors reaches 0, return only "Test not passed".
+                    6. If Messages_count reaches 0 and Errors > 0, return only "Test passed".
+                `;
+
+                const messages = [
+                    { role: "assistant", content: chatFunction },
+                    { role: "user", content: `Previous conversation history: ${conversationHistory.join(" ")}` },
+                    { role: "user", content: message.message }
+                ];
+
+                const botResponse = await callChatGPT(messages);
+
+                // Extract Errors_counter and next question
+                const match = botResponse.match(/Errors_counter:\s*(\d+)\s*Question:\s*(.+)/);
+                if (match) {
+                    const errorsCounter = parseInt(match[1], 10);
+                    const nextQuestion = match[2];
+
+                    // Update counters
+                    errors -= errorsCounter;
+                    messagesCount--;
+
+                    // Check conditions
+                    if (errors <= 0) {
+                        socket.send(JSON.stringify({ message: "Test not passed", maker: "FlashAI" }));
+                    } else if (messagesCount === 0 && errors > 0) {
+                        socket.send(JSON.stringify({ message: "Test passed", maker: "FlashAI" }));
+                    } else {
+                        // Update conversation history and send the next question
+                        conversationHistory.push(nextQuestion);
+                        socket.send(JSON.stringify({
+                            message: `Messages_count: ${messagesCount}, Errors: ${errors}, Question: ${nextQuestion}`,
+                            maker: "FlashAI"
+                        }));
+                    }
+                } else {
+                    console.error("Failed to parse bot response:", botResponse);
+                }
+            } catch (error) {
+                console.error("Error processing message:", error);
+            }
         }
     });
 
     socket.on("close", () => {
-        console.log("Połączenie zamknięte");
+        console.log("Connection closed");
     });
 });
 
-server.on("listening", () => {
-    console.log("Serwer nasłuchuje na porcie 8080");
-});
- 
+console.log("Server listening on port 8080");

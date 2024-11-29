@@ -12,28 +12,57 @@
 }
 
 
+:global(*) {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-.mainContainer {
-  padding: 30px;
+:global(html),
+:global(body) {
+  height: 100%;
+  font-family: "Arial", sans-serif;
+  color: #fff;
+  background-color: #121212;
+}
+
+.homeContainer {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  min-height: 100vh;
+}
+
+.mainContainer {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .userStats {
   display: flex;
   gap: 20px;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .statCard {
-  background-color: #333;
+  background-color: #1e1e1e;
   padding: 20px;
   border-radius: 10px;
-  width: 30%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  flex: 1;
+  min-width: 250px;
   text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: fadeIn 1s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
 }
 
 .statCard h3 {
@@ -44,69 +73,66 @@
 .statCard p {
   font-size: 24px;
   font-weight: bold;
+  color: #66ccff;
 }
 
 .mainOptions {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
 }
 
 .optionCard {
-  background-color: #333;
+  background-color: #1e1e1e;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .optionCard:hover {
-  background-color: #444;
-  transform: scale(1.05);
+  background-color: #333;
+  transform: translateY(-5px);
 }
 
 .optionCard h3 {
   font-size: 20px;
   margin-bottom: 10px;
+  color: #66ccff;
 }
 
 .optionCard p {
   font-size: 16px;
+  color: #ddd;
 }
 
-@keyframes slideDown {
-  0% {
+@keyframes fadeIn {
+  from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(10px);
   }
-  100% {
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 @media (max-width: 768px) {
+  .userStats {
+    flex-direction: column;
+    gap: 15px;
+  }
+
   .mainOptions {
     grid-template-columns: 1fr 1fr;
   }
-
-  .userStats {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .statCard {
-    width: 100%;
-  }
 }
 
+@media (max-width: 480px) {
+  .mainOptions {
+    grid-template-columns: 1fr;
+  }
+}
+  

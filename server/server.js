@@ -8,14 +8,9 @@ const session = require('express-session');
 const fs = require('fs');
 const cors = require('cors');
 const { default: axios } = require("axios");
-
-
-
-
-
+const dotenv = require('dotenv').config();
 
   
-
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
@@ -24,6 +19,7 @@ const pool = new Pool({
     port: 5432,
     ssl: { rejectUnauthorized: false }
 });
+
 
 app.use(session({
     secret: "secret-key",

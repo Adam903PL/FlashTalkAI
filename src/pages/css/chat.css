@@ -1,0 +1,142 @@
+
+  
+  /* Global styles */
+  :global(body) {
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    background: linear-gradient(135deg, #0099ff, #121212);
+    color: #fff;
+  }
+  
+  :global(*) {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  .conversation {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+    max-width: 90vw;
+    min-height: 80vh;
+    margin: 20px auto;
+    background-color: rgba(30, 30, 30, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid #333;
+    overflow-y: auto;
+    max-height: 70vh;
+    position: relative; /* Dodano pozycjonowanie */
+  }
+  
+  .conversation::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .conversation::-webkit-scrollbar-thumb {
+    background: #0099ff;
+    border-radius: 5px;
+  }
+  
+  .conversation::-webkit-scrollbar-thumb:hover {
+    background: #66ccff;
+  }
+  
+  /* Message styles */
+  .userMessage {
+    align-self: flex-end;
+    background-color: #0099ff;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 15px 15px 0 15px;
+    max-width: 75%;
+    margin: 10px 0;
+    font-size: 16px;
+    word-wrap: break-word;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .serverMessage {
+    align-self: flex-start;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 15px;
+    border-radius: 15px 15px 15px 0;
+    max-width: 75%;
+    margin: 10px 0;
+    font-size: 16px;
+    word-wrap: break-word;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Input and button styles */
+  .messs {
+    width: calc(100% - 120px);
+    padding: 15px;
+    margin: 15px 10px 15px 0;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background-color: #2c2c2c;
+    color: #fff;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .messs:focus {
+    border-color: #0099ff;
+    outline: none;
+  }
+  
+  .messs:hover {
+    border-color: #0099ff;
+  }
+  
+  .send_mes {
+    padding: 15px 20px;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+  }
+  
+  .send_mes:hover {
+    background-color: #0099ff;
+    border-color: #0099ff;
+  }
+  
+  .send_mes:focus {
+    outline: none;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 500px) {
+    .conversation {
+      width: 90%;
+      padding: 15px;
+    }
+  
+    .messs {
+      width: calc(100% - 90px);
+    }
+  }
+  
+  .lastchildDiv {
+    position: absolute; /* Ustawiamy jako absolutny */
+    bottom: 0; /* Umieszczamy na dole kontenera */
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: rgba(30, 30, 30, 0.95); /* Dodaj lekki cień */
+    padding: 10px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  }
+  

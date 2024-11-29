@@ -48,7 +48,7 @@ const Home: React.FC = () => {
           <div
             className={homeStyles.optionCard}
             onClick={() => {
-              window.location.href = "/home/learn";
+              navigate("/home/learn")
             }}
           >
             <h3>Ucz się AI</h3>
@@ -57,7 +57,7 @@ const Home: React.FC = () => {
           <div
             className={homeStyles.optionCard}
             onClick={() => {
-              window.location.href = "/home/voice-practice";
+              navigate("/home/voice-practice")
             }}
           >
             <h3>Praktyka Głosowa</h3>
@@ -66,7 +66,7 @@ const Home: React.FC = () => {
           <div
             className={homeStyles.optionCard}
             onClick={() => {
-              window.location.href = "/home/flashcards";
+              navigate("/home/flashcards")
             }}
           >
             <h3>Fiszki</h3>
@@ -75,7 +75,7 @@ const Home: React.FC = () => {
           <div
             className={homeStyles.optionCard}
             onClick={() => {
-              window.location.href = "/home/test";
+              navigate("/home/test")
             }}
           >
             <h3>Test</h3>
