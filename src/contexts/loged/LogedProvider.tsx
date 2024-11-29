@@ -1,8 +1,9 @@
 import { useEffect, useState, type PropsWithChildren } from "react";
 import { LogedContext, type logedType } from "./LogedContext";
-import { useLocation, useNavigate } from "react-router-dom"; 
+
+
 export const LogedProvider = ({ children }: PropsWithChildren) => {
-  const [loged, setLoged] = useState<boolean>(false);
+  const [loged, setLogeds] = useState<boolean>(false);
 
   useEffect(() => {
     fetch("http://localhost:4444/loginsucces", {
@@ -11,12 +12,18 @@ export const LogedProvider = ({ children }: PropsWithChildren) => {
       .then((resp) => resp.json())
       .then((data) => {
         if (data.succes) {
-          setLoged(data.succes);
+          setLogeds(data.succes);
         }
       });
   }, []);
 
-  const value: logedType = { loged };
+  // Funkcja do zmiany stanu logowania
+  const setloged = (status: boolean) => {
+    setLogeds(status);
+  };
+
+  const value: logedType = { loged, setloged };
+
 
   return <LogedContext.Provider value={{ islogin: value }}>{children}</LogedContext.Provider>;
 };

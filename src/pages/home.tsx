@@ -8,7 +8,7 @@ import { useLoged } from "../contexts/loged/useLoged";
 const Home: React.FC = () => {
   const { list, setPoint } = usePoint();
 
-  const {loged} = useLoged()
+  const {loged,setloged} = useLoged()
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -19,7 +19,7 @@ const Home: React.FC = () => {
     }
   }, []);
 
-
+  
   useEffect(() => {
     console.log(list,"sd")
   }, [list]);

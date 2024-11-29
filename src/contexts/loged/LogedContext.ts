@@ -2,6 +2,8 @@ import { createContext } from "react";
 
 export type logedType = {
   loged: boolean;
+  setloged: (status: boolean) => void;
+
 };
 
 type LogedContextResult = {

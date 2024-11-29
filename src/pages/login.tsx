@@ -15,7 +15,7 @@ function Login() {
   const [loading, setLoading] = useState(false); // Stan ładowania
   const [errorMessage, setErrorMessage] = useState(""); // Błąd logowania
 
-  const {loged} = useLoged()
+  const {loged,setloged} = useLoged()
 
   
   useEffect(() => {
@@ -55,7 +55,8 @@ function Login() {
       setErrorMessage("Wystąpił problem z połączeniem.");
       console.error("Błąd:", error);
     } finally {
-      setLoading(false); // Po zakończeniu procesu ładowania
+      setloged(true)
+      setLoading(false); 
     }
   };
 
