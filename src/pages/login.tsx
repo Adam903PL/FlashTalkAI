@@ -20,10 +20,10 @@ function Login() {
   
   useEffect(() => {
     if(loged == true)
-      {navigate("/home")}
-    else{
-      NaN
-    }
+      {navigate("/home")
+        console.log(loged,"ksk")
+        console.log("redirect to/home")
+      }
   }, []);
 
   const sendData = async (data: FormData) => {

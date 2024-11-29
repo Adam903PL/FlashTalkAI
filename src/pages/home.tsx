@@ -6,7 +6,7 @@ import { usePoint } from "../contexts/points/usePoints";
 import { pointsType } from "../contexts/points/PointsContext";
 import { useLoged } from "../contexts/loged/useLoged";
 const Home: React.FC = () => {
-  const { list, setPoint } = usePoint();
+
 
   const {loged,setloged} = useLoged()
 
@@ -20,10 +20,6 @@ const Home: React.FC = () => {
   }, []);
 
   
-  useEffect(() => {
-    console.log(list,"sd")
-  }, [list]);
-
 
 
 
