@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import NavBar from "../navbar";
-import CSS from "../css/learnAI.module.css";
-import { useParams } from "react-router"
+import "../css/chat.css";
+import { useParams } from "react-router";
 
 function Learn() {
-  let topic = useParams()
+  let topic = useParams();
   const [conversation, setConversation] = useState<
     { message: string; maker: string }[]
   >([]);
@@ -17,7 +17,7 @@ function Learn() {
 
     socketRef.current.onopen = () => {
       console.log("Połączono z serwerem WebSocket");
-      socketRef.current?.send(JSON.stringify({type:"topic",topic}))
+      socketRef.current?.send(JSON.stringify({ type: "topic", topic }));
     };
 
     socketRef.current.onmessage = (event) => {
@@ -42,45 +42,51 @@ function Learn() {
     if (serverMessage) {
       setConversation((prev) => [
         ...prev,
-        {type:"message", message: serverMessage, maker: "FlashAI" },
+        { type: "message", message: serverMessage, maker: "FlashAI" },
       ]);
     }
   }, [serverMessage]);
 
   const handleSendMessage = () => {
     if (socketRef.current && message) {
-      const messageObj = {type:"message" ,message, maker: "user" };
+      const messageObj = { type: "message", message, maker: "user" };
       setConversation((prev) => [...prev, messageObj]);
       socketRef.current.send(JSON.stringify(messageObj));
       setMessage("");
     }
   };
   useEffect(() => {
-    console.log("conv", conversation);
+    if (conversation[conversation.length + 1]?.message == "“Test passed") {
+      console.log("Test zdany");
+    }
   }, [conversation]);
   return (
     <div>
       <NavBar />
-      <div className={CSS.conversation}>
+      <div className="conversation">
         {conversation.map((msg, index) => (
           <p
             key={index}
             className={
-              msg.maker === "user" ? CSS.userMessage : CSS.serverMessage
+              msg.maker === "user" ? "userMessage" : "serverMessage"
             }
           >
             <strong>{msg.maker}: </strong>
             {msg.message}
           </p>
         ))}
+
+        <div className="lastchildDiv">
+        <input
+          className="messs"
+          id="messs"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Wpisz wiadomość..."  
+        />
+        <button className="send_mes" onClick={handleSendMessage}>Send Mess</button>
+        </div>
       </div>
-      <input
-        id="messs"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Wpisz wiadomość..."
-      />
-      <button onClick={handleSendMessage}>Send Mess</button>
     </div>
   );
 }

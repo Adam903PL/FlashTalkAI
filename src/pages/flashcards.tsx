@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import navStyles from "./css/headerNav.module.css";
-import cardStyles from "./css/card.module.css";
+import "./css/card.css";
 import Card from "./card";
 import NavBar from "./navbar";
 function Flashcards() {
@@ -42,9 +42,9 @@ function Flashcards() {
 
 
       {/* Flashcards */}
-      <div className={cardStyles.flashcards}>
+      <div className="flashcards">
         {units.map((data: string, index) => (
-          
+
           <Card key={index} unit={data} />
         ))}
       </div>

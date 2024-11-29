@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import navStyles from "./css/headerNav.module.css";
+import "./css/headerNav.css";
 
 function NavBar() {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
@@ -13,27 +13,27 @@ function NavBar() {
   return (
     <>
       {/* Header */}
-      <header className={navStyles.header}>
-        <div className={navStyles.logo} onClick={() => navigate("/home")}>
+      <header className="header">
+        <div className="logo" onClick={() => navigate("/home")}>
           <h1>FlashTalkAI</h1>
         </div>
 
-        <div className={navStyles.searchContainer}>
+        <div className="searchContainer">
           <input
             type="text"
             placeholder="Wyszukaj..."
-            className={navStyles.searchInput}
+            className="searchInput"
           />
         </div>
 
-        <div className={navStyles.menuToggle} onClick={toggleNavMenu}>
-          <i className={`fas fa-bars ${navStyles.hamburgerIcon}`}></i>
+        <div className="menuToggle" onClick={toggleNavMenu}>
+          <i className={`fas fa-bars "hamburgerIcon"`}></i>
         </div>
 
-        <div className={navStyles.userContainer} onClick={toggleUserMenu}>
-          <i className={`fas fa-user ${navStyles.userIcon}`}></i>
+        <div className="userContainer" onClick={toggleUserMenu}>
+          <i className={`fas fa-user "userIcon"`}></i>
           {userMenuVisible && (
-            <div className={navStyles.userMenu}>
+            <div className="userMenu">
               <ul>
                 <li onClick={() => navigate("/settings")}>Ustawienia</li>
                 <li onClick={() => navigate("/logout")}>Wyloguj się</li>
@@ -46,7 +46,7 @@ function NavBar() {
 
       {/* Navigation Menu */}
       {(navMenuVisible || window.innerWidth > 768) && (
-        <nav className={navStyles.navMenu}>
+        <nav className="navMenu">
           <ul>
             <li onClick={() => navigate("/home/learn")}>Ucz się AI</li>
             <li onClick={() => navigate("/home/voice-practice")}>

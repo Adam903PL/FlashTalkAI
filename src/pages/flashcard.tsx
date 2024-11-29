@@ -3,8 +3,7 @@
 
   import { useEffect, useState, useRef } from "react";
   import { useNavigate } from "react-router-dom";
-  import navStyles from "./css/headerNav.module.css";
-  import flashcardStyles from "./css/flashcardlearn.module.css";
+  import "./css/flashcardlearn.css";
   
   import WordContainer from "./wordContainer";
   import NavBar from "./navbar";
@@ -173,16 +172,16 @@
         <NavBar></NavBar>
   
         {/* Flashcard Content */}
-        <div className={flashcardStyles.cardLearnContainer}>
-          <div ref={cardRef} className={flashcardStyles.cardLearn}>
+        <div className="cardLearnContainer">
+          <div ref={cardRef} className="cardLearn">
             <div
-              className={flashcardStyles.arrow}
+              className="arrow"
               onClick={() => handleArrowClick("prev")}
             >
               {"<"}
             </div>
   
-            <div className={flashcardStyles.word} onClick={handleWordClick}>
+            <div className="word" onClick={handleWordClick}>
               {words.length > 0
                 ? showTranslation
                   ? words[wordIndex]?.translation
@@ -194,7 +193,7 @@
             </div>
   
             <div
-              className={flashcardStyles.arrow}
+              className="arrow"
               onClick={() => handleArrowClick("next")}
             >
               {">"}
@@ -203,7 +202,7 @@
         </div>
         {/* Mapujemy przez słowa i renderujemy komponent Word */}
         <h1 style={{ margin: "0 0 0 10%" }}>Known Words</h1>
-        <div className={flashcardStyles.linie}></div>
+        <div className="linie"></div>
         <div>
           {knownWords.map((word, index) => {
             const main = words.find(
@@ -225,7 +224,7 @@
           })}
         </div>
         <h1 style={{ margin: "0 0 0 10%" }}>UnKnown Words</h1>
-        <div className={flashcardStyles.linie}></div>
+        <div className="linie"></div>
         <div>
           {knownWords.map((word, index) => {
             const main = words.find(

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import loginStyles from './css/login.module.css';
+import  './css/login.css';
 
 type FormData = {
   email: string;
@@ -32,7 +32,7 @@ function Login() {
         console.log(data);
         if (data.success) {
           console.log("Zalogowano pomyślnie:", data.message);
-          window.location.href = "/home";
+          navigate("/home");
         } else {
           console.log("Błąd logowania:", data.message);
         }
@@ -41,9 +41,9 @@ function Login() {
   };
 
   return (
-    <div className={loginStyles.loginBody}>
-      <div className={loginStyles.container}>
-        <h1 className={loginStyles.title}>Login</h1>
+    <div className="loginBody">
+      <div className="maincontainer">
+        <h1 className="title">Login</h1>
         <form onSubmit={handleSubmit(sendData)}>
           <input
             type="text"
@@ -58,15 +58,15 @@ function Login() {
             {...register("password")}
           />
           <button type="submit">Send Data</button>
-          <button
+          <button 
             type="button"
-            className={loginStyles.forgotPasswordButton}
+            className="forgotPasswordButton"
           >
             🔑 Przypomnij hasło
           </button>
         </form>
         <button
-          className={loginStyles.forgotPasswordButton}
+          className="forgotPasswordButton"
           onClick={() => navigate("/register")} 
         >
           Nie masz konta? Zarejestruj się
