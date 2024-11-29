@@ -2,10 +2,21 @@ import { useEffect, useState } from "react";
 import NavBar from "../navbar";
 import "../css/learnAI.css";
 import { useNavigate } from "react-router-dom";
+import { useLoged } from "../../contexts/loged/useLoged";
 
 function LearnTopics() {
   const [topics, setTopics] = useState([]);
   const navigate = useNavigate();
+  const {loged} = useLoged()
+  useEffect(() => {
+    if(loged == false)
+      {navigate("/home")}
+    else{
+      NaN
+    }
+  }, []);
+
+
 
   useEffect(() => {
     fetch("http://localhost:4444/getAllTopics")

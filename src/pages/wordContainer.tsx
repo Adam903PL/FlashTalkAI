@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import volumeMax from "../assets/volume-max.svg";
 import "./css/flashcardlearn.css";
+import { useLoged } from "../contexts/loged/useLoged";
+import { useNavigate } from "react-router-dom";
 
 type WordContainerProps = {
   word: { id: number; word: string; translation: string };
@@ -10,6 +12,19 @@ type WordContainerProps = {
 
 function WordContainer({ word, onReload, known }: WordContainerProps) {
   const [isKnown, setIsKnown] = useState(known);
+
+
+  const {loged} = useLoged()
+
+  const navigate = useNavigate()
+  useEffect(() => {
+    if(loged == false)
+      {navigate("/home")}
+    else{
+      NaN
+    }
+  }, []);
+
 
   const changeIsKnown = (wordId: number) => {
     fetch("http://localhost:4444/changeKnown", {

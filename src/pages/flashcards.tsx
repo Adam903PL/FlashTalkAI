@@ -3,22 +3,22 @@ import navStyles from "./css/headerNav.module.css";
 import "./css/card.css";
 import Card from "./card";
 import NavBar from "./navbar";
+import { useNavigate } from "react-router-dom";
+import { useLoged } from "../contexts/loged/useLoged";
 function Flashcards() {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [units, setUnits] = useState<string[]>([]);
 
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
+  const {loged} = useLoged()
+
+  const navigate = useNavigate()
   useEffect(() => {
-    fetch("http://localhost:4444/loginSucces", {
-      credentials: "include",
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        if (data.succes == false) {
-          window.location.href = "/login";
-          // navigate("/home");
-        }
-      });
+    if(loged == false)
+      {navigate("/home")}
+    else{
+      NaN
+    }
   }, []);
   useEffect(() => {
     fetch("http://localhost:4444/api/flashcards", { credentials: "include" })

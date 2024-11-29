@@ -261,6 +261,36 @@ app.get('/getAllTopics', async (req,res)=>{
 
 
 
+app.get('/getuserdatas', async (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
+
+    try {
+        const client = await pool.connect();
+        const query = "SELECT points, userlevel FROM Learn_ai_points WHERE userid = $1";
+        const values = [req.session.user.userid];
+
+        console.log("Wykonane zapytanie:", query);
+        console.log("Wartości:", values);
+
+        const response = await client.query(query, values);
+
+        if (response.rows.length > 0) {
+            const { point, userlevel } = response.rows[0]; 
+            console.log(point,userlevel,"ksksksk")
+            res.json({ point, level: userlevel });
+        } else {
+            res.status(404).json({ success: false, message: "No data found for user." });
+        }
+
+        client.release(); 
+    } catch (err) {
+        console.error("Error during query:", err);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
+
 
 
 
