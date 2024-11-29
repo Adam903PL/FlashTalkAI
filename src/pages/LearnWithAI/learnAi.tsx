@@ -1,10 +1,25 @@
 import React, { useEffect, useState, useRef } from "react";
 import NavBar from "../navbar";
 import "../css/chat.css";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import { useLoged } from "../../contexts/loged/useLoged";
 
 function Learn() {
   let topic = useParams();
+
+  const navigate = useNavigate()
+
+  const {loged} = useLoged()
+  useEffect(() => {
+    if(loged == false)
+      {navigate("/home")}
+    else{
+      NaN
+    }
+  }, []);
+
+
+
   const [conversation, setConversation] = useState<
     { message: string; maker: string }[]
   >([]);

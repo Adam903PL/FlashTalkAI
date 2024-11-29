@@ -7,6 +7,7 @@
   
   import WordContainer from "./wordContainer";
   import NavBar from "./navbar";
+import { useLoged } from "../contexts/loged/useLoged";
   type wordsType = {
     id: number;
     word: string;
@@ -34,6 +35,19 @@
     const [knownWords, setKnownWords] = useState<Word[]>([]);
   
     const navigate = useNavigate();
+
+
+    const {loged} = useLoged()
+
+
+    useEffect(() => {
+      if(loged == false)
+        {navigate("/home")}
+      else{
+        NaN
+      }
+    }, []);
+
     const cardRef = useRef<HTMLDivElement>(null);
   
     const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);

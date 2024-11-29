@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./css/headerNav.css";
+import { useLoged } from "../contexts/loged/useLoged";
 
 function NavBar() {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [navMenuVisible, setNavMenuVisible] = useState(false);
   const navigate = useNavigate();
+  const {loged} = useLoged()
 
+  
+  useEffect(() => {
+    if(loged == false)
+      {navigate("/home")}
+    else{
+      NaN
+    }
+  }, []);
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
   const toggleNavMenu = () => setNavMenuVisible(!navMenuVisible);
 

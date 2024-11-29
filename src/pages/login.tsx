@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import  './css/login.css';
+import './css/login.css';
+import { useEffect, useState } from "react";
+import { useLoged } from "../contexts/loged/useLoged";
 
 type FormData = {
   email: string;
@@ -8,36 +10,53 @@ type FormData = {
 };
 
 function Login() {
-  const { register, handleSubmit } = useForm<FormData>({});
+  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
   const navigate = useNavigate(); // Hook do nawigacji
+  const [loading, setLoading] = useState(false); // Stan ładowania
+  const [errorMessage, setErrorMessage] = useState(""); // Błąd logowania
 
-  const sendData = (data: any) => {
+  const {loged} = useLoged()
+
+  
+  useEffect(() => {
+    if(loged == true)
+      {navigate("/home")}
+    else{
+      NaN
+    }
+  }, []);
+
+  const sendData = async (data: FormData) => {
     const updatedFormData = { email: data.email, password: data.password };
 
-    fetch("http://localhost:4444/loginData", {
-      method: "POST",
-      credentials: 'include',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedFormData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data: any) => {
-        console.log(data);
-        if (data.success) {
-          console.log("Zalogowano pomyślnie:", data.message);
-          navigate("/home");
-        } else {
-          console.log("Błąd logowania:", data.message);
-        }
-      })
-      .catch((error) => console.error("Błąd:", error));
+    try {
+      setLoading(true); // Ustawienie stanu ładowania
+      const response = await fetch("http://localhost:4444/loginData", {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedFormData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Błąd logowania: " + response.statusText);
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        console.log("Zalogowano pomyślnie:", result.message);
+        navigate("/home");
+      } else {
+        setErrorMessage(result.message || "Nieznany błąd.");
+      }
+    } catch (error) {
+      setErrorMessage("Wystąpił problem z połączeniem.");
+      console.error("Błąd:", error);
+    } finally {
+      setLoading(false); // Po zakończeniu procesu ładowania
+    }
   };
 
   return (

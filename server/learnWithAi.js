@@ -4,7 +4,7 @@ const WebSocket = require("ws");
 const { Pool } = require("pg");
 
 dotenv.config();
-// const apiKey = process.env.OPENAI_API_KEY;
+const apiKey  = process.env.OPENAI_API_KEY;
 
 const pool = new Pool({
     user: 'flashtalkai_user',
