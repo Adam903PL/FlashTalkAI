@@ -7,16 +7,8 @@ function NavBar() {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [navMenuVisible, setNavMenuVisible] = useState(false);
   const navigate = useNavigate();
-  const {loged} = useLoged()
 
-  
-  useEffect(() => {
-    if(loged == false)
-      {navigate("/home")}
-    else{
-      NaN
-    }
-  }, []);
+
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
   const toggleNavMenu = () => setNavMenuVisible(!navMenuVisible);
 
@@ -42,15 +34,13 @@ function NavBar() {
 
         <div className="userContainer" onClick={toggleUserMenu}>
           <i className={`fas fa-user "userIcon"`}></i>
-          {userMenuVisible && (
             <div className="userMenu">
               <ul>
                 <li onClick={() => navigate("/settings")}>Ustawienia</li>
-                <li onClick={() => navigate("/logout")}>Wyloguj się</li>
+                <li onClick={() => navigate("http://localhost:4444/logout")}>Wyloguj się</li>
                 <li onClick={() => navigate("/options")}>Opcje strony</li>
               </ul>
             </div>
-          )}
         </div>
       </header>
 
