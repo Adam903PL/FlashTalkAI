@@ -155,7 +155,6 @@ app.get("/logout", (req, res) => {
         if (err) {
             return res.json({ success: false, message: "Błąd podczas wylogowywania" });
         }
-        res.redirect('/login');
     });
 });
 

@@ -6,11 +6,17 @@ import { useLoged } from "../contexts/loged/useLoged";
 function NavBar() {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [navMenuVisible, setNavMenuVisible] = useState(false);
+  const { loged, setloged } = useLoged();
   const navigate = useNavigate();
-
 
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
   const toggleNavMenu = () => setNavMenuVisible(!navMenuVisible);
+  const logout = () => {
+    fetch("http://localhost:4444/logout", { credentials: "include" })
+      .catch((err) => {console.error("Errors during logout:", err)});
+      setloged(false);
+      navigate("/login");
+  };
 
   return (
     <>
@@ -34,13 +40,17 @@ function NavBar() {
 
         <div className="userContainer" onClick={toggleUserMenu}>
           <i className={`fas fa-user "userIcon"`}></i>
-            <div className="userMenu">
-              <ul>
-                <li onClick={() => navigate("/settings")}>Ustawienia</li>
-                <li onClick={() => navigate("http://localhost:4444/logout")}>Wyloguj się</li>
-                <li onClick={() => navigate("/options")}>Opcje strony</li>
-              </ul>
-            </div>
+          <div className="userMenu">
+            <ul>
+              <li onClick={() => navigate("/settings")}>Ustawienia</li>
+              <li
+                onClick={logout}
+              >
+                Wyloguj się
+              </li>
+              <li onClick={() => navigate("/options")}>Opcje strony</li>
+            </ul>
+          </div>
         </div>
       </header>
 
