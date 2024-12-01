@@ -76,7 +76,7 @@ function Learn() {
         body: JSON.stringify({ topicid: topic }),
       })
         .then((resp) => resp.json())
-        .then((data) => {
+        .then((data) => { 
           console.log(data);
         })
         .catch(err=>console.log('Error during sending point to db:',err))

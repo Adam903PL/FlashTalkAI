@@ -307,7 +307,7 @@ app.post('/addpointlearwithai', async (req, res) => {
         const client = await pool.connect();
 
 
-        const updateQuery = "UPDATE learn_ai_points SET point = point + 20 WHERE topicid = $1 AND userid = $2";
+        const updateQuery = "UPDATE learn_ai_points SET point = 4 WHERE topicid = $1 AND userid = $2";
         const updateValues = [parseInt(req.body.topicid.lesson), req.session.user.userid];
    
         const updateResponse = await client.query(updateQuery, updateValues);
