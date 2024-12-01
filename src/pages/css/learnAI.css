@@ -40,7 +40,7 @@
 /* Karta tematu */
 .topicCard {
   background-color: rgba(30, 30, 30, 0.9);
-  border: 1px solid #333;
+
   border-radius: 15px;
   padding: 20px;
   text-align: center;
@@ -51,6 +51,35 @@
   justify-content: space-between;
 }
 
+
+.topicCardKnown {
+  border: 1px solid rgb(83, 255, 83);
+  box-shadow: 0 0 10px rgb(83, 255, 83);
+  animation: glowKnown 1.5s infinite alternate;
+}
+
+.topicCardUnKnown {
+  border: 1px solid red;
+  box-shadow: 0 0 10px red;
+  animation: glowUnknown 1.5s infinite alternate;
+}
+
+@keyframes glowKnown {
+  0% {
+    box-shadow: 0 0 10px rgb(83, 255, 83);
+  }
+  100% {
+    box-shadow: 0 0 20px rgb(83, 255, 83);
+  }
+}
+@keyframes glowUnknown {
+  0% {
+    box-shadow: 0 0 10px red;
+  }
+  100% {
+    box-shadow: 0 0 20px red;
+  }
+}
 
 
 

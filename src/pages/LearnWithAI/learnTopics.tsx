@@ -1,35 +1,45 @@
 import { useEffect, useState } from "react";
 import NavBar from "../navbar";
 import "../css/learnAI.css";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
 import { usePoint } from "../../contexts/points/usePoints";
+
 function LearnTopics() {
   const [topics, setTopics] = useState([]);
 
   const { list, setPoint } = usePoint();
-
+  const location = useLocation();
   const navigate = useNavigate();
   const { loged } = useLoged();
-  useEffect(() => {
-    if (loged == false) {
-      navigate("/home");
-    }
-  }, []);
 
   useEffect(() => {
-    fetch("http://localhost:4444/getAllTopics")
+    if (loged === false) {
+      navigate("/home");
+    }
+  }, [loged]);
+
+  useEffect(() => {
+    console.log("Fetchowanie do getalltopics");
+    fetch("http://localhost:4444/getAllTopics", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data)
+        console.log(data, "thissss");
         setTopics(data.data);
       })
       .catch((err) => console.error("Error fetching topics:", err));
-  }, []);
+  }, [location]);
 
   if (list.length === 0) {
     return <div>Loading...</div>; // Możesz wyświetlić coś, gdy dane są ładowane
   }
+
   const renderTopicsByLevel = (
     level: number,
     start: number,
@@ -42,7 +52,9 @@ function LearnTopics() {
         <div className="topicsGrid">
           {topics.slice(start, end).map((topic, index) => (
             <div
-              className="topicCard"
+              className={`topicCard ${
+                topic.point > 0 ? "topicCardKnown" : "topicCardUnKnown"
+              }`}
               key={index}
               onClick={() => {
                 access ? navigate(`/home/learn/${index + 1}`) : NaN;
@@ -54,8 +66,7 @@ function LearnTopics() {
           ))}
         </div>
         {access ? (
-          <div className="accesstrue">
-          </div>
+          <div className="accesstrue"></div>
         ) : (
           <div className="accessfalse">
             <div className="accessfalse-message">
@@ -66,6 +77,7 @@ function LearnTopics() {
       </section>
     );
   };
+
   const gaveAcces = (lvl: number) => {
     const topics = [];
     for (let i = 1; i <= 4; i++) {
