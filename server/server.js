@@ -166,7 +166,9 @@ app.get("/logout", (req, res) => {
 
 
 app.post("/changeKnown", async (req, res) => {
-    // Sprawdzenie, czy przekazano wordId w danych
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
     if (!req.body.wordId) {
         return res.status(400).json({ success: false, message: "Brak wordId w danych" });
     }
@@ -231,6 +233,7 @@ app.post('/getAllWords', async (req, res) => {
 
 
 app.get('/api/tematData', async (req,res)=>{
+    
     try{
         const client = await pool.connect();
         const query = "select * from public.conversation_topics"
@@ -245,10 +248,14 @@ app.get('/api/tematData', async (req,res)=>{
 
 
 app.get('/getAllTopics', async (req,res)=>{
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
     try{
         const client = await pool.connect();
-        const query = "select * from learn_ai_topics"
-        const response = await client.query(query);
+        const query = "SELECT lat.topicid, lat.topicdescription,lap.point FROM learn_ai_topics AS lat LEFT JOIN learn_ai_points AS lap ON lap.topicid = lat.topicid AND lap.userid = $1"
+        const values = [req.session.user.userid];
+        const response = await client.query(query,values);
         res.json({data:response.rows})
 
         client.release(); 
@@ -293,6 +300,9 @@ app.get('/getuserdatas', async (req, res) => {
 
 
 app.post('/addpointlearwithai', async (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
     try {
         const client = await pool.connect();
 
@@ -315,6 +325,21 @@ app.post('/addpointlearwithai', async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error." });
     }
 });
+
+
+app.get('/checkislogedin', (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    } else {
+        return res.status(200).json({ 
+            success: true, 
+            message: "Użytkownik jest zalogowany", 
+            session: req.session 
+        });
+    }
+});
+
+
 
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
