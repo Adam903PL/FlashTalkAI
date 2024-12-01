@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import registerStyles from './css/registration.module.css';
+import './css/registration.css';
 
 type FormData = {
   email: string;
@@ -43,9 +43,9 @@ function Registration() {
   };
 
   return (
-    <div className={registerStyles.registrationBody}>
-      <div className={registerStyles.container}>
-        <h1 className={registerStyles.title}>Register</h1>
+    <div className="registrationBody">
+      <div className="maincontainer">
+        <h1 className="title">Register</h1>
         <form onSubmit={handleSubmit(sendData)}>
           <input type="text" placeholder="Type Email" id="email" {...register("email")} />
           <input type="password" placeholder="Type Password" id="password" {...register("password")} />
@@ -53,7 +53,7 @@ function Registration() {
           <button type="submit">Register</button>
         </form>
         <button
-          className={registerStyles.redirectButton}
+          className="redirectButton"
           onClick={() => navigate("/login")}
         >
           Masz konto? Zaloguj się
