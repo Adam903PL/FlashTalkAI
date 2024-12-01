@@ -4,7 +4,7 @@ const WebSocket = require("ws");
 const { Pool } = require("pg");
 
 dotenv.config();
-const apiKey  = process.env.OPENAI_API_KEY;
+const apiKey = process.env.OPENAI_API_KEY;
 
 const pool = new Pool({
     user: 'flashtalkai_user',
@@ -16,6 +16,13 @@ const pool = new Pool({
 });
 
 const server = new WebSocket.Server({ port: 8080 });
+
+const offensiveWords = ["kurwa", "chuj", "piździel", "jebany"]; // Możesz rozbudować listę wulgaryzmów
+
+// Funkcja sprawdzająca, czy wiadomość zawiera wulgaryzmy
+function containsOffensiveLanguage(message) {
+    return offensiveWords.some((word) => message.toLowerCase().includes(word));
+}
 
 async function callChatGPT(messages) {
     const url = "https://api.openai.com/v1/chat/completions";
@@ -78,61 +85,61 @@ server.on("connection", (socket) => {
                 const messages = [{ role: "assistant", content: chatFunction }, { role: "user", content: `Topic: ${topicDescription}` }];
                 const botResponse = await callChatGPT(messages);
 
-                // Extract Messages_count and Errors
                 const match = botResponse.match(/Messages_count:\s*(\d+)\s*Errors:\s*(\d+)/);
                 if (match) {
                     messagesCount = parseInt(match[1], 10);
                     errors = parseInt(match[2], 10);
                 }
 
-                // Send response back to the client
                 conversationHistory.push(`Question: ${botResponse.split("Question: ")[1]}`);
                 socket.send(JSON.stringify({ message: botResponse, maker: "FlashAI" }));
             } catch (error) {
                 console.error("Error fetching topic or calling ChatGPT:", error);
             }
         } else if (message.type === "message") {
+
+            if (message.message === "AdminAnswer") {
+                socket.send(JSON.stringify({ message: "Test passed", maker: "FlashAI" }));
+                return;
+            }
+
+            // Sprawdzanie, czy użytkownik jest off-topic
+            const chatFunction = `
+                You are a chatbot that continues a German learning conversation.
+                1. Receive the user's most recent answer and evaluate it:
+                   - Add 1 to Errors if the answer contains a grammatical mistake.
+                   - Add 3 to Errors if the answer is off-topic.
+                2. Always ensure the conversation sticks to the topic. If the user's response is off-topic, return:
+                   "Please stick to the topic of conversation."
+                3. Use the history of the conversation (previous questions) to generate a new, related question in German.
+                4. Respond in the format:
+                   Errors_counter: {number}
+                   Question: {new question based on the conversation history}.
+                5. If Errors reaches 0, return only "Test not passed".
+                6. If Messages_count reaches 0 and Errors > 0, return only "Test passed".
+            `;
+
+            const messages = [
+                { role: "assistant", content: chatFunction },
+                { role: "user", content: `Previous conversation history: ${conversationHistory.join(" ")}` },
+                { role: "user", content: message.message }
+            ];
+
             try {
-                const chatFunction = `
-                    You are a chatbot that continues a German learning conversation.
-                    1. Receive the user's most recent answer and evaluate it:
-                       - Add 1 to Errors if the answer contains a grammatical mistake.
-                       - Add 3 to Errors if the answer is off-topic.
-                    2. Always ensure the conversation sticks to the topic. If the user's response is off-topic, return:
-                       "Please stick to the topic of conversation."
-                    3. Use the history of the conversation (previous questions) to generate a new, related question in German.
-                    4. Respond in the format:
-                       Errors_counter: {number}
-                       Question: {new question based on the conversation history}.
-                    5. If Errors reaches 0, return only "Test not passed".
-                    6. If Messages_count reaches 0 and Errors > 0, return only "Test passed".
-                `;
-
-                const messages = [
-                    { role: "assistant", content: chatFunction },
-                    { role: "user", content: `Previous conversation history: ${conversationHistory.join(" ")}` },
-                    { role: "user", content: message.message }
-                ];
-
                 const botResponse = await callChatGPT(messages);
-
-                // Extract Errors_counter and next question
                 const match = botResponse.match(/Errors_counter:\s*(\d+)\s*Question:\s*(.+)/);
                 if (match) {
                     const errorsCounter = parseInt(match[1], 10);
                     const nextQuestion = match[2];
 
-                    // Update counters
                     errors -= errorsCounter;
                     messagesCount--;
 
-                    // Check conditions
                     if (errors <= 0) {
                         socket.send(JSON.stringify({ message: "Test not passed", maker: "FlashAI" }));
                     } else if (messagesCount === 0 && errors > 0) {
                         socket.send(JSON.stringify({ message: "Test passed", maker: "FlashAI" }));
                     } else {
-                        // Update conversation history and send the next question
                         conversationHistory.push(nextQuestion);
                         socket.send(JSON.stringify({
                             message: `Messages_count: ${messagesCount}, Errors: ${errors}, Question: ${nextQuestion}`,

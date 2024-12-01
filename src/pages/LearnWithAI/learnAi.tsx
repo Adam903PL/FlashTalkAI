@@ -7,18 +7,13 @@ import { useLoged } from "../../contexts/loged/useLoged";
 function Learn() {
   let topic = useParams();
 
-  const navigate = useNavigate()
-
-  const {loged} = useLoged()
+  const navigate = useNavigate();
+  const { loged } = useLoged();
   useEffect(() => {
-    if(loged == false)
-      {navigate("/home")}
-    else{
-      NaN
+    if (loged == false) {
+      navigate("/home");
     }
   }, []);
-
-
 
   const [conversation, setConversation] = useState<
     { message: string; maker: string }[]
@@ -71,8 +66,22 @@ function Learn() {
     }
   };
   useEffect(() => {
-    if (conversation[conversation.length + 1]?.message == "“Test passed") {
-      console.log("Test zdany");
+    if (conversation[conversation.length - 1]?.message == "Test passed") {
+      fetch("http://localhost:4444/addpointlearwithai", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ topicid: topic }),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch(err=>console.log('Error during sending point to db:',err))
+        navigate("/home/learn")
+
     }
   }, [conversation]);
   return (
@@ -82,9 +91,7 @@ function Learn() {
         {conversation.map((msg, index) => (
           <p
             key={index}
-            className={
-              msg.maker === "user" ? "userMessage" : "serverMessage"
-            }
+            className={msg.maker === "user" ? "userMessage" : "serverMessage"}
           >
             <strong>{msg.maker}: </strong>
             {msg.message}
@@ -92,14 +99,16 @@ function Learn() {
         ))}
 
         <div className="lastchildDiv">
-        <input
-          className="messs"
-          id="messs"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Wpisz wiadomość..."  
-        />
-        <button className="send_mes" onClick={handleSendMessage}>Send Mess</button>
+          <input
+            className="messs"
+            id="messs"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Wpisz wiadomość..."
+          />
+          <button className="send_mes" onClick={handleSendMessage}>
+            Send Mess
+          </button>
         </div>
       </div>
     </div>
