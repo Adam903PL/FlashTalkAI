@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "dev": "cd .. && npm run build && cd server && nodemon server.js",
     "build": "vite build --prefix .."
   },
   "keywords": [],

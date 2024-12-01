@@ -19,7 +19,7 @@
   width: 100vw;
 }
 
-.container {
+.maincontainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,6 +30,7 @@
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
   width: 100%;
   max-width: 400px;
+  gap: 10px;
   backdrop-filter: blur(10px);
   border: 1px solid #333;
 }
@@ -40,8 +41,7 @@
   text-align: center;
 }
 
-input[type="text"],
-input[type="password"] {
+.inputField {
   width: 100%;
   padding: 15px;
   margin: 10px 0;
@@ -53,13 +53,16 @@ input[type="password"] {
   transition: border-color 0.3s ease;
 }
 
-input[type="text"]:focus,
-input[type="password"]:focus {
+.inputField:focus {
   border-color: #0099ff;
   outline: none;
 }
 
-button {
+.inputField:hover {
+  border-color: #0099ff;
+}
+
+.actionButton {
   width: 100%;
   padding: 15px;
   background-color: #333;
@@ -72,18 +75,13 @@ button {
   margin-top: 10px;
 }
 
-button:hover {
+.actionButton:hover {
   background-color: #0099ff;
   border-color: #0099ff;
 }
 
-button:focus {
+.actionButton:focus {
   outline: none;
-}
-
-input[type="text"]:hover,
-input[type="password"]:hover {
-  border-color: #0099ff;
 }
 
 .forgotPassword {
@@ -98,17 +96,8 @@ input[type="password"]:hover {
   color: #66ccff;
 }
 
-/* Responsive Design */
-@media (max-width: 500px) {
-  .container {
-    padding: 20px;
-    width: 90%;
-  }
-}
-
-
 .forgotPasswordButton {
-  margin-top: 15px;
+  /* margin-top: 15px; */
   font-size: 14px;
   color: #fff;
   text-decoration: none;
@@ -133,3 +122,50 @@ input[type="password"]:hover {
 .forgotPasswordButton:focus {
   outline: none;
 }
+
+/* Responsive Design */
+@media (max-width: 500px) {
+  .container {
+    padding: 20px;
+    width: 90%;
+  }
+}
+
+
+
+
+.redirectButton{
+  margin-top: 15px;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.redirectButton:hover {
+  background-color: rgba(0, 153, 255, 0.2);
+  color: #66ccff;
+  transform: scale(1.05);
+}
+
+.redirectButton:focus {
+  outline: none;
+}
+
+
+
+
+
+
+
+
+
