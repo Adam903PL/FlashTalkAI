@@ -253,7 +253,7 @@ app.get('/getAllTopics', async (req,res)=>{
     }
     try{
         const client = await pool.connect();
-        const query = "SELECT lat.topicid, lat.topicdescription,lap.point FROM learn_ai_topics AS lat LEFT JOIN learn_ai_points AS lap ON lap.topicid = lat.topicid AND lap.userid = $1"
+        const query = "SELECT lat.topicid, lat.topicdescription,lap.point FROM learn_ai_topics AS lat LEFT JOIN learn_ai_points AS lap ON lap.topicid = lat.topicid AND lap.userid = $1 order by topicid asc"
         const values = [req.session.user.userid];
         const response = await client.query(query,values);
         res.json({data:response.rows})
@@ -306,10 +306,9 @@ app.post('/addpointlearwithai', async (req, res) => {
     try {
         const client = await pool.connect();
 
-
         const updateQuery = "UPDATE learn_ai_points SET point = 4 WHERE topicid = $1 AND userid = $2";
         const updateValues = [parseInt(req.body.topicid.lesson), req.session.user.userid];
-   
+        console.log(updateValues,"take bambo take pete eko teka  ")
         const updateResponse = await client.query(updateQuery, updateValues);
 
         if (updateResponse.rowCount > 0) {
