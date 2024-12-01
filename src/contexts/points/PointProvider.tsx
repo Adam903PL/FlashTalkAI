@@ -6,14 +6,13 @@ export const PointsProvider = ({ children }: PropsWithChildren) => {
   const [loged, setloged] = useState<boolean>(false);
 
   useEffect(() => {
-    fetch("http://localhost:4444/loginsucces",{
-        credentials: "include"
+    fetch("http://localhost:4444/loginsucces", {
+      credentials: "include",
     })
       .then((resp) => resp.json())
       .then((data) => {
-        data.succes ?  setloged(data.succes) : NaN
-
-    });
+        data.succes ? setloged(data.succes) : NaN;
+      });
   }, []);
 
   useEffect(() => {

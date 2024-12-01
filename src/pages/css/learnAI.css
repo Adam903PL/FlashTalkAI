@@ -15,6 +15,8 @@
   width: 100%;
   max-width: 1200px;
   margin: 20px 0;
+  position: relative;
+  z-index: 1;
 }
 
 .levelTitle {
@@ -48,6 +50,9 @@
   flex-direction: column;
   justify-content: space-between;
 }
+
+
+
 
 .topicCard:hover {
   transform: translateY(-5px);
@@ -86,4 +91,46 @@
   .topicCard {
     padding: 10px;
   }
+}
+
+/* Styl dla odblokowanego poziomu */
+.accesstrue {
+  z-index: 1000;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Styl dla zablokowanego poziomu */
+.accessfalse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4); /* Jasna transparentna warstwa */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Nad innymi elementami */
+  backdrop-filter: blur(10px) brightness(0.8); /* Efekt szklany */
+  border-radius: 10px; /* Zaokrąglone krawędzie */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Lekki cień */
+}
+
+.accessfalse:hover {
+  background: rgba(255, 255, 255, 0.5); /* Lżejszy kolor na hover */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3); /* Większy cień */
+}
+
+/* Wiadomość na overlay */
+.accessfalse-message {
+  text-align: center;
+  color: #333; /* Ciemniejszy tekst dla kontrastu */
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border: 2px solid rgba(255, 255, 255, 0.8); /* Delikatna biała ramka */
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7); /* Jasne, półprzezroczyste tło */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Głębia cienia */
 }

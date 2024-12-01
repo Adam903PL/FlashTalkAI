@@ -267,23 +267,24 @@ app.get('/getuserdatas', async (req, res) => {
 
     try {
         const client = await pool.connect();
-        const query = "SELECT points, userlevel FROM Learn_ai_points WHERE userid = $1";
+        const query = "SELECT points,userlevel FROM user_points_and_levels where userid = $1";
         const values = [req.session.user.userid];
-
+        
         console.log("Wykonane zapytanie:", query);
         console.log("Wartości:", values);
-
+        
         const response = await client.query(query, values);
-
+        
         if (response.rows.length > 0) {
-            const { point, userlevel } = response.rows[0]; 
-            console.log(point,userlevel,"ksksksk")
-            res.json({ point, level: userlevel });
+            const { points, userlevel } = response.rows[0]; 
+            console.log(points, userlevel, "ksksksk");
+            res.json({ points, level: userlevel });
         } else {
             res.status(404).json({ success: false, message: "No data found for user." });
         }
-
-        client.release(); 
+        
+        client.release();
+        
     } catch (err) {
         console.error("Error during query:", err);
         res.status(500).json({ success: false, message: "Internal server error" });
@@ -291,7 +292,29 @@ app.get('/getuserdatas', async (req, res) => {
 });
 
 
+app.post('/addpointlearwithai', async (req, res) => {
+    try {
+        const client = await pool.connect();
 
+
+        const updateQuery = "UPDATE learn_ai_points SET point = point + 20 WHERE topicid = $1 AND userid = $2";
+        const updateValues = [parseInt(req.body.topicid.lesson), req.session.user.userid];
+   
+        const updateResponse = await client.query(updateQuery, updateValues);
+
+        if (updateResponse.rowCount > 0) {
+            res.json({ success: true, message: "Points updated successfully." });
+        } else {
+            res.json({ success: false, message: "No matching topic or user found." });
+        }
+
+        client.release();
+
+    } catch (err) {
+        console.error("Error during query:", err);
+        res.status(500).json({ success: false, message: "Internal server error." });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
