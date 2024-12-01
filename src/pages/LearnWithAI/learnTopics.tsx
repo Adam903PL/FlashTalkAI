@@ -79,18 +79,22 @@ function LearnTopics() {
   };
 
   const gaveAcces = (lvl: number) => {
+    console.log(lvl, "lvl");
     const topics = [];
     for (let i = 1; i <= 4; i++) {
-      let j = (i - 1) * 25;
-      let l = i * 25;
-      if (i <= lvl) {
-        topics.push(renderTopicsByLevel(i, j, l, true));
+      let j = (i - 1) * 25; // Początek zakresu dla danego poziomu
+      let l = i * 25; // Koniec zakresu dla danego poziomu
+  
+      if (lvl >= i) {
+        topics.push(renderTopicsByLevel(i, j, l, true)); 
       } else {
-        topics.push(renderTopicsByLevel(i, j, l, false));
+        topics.push(renderTopicsByLevel(i, j, l, false)); 
       }
     }
     return topics;
   };
+  
+  
 
   return (
     <>
