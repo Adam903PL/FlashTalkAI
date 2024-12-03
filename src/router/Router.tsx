@@ -1,8 +1,4 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-  RouteObject,
-} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Home from "../pages/home";
 import Flashcards from "../pages/flashcards";
@@ -10,9 +6,9 @@ import Flashcard from "../pages/flashcard";
 import Login from "../pages/login";
 import Registration from "../pages/registration";
 import LearnTopics from "../pages/LearnWithAI/learnTopics";
-import LearnAi from "../pages/LearnWithAI/learnAi"
+import LearnAi from "../pages/LearnWithAI/learnAi";
 
-function Router() {
+function MainRouter() {
   const [units, setUnits] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,47 +24,27 @@ function Router() {
       .catch(() => setLoading(false));
   }, []);
 
-  const unitRoutes: RouteObject[] = units.map((unit, index) => ({
-    path: `/home/flashcards/${unit.replace(".json", "")}`,
-    element: <Flashcard key={index} unit={unit} />,
-  }));
-
-  const routes: RouteObject[] = [
-    {
-      path: "/home",
-      element: <Home />,
-    },
-    {
-      path: "/home/flashcards",
-      element: <Flashcards />,
-    },
-    ...unitRoutes, 
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/register",
-      element: <Registration />,
-    },
-    {
-      path: "/home/learn",
-      element: <LearnTopics/>,
-    },
-    {
-      path: "/home/learn/:lesson", 
-      element: <LearnAi /> 
-    }
-  ];
-
-  const router = createBrowserRouter(routes);
-
-
   if (loading) {
     return <div>Ładowanie...</div>;
   }
 
-  return <RouterProvider router={router} />;
+  return (
+    <Routes>
+      <Route path="/home" element={<Home />} />
+      <Route path="/home/flashcards" element={<Flashcards />} />
+      {units.map((unit, index) => (
+        <Route
+          key={index}
+          path={`/home/flashcards/${unit.replace(".json", "")}`}
+          element={<Flashcard unit={unit} />}
+        />
+      ))}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Registration />} />
+      <Route path="/home/learn" element={<LearnTopics />} />
+      <Route path="/home/learn/:lesson" element={<LearnAi />} />
+    </Routes>
+  );
 }
 
-export default Router;
+export default MainRouter;

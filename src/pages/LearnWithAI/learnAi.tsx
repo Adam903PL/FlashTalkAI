@@ -8,12 +8,8 @@ function Learn() {
   let topic = useParams();
 
   const navigate = useNavigate();
-  const { loged } = useLoged();
-  useEffect(() => {
-    if (loged == false) {
-      navigate("/home");
-    }
-  }, []);
+ 
+
 
   const [conversation, setConversation] = useState<
     { message: string; maker: string }[]

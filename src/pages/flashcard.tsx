@@ -37,16 +37,8 @@ import { useLoged } from "../contexts/loged/useLoged";
     const navigate = useNavigate();
 
 
-    const {loged} = useLoged()
 
 
-    useEffect(() => {
-      if(loged == false)
-        {navigate("/home")}
-      else{
-        NaN
-      }
-    }, []);
 
     const cardRef = useRef<HTMLDivElement>(null);
   

@@ -1,15 +1,17 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { LogedProvider } from "./contexts/loged/LogedProvider";
 import { PointsProvider } from "./contexts/points/PointProvider";
-import Router from "./router/Router";
+import MainRouter from "./router/Router";
 
 function App() {
   return (
-      <LogedProvider>
+    <Router> 
+      <LogedProvider> 
         <PointsProvider>
-          <Router />
+          <MainRouter />
         </PointsProvider>
       </LogedProvider>
+    </Router>
   );
 }
 
