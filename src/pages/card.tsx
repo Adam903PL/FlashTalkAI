@@ -9,16 +9,15 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ unit }) => {
   const [description, setDescription] = useState<string>("");
-  const {loged} = useLoged()
 
   const navigate = useNavigate()
-  useEffect(() => {
-    if(loged == false)
-      {navigate("/home")}
-    else{
-      NaN
-    }
-  }, []);
+
+
+
+
+
+
+
   useEffect(() => {
     fetch(`http://localhost:4444/api/flashcards/${unit}`, {
       credentials: "include",

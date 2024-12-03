@@ -8,18 +8,9 @@ import { useLoged } from "../contexts/loged/useLoged";
 const Home: React.FC = () => {
 
 
-  const {loged,setloged} = useLoged()
 
   const navigate = useNavigate();
-  useEffect(() => {
-    if(loged == false)
-      {navigate("/login")}
-    else{
-      NaN
-    }
-  }, []);
 
-  
 
 
 
