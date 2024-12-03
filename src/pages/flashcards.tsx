@@ -10,16 +10,8 @@ function Flashcards() {
   const [units, setUnits] = useState<string[]>([]);
 
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
-  const {loged} = useLoged()
 
-  const navigate = useNavigate()
-  useEffect(() => {
-    if(loged == false)
-      {navigate("/home")}
-    else{
-      NaN
-    }
-  }, []);
+
   useEffect(() => {
     fetch("http://localhost:4444/api/flashcards", { credentials: "include" })
       .then((resp) => resp.json())
