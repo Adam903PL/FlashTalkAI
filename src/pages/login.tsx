@@ -18,13 +18,6 @@ function Login() {
   const {loged,setloged} = useLoged()
 
   
-  useEffect(() => {
-    if(loged == true)
-      {navigate("/home")
-        console.log(loged,"ksk")
-        console.log("redirect to/home")
-      }
-  }, []);
 
   const sendData = async (data: FormData) => {
     const updatedFormData = { email: data.email, password: data.password };

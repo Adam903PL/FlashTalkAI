@@ -14,16 +14,9 @@ function WordContainer({ word, onReload, known }: WordContainerProps) {
   const [isKnown, setIsKnown] = useState(known);
 
 
-  const {loged} = useLoged()
 
   const navigate = useNavigate()
-  useEffect(() => {
-    if(loged == false)
-      {navigate("/home")}
-    else{
-      NaN
-    }
-  }, []);
+
 
 
   const changeIsKnown = (wordId: number) => {

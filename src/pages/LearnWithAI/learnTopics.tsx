@@ -7,17 +7,8 @@ import { usePoint } from "../../contexts/points/usePoints";
 
 function LearnTopics() {
   const [topics, setTopics] = useState([]);
-
   const { list, setPoint } = usePoint();
-  const location = useLocation();
   const navigate = useNavigate();
-  const { loged } = useLoged();
-
-  useEffect(() => {
-    if (loged === false) {
-      navigate("/home");
-    }
-  }, [loged]);
 
   useEffect(() => {
     console.log("Fetchowanie do getalltopics");
@@ -34,7 +25,7 @@ function LearnTopics() {
         setTopics(data.data);
       })
       .catch((err) => console.error("Error fetching topics:", err));
-  }, [location]);
+  }, []);
 
   if (list.length === 0) {
     return <div>Loading...</div>; // Możesz wyświetlić coś, gdy dane są ładowane
@@ -47,20 +38,20 @@ function LearnTopics() {
     access: boolean
   ) => {
     return (
-      <section className="levelSection">
+      <section className="levelSection" key={level}>
         <h2 className="levelTitle">Level {level}</h2>
         <div className="topicsGrid">
-          {topics.slice(start, end).map((topic, index) => (
+          {topics.slice(start, end).map((topic) => (
             <div
               className={`topicCard ${
                 topic.point > 0 ? "topicCardKnown" : "topicCardUnKnown"
               }`}
-              key={index}
+              key={topic.topicid} // Use a unique key based on topicid
               onClick={() => {
-                access ? navigate(`/home/learn/${index + 1}`) : NaN;
+                access ? navigate(`/home/learn/${topic.topicid}`) : NaN;
               }}
             >
-              <h3 className="topicTitle">{`Topic ${index + 1}`}</h3>
+              <h3 className="topicTitle">{`Topic ${topic.topicid}`}</h3>
               <p className="topicDescription">{topic.topicdescription}</p>
             </div>
           ))}
@@ -93,8 +84,6 @@ function LearnTopics() {
     }
     return topics;
   };
-  
-  
 
   return (
     <>
