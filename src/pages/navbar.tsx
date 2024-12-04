@@ -43,11 +43,7 @@ function NavBar() {
           <div className="userMenu">
             <ul>
               <li onClick={() => navigate("/settings")}>Ustawienia</li>
-              <li
-                onClick={logout}
-              >
-                Wyloguj się
-              </li>
+              <li onClick={logout}>Wyloguj się</li>
               <li onClick={() => navigate("/options")}>Opcje strony</li>
             </ul>
           </div>
@@ -59,9 +55,7 @@ function NavBar() {
         <nav className="navMenu">
           <ul>
             <li onClick={() => navigate("/home/learn")}>Ucz się AI</li>
-            <li onClick={() => navigate("/home/voice-practice")}>
-              Praktyka Głosowa
-            </li>
+            <li onClick={() => navigate("/home/Speak")}>Praktyka Głosowa</li>
             <li onClick={() => navigate("/home/flashcards")}>Fiszki</li>
             <li onClick={() => navigate("/home/test")}>Test</li>
           </ul>
