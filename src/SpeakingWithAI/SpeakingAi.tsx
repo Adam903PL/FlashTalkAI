@@ -1,67 +1,113 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import NavBar from "../pages/navbar";
+import { useNavigate,useLocation } from "react-router";
+import { useLoged } from "../contexts/loged/useLoged";
 
-export const SpeakingAi = () => {
+function SpeakingAi() {
   const location = useLocation();
-  const question = location.state?.question || "Brak pytania";
-  const id = location.state?.id || "Brak ID";
-  const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [response, setResponse] = useState<string | null>(null);
-  const [messageLog, setMessageLog] = useState<string[]>([]);
-  const [isMounted, setIsMounted] = useState(true);
+  const { question } = location.state || {}; 
+  let topic = question;
+
+  const navigate = useNavigate();
+
+  const [conversation, setConversation] = useState<
+    { message: string; maker: string }[]
+  >([]);
+  const [serverMessage, setServerMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    setIsMounted(true);
-    const ws = new WebSocket("ws://localhost:8080");
-    setSocket(ws);
+    socketRef.current = new WebSocket("ws://localhost:8080");
 
-    ws.onopen = () => {
-      console.log("Połączono z serwerem WebSocket.");
-      console.log({socket})
-      if (question) {
-        ws.send(JSON.stringify({ question: question }));
-      }
+    socketRef.current.onopen = () => {
+      console.log("Połączono z serwerem WebSocket");
+      socketRef.current?.send(JSON.stringify({ type: "topic", topic }));
+      console.log(topic)
     };
 
-    ws.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        console.log("Odebrano wiadomość:", data);
-        if (data?.message && isMounted) {
-          setResponse(data.message);
-          setMessageLog((prevLog) => [...prevLog, data.message]);
-        }
-      } catch (error) {
-        console.error("Błąd parsowania wiadomości:", error);
-      }
+    socketRef.current.onmessage = (event) => {
+      const datas = JSON.parse(event.data);
+      setConversation((prev) => [...prev, datas]);
     };
 
-    // ws.onclose = () => {
-    //   console.log("Połączenie WebSocket zostało zamknięte.");
-    // };
+    socketRef.current.onerror = (error) => {
+      console.error("Błąd WebSocket:", error);
+    };
 
-    ws.onerror = (error) => {
-      console.error("Wystąpił błąd WebSocket:", error);
+    socketRef.current.onclose = () => {
+      console.log("Połączenie WebSocket zostało zamknięte.");
     };
 
     return () => {
-      setIsMounted(false);
-      console.log("Zamykanie połączenia WebSocket.");
-      ws.close();
+      socketRef.current?.close();
     };
-  }, [question, id]);
+  }, []);
 
+  useEffect(() => {
+    if (serverMessage) {
+      setConversation((prev) => [
+        ...prev,
+        { type: "message", message: serverMessage, maker: "FlashAI" },
+      ]);
+    }
+  }, [serverMessage]);
+
+  const handleSendMessage = () => {
+    if (socketRef.current && message) {
+      const messageObj = { type: "message", message, maker: "user" };
+      setConversation((prev) => [...prev, messageObj]);
+      socketRef.current.send(JSON.stringify(messageObj));
+      setMessage("");
+    }
+  };
+  useEffect(() => {
+    if (conversation[conversation.length - 1]?.message == "Test passed") {
+      fetch("http://localhost:4444/addpointlearwithai", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ topicid: topic }),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => console.log("Error during sending point to db:", err));
+      navigate("/home/learn");
+    }
+  }, [conversation]);
   return (
     <div>
-      <h1>Witaj na kolejnej stronie!</h1>
-      <p>Otrzymane pytanie: {question}</p>
-      <p>Odpowiedź serwera: {response || "Brak odpowiedzi"}</p>
-      <h3>Log wiadomości:</h3>
-      <ul>
-        {messageLog.map((msg, index) => (
-          <li key={index}>{msg}</li>
+      <NavBar />
+      <div className="conversation">
+        {conversation.map((msg, index) => (
+          <p
+            key={index}
+            className={msg.maker === "user" ? "userMessage" : "serverMessage"}
+          >
+            <strong>{msg.maker}: </strong>
+            {msg.message}
+          </p>
         ))}
-      </ul>
+
+        <div className="lastchildDiv">
+          <input
+            className="messs"
+            id="messs"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Wpisz wiadomość..."
+          />
+          <button className="send_mes" onClick={handleSendMessage}>
+            Send Mess
+          </button>
+        </div>
+      </div>
     </div>
   );
-};
+}
+
+export default SpeakingAi;

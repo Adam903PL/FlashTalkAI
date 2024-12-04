@@ -8,7 +8,7 @@ import Registration from "../pages/registration";
 import LearnTopics from "../pages/LearnWithAI/learnTopics";
 import LearnAi from "../pages/LearnWithAI/learnAi";
 import { Levels } from "../SpeakingWithAI/SpeakingLevels";
-import { SpeakingAi } from "../SpeakingWithAI/SpeakingAi";
+import SpeakingAi from "../SpeakingWithAI/SpeakingAi";
 
 function MainRouter() {
   const [units, setUnits] = useState<string[]>([]);
