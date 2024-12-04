@@ -1,16 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import NavBar from "../navbar";
 import "../css/chat.css";
-import { useNavigate, useParams } from "react-router";
-import { useLoged } from "../../contexts/loged/useLoged";
+import { useParams } from "react-router";
 
 function Learn() {
   let topic = useParams();
-
-  const navigate = useNavigate();
- 
-
-
   const [conversation, setConversation] = useState<
     { message: string; maker: string }[]
   >([]);
@@ -62,22 +56,8 @@ function Learn() {
     }
   };
   useEffect(() => {
-    if (conversation[conversation.length - 1]?.message == "Test passed") {
-      fetch("http://localhost:4444/addpointlearwithai", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ topicid: topic }),
-      })
-        .then((resp) => resp.json())
-        .then((data) => { 
-          console.log(data);
-        })
-        .catch(err=>console.log('Error during sending point to db:',err))
-        navigate("/home/learn")
-
+    if (conversation[conversation.length + 1]?.message == "“Test passed") {
+      console.log("Test zdany");
     }
   }, [conversation]);
   return (

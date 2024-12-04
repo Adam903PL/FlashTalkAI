@@ -8,14 +8,9 @@ const session = require('express-session');
 const fs = require('fs');
 const cors = require('cors');
 const { default: axios } = require("axios");
-
-
-
-
-
+const dotenv = require('dotenv').config();
 
   
-
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
@@ -24,6 +19,7 @@ const pool = new Pool({
     port: 5432,
     ssl: { rejectUnauthorized: false }
 });
+
 
 app.use(session({
     secret: "secret-key",
@@ -39,7 +35,8 @@ app.use(session({
 // Konfiguracja CORS
 app.use(cors({
     origin: 'http://localhost:5173',
-    credentials: true
+    credentials: true,
+    methods: "GET,POST,PUT,DELETE"
 }));
 
 
@@ -159,7 +156,6 @@ app.get("/logout", (req, res) => {
         if (err) {
             return res.json({ success: false, message: "Błąd podczas wylogowywania" });
         }
-        res.redirect('/login');
     });
 });
 
@@ -171,7 +167,9 @@ app.get("/logout", (req, res) => {
 
 
 app.post("/changeKnown", async (req, res) => {
-    // Sprawdzenie, czy przekazano wordId w danych
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
     if (!req.body.wordId) {
         return res.status(400).json({ success: false, message: "Brak wordId w danych" });
     }
@@ -236,6 +234,7 @@ app.post('/getAllWords', async (req, res) => {
 
 
 app.get('/api/tematData', async (req,res)=>{
+    
     try{
         const client = await pool.connect();
         const query = "select * from public.conversation_topics"
@@ -256,10 +255,14 @@ app.post("/api/forwardToAi", (req, res) => {
 
 
 app.get('/getAllTopics', async (req,res)=>{
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
     try{
         const client = await pool.connect();
-        const query = "select * from learn_ai_topics"
-        const response = await client.query(query);
+        const query = "SELECT lat.topicid, lat.topicdescription,lap.point FROM learn_ai_topics AS lat LEFT JOIN learn_ai_points AS lap ON lap.topicid = lat.topicid AND lap.userid = $1 order by topicid asc"
+        const values = [req.session.user.userid];
+        const response = await client.query(query,values);
         res.json({data:response.rows})
 
         client.release(); 
@@ -271,6 +274,76 @@ app.get('/getAllTopics', async (req,res)=>{
 
 
 
+app.get('/getuserdatas', async (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
+
+    try {
+        const client = await pool.connect();
+        const query = "SELECT points,userlevel FROM user_points_and_levels where userid = $1";
+        const values = [req.session.user.userid];
+        
+        console.log("Wykonane zapytanie:", query);
+        console.log("Wartości:", values);
+        
+        const response = await client.query(query, values);
+        
+        if (response.rows.length > 0) {
+            const { points, userlevel } = response.rows[0]; 
+            console.log(points, userlevel, "ksksksk");
+            res.json({ points, level: userlevel });
+        } else {
+            res.status(404).json({ success: false, message: "No data found for user." });
+        }
+        
+        client.release();
+        
+    } catch (err) {
+        console.error("Error during query:", err);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+});
+
+
+app.post('/addpointlearwithai', async (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
+    try {
+        const client = await pool.connect();
+
+        const updateQuery = "UPDATE learn_ai_points SET point = 4 WHERE topicid = $1 AND userid = $2";
+        const updateValues = [parseInt(req.body.topicid.lesson), req.session.user.userid];
+        console.log(updateValues,"take bambo take pete eko teka  ")
+        const updateResponse = await client.query(updateQuery, updateValues);
+
+        if (updateResponse.rowCount > 0) {
+            res.json({ success: true, message: "Points updated successfully." });
+        } else {
+            res.json({ success: false, message: "No matching topic or user found." });
+        }
+
+        client.release();
+
+    } catch (err) {
+        console.error("Error during query:", err);
+        res.status(500).json({ success: false, message: "Internal server error." });
+    }
+});
+
+
+app.get('/checkislogedin', (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    } else {
+        return res.status(200).json({ 
+            success: true, 
+            message: "Użytkownik jest zalogowany", 
+            session: req.session 
+        });
+    }
+});
 
 
 

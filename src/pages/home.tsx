@@ -1,28 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import homeStyles from "./css/home.module.css";
 import NavBar from "./navbar";
 import { useNavigate } from "react-router-dom";
-import { Outlet } from "react-router-dom";
-import { Link } from "react-router-dom"
-
+import { usePoint } from "../contexts/points/usePoints";
+import { pointsType } from "../contexts/points/PointsContext";
+import { useLoged } from "../contexts/loged/useLoged";
 const Home: React.FC = () => {
+
+
 
   const navigate = useNavigate();
 
 
-  useEffect(() => {
-    fetch("http://localhost:4444/loginSucces", {
-      credentials: "include",
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        if (data.succes == false) {
-          window.location.href = "/login";
-          // navigate('/login')
-          // navigate("/home");
-        }
-      });
-  }, []);
+
+
   return (
     <div className={homeStyles.homeContainer}>
       {/* Header */}
@@ -48,7 +39,7 @@ const Home: React.FC = () => {
           <div
             className={homeStyles.optionCard}
             onClick={() => {
-              window.location.href = "/home/learn";
+              navigate("/home/learn");
             }}
           >
             <h3>Ucz się AI</h3>
@@ -57,7 +48,7 @@ const Home: React.FC = () => {
           <div
             className={homeStyles.optionCard}
             onClick={() => {
-              window.location.href = "/home/voice-practice";
+              navigate("/home/voice-practice");
             }}
           >
             <h3>Praktyka Głosowa</h3>
@@ -66,7 +57,7 @@ const Home: React.FC = () => {
           <div
             className={homeStyles.optionCard}
             onClick={() => {
-              window.location.href = "/home/flashcards";
+              navigate("/home/flashcards");
             }}
           >
             <h3>Fiszki</h3>
@@ -75,7 +66,7 @@ const Home: React.FC = () => {
           <div
             className={homeStyles.optionCard}
             onClick={() => {
-              window.location.href = "/home/test";
+              navigate("/home/test");
             }}
           >
             <h3>Test</h3>
@@ -83,9 +74,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
-
     </div>
-    
   );
 };
 
