@@ -1,12 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Home from "../pages/home";
-import Flashcards from "../pages/flashcards";
-import Flashcard from "../pages/flashcard";
+import Flashcards from "../pages/flashcards/flashcards";
+import Flashcard from "../pages/flashcards/flashcard";
 import Login from "../pages/login";
 import Registration from "../pages/registration";
 import LearnTopics from "../pages/LearnWithAI/learnTopics";
 import LearnAi from "../pages/LearnWithAI/learnAi";
+import FetchFlashcardsWithRandomIds from "../pages/testing/POSTtest";
 
 function MainRouter() {
   const [units, setUnits] = useState<string[]>([]);
@@ -43,6 +44,7 @@ function MainRouter() {
       <Route path="/register" element={<Registration />} />
       <Route path="/home/learn" element={<LearnTopics />} />
       <Route path="/home/learn/:lesson" element={<LearnAi />} />
+      <Route path="/home/POST" element={<FetchFlashcardsWithRandomIds/>}/>
     </Routes>
   );
 }

@@ -32,7 +32,7 @@ app.use(session({
     }
 }));
 
-// Konfiguracja CORS
+
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
@@ -232,6 +232,47 @@ app.post('/getAllWords', async (req, res) => {
     }
 });
 
+app.post('/getKnownWordsByUnitId', async (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
+
+    const { from, to } = req.body;
+
+    // Walidacja danych wejściowych
+    if (typeof from !== "number" || typeof to !== "number" || from > to) {
+        return res.status(400).json({ success: false, message: "Nieprawidłowe wartości zakresu (from, to)." });
+    }
+
+    try {
+        const client = await pool.connect();
+        const query = `
+            SELECT flashcard_id
+            FROM user_flashcards 
+            WHERE user_id = $1 
+              AND flashcard_id BETWEEN $2 AND $3 
+              AND known = false
+            ORDER BY flashcard_id ASC
+        `;
+        const values = [req.session.user.userid, from, to];
+
+        console.log("Wykonane zapytanie:", query);
+        console.log("Wartości:", values);
+
+        const response = await client.query(query, values);
+
+        // Zwracanie tylko listy ID
+        const flashcardIds = response.rows.map(row => row.flashcard_id);
+        res.json(flashcardIds);
+
+        client.release();
+    } catch (err) {
+        console.error("Błąd bazy danych:", err);
+        res.status(500).json({ success: false, message: "Wystąpił błąd podczas przetwarzania zapytania." });
+    }
+});
+
+
 
 app.get('/api/tematData', async (req,res)=>{
     
@@ -338,6 +379,13 @@ app.get('/checkislogedin', (req, res) => {
         });
     }
 });
+
+
+
+
+
+
+
 
 
 
