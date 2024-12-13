@@ -1,33 +1,42 @@
 /* Główne ustawienia kontenera */
 .cardLearnContainer {
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  height: 100vh;
 }
 
 /* Karta z zawartością */
+.cardLearnWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  height: 60%;
+  background-color: #333;
+  color: #fff;
+  border-radius: 15px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+  padding: 30px;
+  font-family: 'Arial', sans-serif;
+  transition: transform 0.5s ease;
+  position: relative;
+  animation: rotate360 0.5s ease-in-out forwards;
+}
+
+.cardLearnWrapper:hover {
+  transform: scale(1.05);
+}
+
 .cardLearn {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 80%;  
-    height: 60%; 
-    background-color: #333; 
-    color: #fff;  /* Biały kolor tekstu */
-    border-radius: 15px;
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);  /* Silniejszy cień dla ciemnego tła */
-    padding: 30px;
-    font-family: 'Arial', sans-serif;
-    transition: transform 0.5s ease;
-    position: relative;
-    animation: rotate360 0.5s ease-in-out forwards;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  background-color: inherit;
 }
-
-.cardLearn:hover {
-    transform: scale(1.05);
-}
-
 
 @keyframes rotate360 {
   0% {
@@ -43,57 +52,50 @@
 
 /* Strzałki */
 .arrow {
-    font-size: 8vw;  /* Zmiana rozmiaru na 8% szerokości ekranu */
-    background-color: #333;
-    color: #fff;
-    border-radius: 50%;
-    width: 12vw;  /* Szerokość strzałki 12% szerokości ekranu */
-    height: 12vw; /* Wysokość strzałki 12% szerokości ekranu */
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    -webkit-user-select: none;  
-    -moz-user-select: none;     
-    -ms-user-select: none; 
-    transition: background-color 0.3s ease, transform 0.3s ease;
+  font-size: 8vw;
+  background-color: #333;
+  color: #fff;
+  border-radius: 50%;
+  width: 12vw;
+  height: 12vw;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .arrow:hover {
-    background-color: #1e90ff;
-    transform: scale(1.1);  /* Powiększenie strzałki przy hover */
+  background-color: #1e90ff;
+  transform: scale(1.1);
 }
 
 /* Słowo */
 .word {
-    font-size: 6vw;  /* Duże litery - 10% szerokości ekranu */
-    font-weight: 700;
-    color: white;
-    text-align: center;
-    flex-grow: 1;
-    transition: opacity 0.3s ease;
-    margin: 0 30px;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;  
-    -moz-user-select: none;     
-    -ms-user-select: none; 
-
+  font-size: 6vw;
+  font-weight: 700;
+  color: white;
+  text-align: center;
+  flex-grow: 1;
+  transition: opacity 0.3s ease;
+  margin: 0 30px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-
-.word{
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.word {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-
-
-
-
-
 
 /* Styl dla głównego kontenera */
 .box {
@@ -112,14 +114,14 @@
 }
 
 /* Obramowanie dla znanego słówka */
-.box.known {
-  border-color: #28a745; /* Zielony */
+.known {
+  border-color: #28a745;
   box-shadow: 0 4px 16px rgba(40, 167, 69, 0.5);
 }
 
 /* Obramowanie dla nieznanego słówka */
-.box.unknown {
-  border-color: #dc3545; /* Czerwony */
+.unknown {
+  border-color: #dc3545;
   box-shadow: 0 4px 16px rgba(220, 53, 69, 0.5);
 }
 
@@ -143,7 +145,6 @@
   filter: brightness(0.8);
 }
 
-
 .wordEmoji img:hover {
   transform: scale(1.1);
   filter: brightness(1);
@@ -156,16 +157,32 @@
   }
 }
 
-
-.linie{
+/* Linie oddzielające sekcje */
+.linie {
   width: 80%;
   margin: 0 10% 0 10%;
   height: 2px;
   background-color: #333;
 }
+
 .linie2 {
   width: 100%;
   height: 1px;
   background-color: #333;
   margin: 8px 0;
+}
+
+/* Styl informacji o indeksie słówka */
+.wordIndexInfo {
+  margin-top: 20px;
+  font-size: 1.2em;
+  text-align: center;
+  color: #fff;
+}
+
+/* Wyświetlanie wszystkich słówek */
+.wordsAll {
+  color: #fff;
+  text-align: center;
+  margin-top: 20px;
 }

@@ -19,7 +19,6 @@ const server = new WebSocket.Server({ port: 8080 });
 
 const offensiveWords = ["kurwa", "chuj", "piździel", "jebany"]; // Możesz rozbudować listę wulgaryzmów
 
-// Funkcja sprawdzająca, czy wiadomość zawiera wulgaryzmy
 function containsOffensiveLanguage(message) {
     return offensiveWords.some((word) => message.toLowerCase().includes(word));
 }

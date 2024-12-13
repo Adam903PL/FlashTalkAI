@@ -11,7 +11,7 @@ export const PointsProvider = ({ children }: PropsWithChildren) => {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        data.succes ? setloged(data.succes) : NaN;
+        setloged(data.succes)
       });
   }, []);
 

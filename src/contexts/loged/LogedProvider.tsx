@@ -14,21 +14,38 @@ export const LogedProvider = ({ children }: PropsWithChildren) => {
       .then((resp) => resp.json())
       .then((data) => {
         if (data.succes) {
-          setLogeds(data.succes);
+          console.log(data.succes,"is loged in to app")
+          setLogeds(true);
         }
       });
   }, []);
 
+
+  useEffect(()=>{
+    console.log(loged,'sksk');
+    
+    fetch("http://localhost:4444/loginsucces",{
+      credentials:"include"
+    }).then(resp=>resp.json())
+    .then(data=>console.log(data,"checking"))
+
+
+  },[loged])
+
   useEffect(() => {
     if (loged && (location.pathname === "/login" || location.pathname === "/register")) {
-      navigate("/home");
+      // navigate("/home");
+      // w chuj wazne ^  nie  wżucać zakomentowanego na gita 
     }
-    else if (!loged && location.pathname !== "/login" && location.pathname !== "/register") {
-      navigate("/login");
+    else if (loged==false && location.pathname !== "/login" && location.pathname !== "/register") {
+      console.log(loged,location.pathname)
+      // navigate("/login");
+      // w chuj wazne ^  nie  wżucać zakomentowanego na gita
     }
   }, [loged, location, navigate]);
 
   const setloged = (status: boolean) => {
+    console.log(status,"ksksk")
     setLogeds(status);
   };
 
