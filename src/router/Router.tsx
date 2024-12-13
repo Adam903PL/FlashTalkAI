@@ -44,7 +44,7 @@ function MainRouter() {
       <Route path="/register" element={<Registration />} />
       <Route path="/home/learn" element={<LearnTopics />} />
       <Route path="/home/learn/:lesson" element={<LearnAi />} />
-      <Route path="/home/POST" element={<FetchFlashcardsWithRandomIds/>}/>
+      {/* <Route path="/home/POST" element={<FetchFlashcardsWithRandomIds/>}/> */}
     </Routes>
   );
 }
