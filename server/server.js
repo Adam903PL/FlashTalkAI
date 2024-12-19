@@ -382,7 +382,54 @@ app.get('/checkislogedin', (req, res) => {
 
 
 
+app.get('/getuserpoint', async (req, res) => {
+    try {
+        const client = await pool.connect();
 
+        const query = `
+            SELECT 
+                (SELECT SUM(point) 
+                 FROM learn_ai_points 
+                 WHERE userid = $1) AS UserLearnAiPoints,
+                (SELECT COUNT(known) 
+                 FROM user_flashcards 
+                 WHERE user_id = $1) AS UserFlashCardPoints;
+        `;
+
+
+        const values = [1];
+
+
+        const result = await client.query(query, values);
+
+
+        client.release();
+
+        if (result.rows.length > 0) {
+            const data = result.rows[0]; 
+            return res.status(200).json({
+                success: true,
+                message: "Dane użytkownika zostały pobrane",
+                data: {
+                    UserLearnAiPoints: data.userlearnaipoints || 0,
+                    UserFlashCardPoints: data.userflashcardpoints || 0
+                }
+            });
+        } else {
+            return res.status(404).json({
+                success: false,
+                message: "Nie znaleziono punktów dla tego użytkownika"
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            success: false,
+            message: "Wystąpił błąd serwera",
+            error: err.message
+        });
+    }
+});
 
 
 
@@ -392,5 +439,4 @@ app.get('/checkislogedin', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
-
 
