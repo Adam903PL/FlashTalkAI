@@ -1,7 +1,8 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import NavBar from "../pages/navbar";
 import { useNavigate,useLocation } from "react-router";
 import { useLoged } from "../contexts/loged/useLoged";
+import VoiceInput from './speechtotext/texttospeech'
 
 function SpeakingAi() {
   const location = useLocation();
@@ -80,33 +81,33 @@ function SpeakingAi() {
     }
   }, [conversation]);
   return (
-    <div>
-      <NavBar />
-      <div className="conversation">
-        {conversation.map((msg, index) => (
-          <p
-            key={index}
-            className={msg.maker === "user" ? "userMessage" : "serverMessage"}
-          >
-            <strong>{msg.maker}: </strong>
-            {msg.message}
-          </p>
-        ))}
+      <div>
+        <NavBar />
+        <div className="conversation">
+          {conversation.map((msg, index) => (
+              <p
+                  key={index}
+                  className={msg.maker === "user" ? "userMessage" : "serverMessage"}
+              >
+                <strong>{msg.maker}: </strong>
+                {msg.message}
+              </p>
+          ))}
 
-        <div className="lastchildDiv">
-          <input
-            className="messs"
-            id="messs"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Wpisz wiadomość..."
-          />
-          <button className="send_mes" onClick={handleSendMessage}>
-            Send Mess
-          </button>
+          <div className="lastchildDiv">
+            <VoiceInput
+                className="messs"
+                id="messs"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Wpisz wiadomość..."
+            />
+            <button className="send_mes" onClick={handleSendMessage}>
+              Send Mess
+            </button>
+          </div>
         </div>
       </div>
-    </div>
   );
 }
 
