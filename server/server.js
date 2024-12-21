@@ -387,14 +387,16 @@ app.get('/getuserpoint', async (req, res) => {
         const client = await pool.connect();
 
         const query = `
-            SELECT 
-                (SELECT SUM(point) 
-                 FROM learn_ai_points 
-                 WHERE userid = $1) AS UserLearnAiPoints,
-                (SELECT COUNT(known) 
-                 FROM user_flashcards 
-                 WHERE user_id = $1) AS UserFlashCardPoints;
-        `;
+        SELECT 
+            (SELECT COUNT(known) 
+            FROM user_flashcards 
+            WHERE user_id = $1) AS User_Flash_Card_Points,
+            u.points as user_learn_ai_points,
+            u.userlevel as user_learn_ai_level
+        FROM 
+            user_points_and_levels u
+        WHERE 
+            u.userid = $1;`;
 
 
         const values = [1];
@@ -411,8 +413,10 @@ app.get('/getuserpoint', async (req, res) => {
                 success: true,
                 message: "Dane użytkownika zostały pobrane",
                 data: {
-                    UserLearnAiPoints: data.userlearnaipoints || 0,
-                    UserFlashCardPoints: data.userflashcardpoints || 0
+                    UserLearnAiPoints: data.user_learn_ai_points || 0,
+                    UserLearnAiLevel: data.user_learn_ai_level || 0,
+                    UserFlashCardPoints: data.user_flash_card_points || 0
+
                 }
             });
         } else {

@@ -7,7 +7,7 @@ import { usePoint } from "../../contexts/points/usePoints";
 
 function LearnTopics() {
   const [topics, setTopics] = useState([]);
-  const { list, setPoint } = usePoint();
+  const { list} = usePoint();
   const navigate = useNavigate();
 
   useEffect(() => {
