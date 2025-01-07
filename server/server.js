@@ -51,6 +51,15 @@ function getFlashcardFiles(directory = './flashcards') {
         return [];
     }
 }
+  
+  
+app.get('/api/test', (req, res) => {
+    const files = getFlashcardFiles(path.join(__dirname, 'test'));
+    res.json(files);
+});
+
+
+
 
 app.get('/api/flashcards', (req, res) => {
     const files = getFlashcardFiles(path.join(__dirname, 'flashcards'));
@@ -63,7 +72,9 @@ function generateFlashcardEndpoints(directory = './flashcards') {
 
     fileList.forEach(file => {
         const filePath = path.join(directory, file);
-        app.get(`/api/flashcards/${file}`, (req, res) => {
+        const apiPath = `/api/${path.basename(directory)}/${file}`;
+
+        app.get(apiPath, (req, res) => {
             fs.readFile(filePath, 'utf-8', (err, data) => {
                 if (err) {
                     return res.status(404).json({ error: 'Plik nie znaleziony' });
@@ -82,6 +93,7 @@ function generateFlashcardEndpoints(directory = './flashcards') {
 
 
 generateFlashcardEndpoints(path.join(__dirname, 'flashcards'));
+generateFlashcardEndpoints(path.join(__dirname, 'test'));
 app.post("/loginData", async (req, res) => {
     let datas = {
         email: req.body.email,

@@ -1,0 +1,95 @@
+{
+    "test": [
+      {
+        "type": "fillthegap",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Ich ___ ein Buch über Geschichte.",
+            "answer": "lese"
+          },
+          {
+            "id": 2,
+            "question": "Die ___ zeigt den Weg.",
+            "answer": "Seite"
+          },
+          {
+            "id": 3,
+            "question": "Er möchte ___ ziehen.",
+            "answer": "nach"
+          },
+          {
+            "id": 4,
+            "question": "Das ___ dauert eine Stunde.",
+            "answer": "Gespräch"
+          },
+          {
+            "id": 5,
+            "question": "Sie hat ___ Augen.",
+            "answer": "blaue"
+          },
+          {
+            "id": 6,
+            "question": "Das ___ der Arbeit ist wichtig.",
+            "answer": "Ende"
+          },
+          {
+            "id": 7,
+            "question": "Der Schüler muss viel ___ .",
+            "answer": "lernen"
+          },
+          {
+            "id": 8,
+            "question": "Ich kann den Grund nicht ___ .",
+            "answer": "verstehen"
+          }
+        ]
+      },
+      {
+        "type": "simpletranslation",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Die Mutter ist stark.",
+            "answer": "The mother is strong."
+          },
+          {
+            "id": 2,
+            "question": "Er hat viel Geld.",
+            "answer": "He has a lot of money."
+          },
+          {
+            "id": 3,
+            "question": "Das Kind ist allein.",
+            "answer": "The child is alone."
+          },
+          {
+            "id": 4,
+            "question": "Ich sehe den Kopf.",
+            "answer": "I see the head."
+          },
+          {
+            "id": 5,
+            "question": "I understand the reason.",
+            "answer": "Ich verstehe den Grund."
+          },
+          {
+            "id": 6,
+            "question": "We write the words.",
+            "answer": "Wir schreiben die Wörter."
+          },
+          {
+            "id": 7,
+            "question": "She learns a lot.",
+            "answer": "Sie lernt viel."
+          },
+          {
+            "id": 8,
+            "question": "They run to school.",
+            "answer": "Sie laufen zur Schule."
+          }
+        ]
+      }
+    ]
+  }
+  

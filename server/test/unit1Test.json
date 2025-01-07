@@ -1,7 +1,95 @@
-[
-    {"id":1,"type":"fillTheGap","question":"Ich ___ Pfannkuchen","answer":"mag"},
-    {"id":2,"type":"fillTheGap","question":"Ich ___ Pfannkuchen","answer":"mag"},
-    {"id":3,"type":"fillTheGap","question":"Ich ___ Pfannkuchen","answer":"mag"},
-    
-
-]
+{
+    "test": [
+      {
+        "type": "fillthegap",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Ich ___ ein Buch.",
+            "answer": "habe"
+          },
+          {
+            "id": 2,
+            "question": "Er kommt ___ Hause.",
+            "answer": "nach"
+          },
+          {
+            "id": 3,
+            "question": "Wir sind ___ Garten.",
+            "answer": "im"
+          },
+          {
+            "id": 4,
+            "question": "Sie geht ___ Schule.",
+            "answer": "zur"
+          },
+          {
+            "id": 5,
+            "question": "Das ist ___ Auto.",
+            "answer": "mein"
+          },
+          {
+            "id": 6,
+            "question": "Ich mag ___ Hund.",
+            "answer": "deinen"
+          },
+          {
+            "id": 7,
+            "question": "Wir fahren ___ Zug.",
+            "answer": "mit"
+          },
+          {
+            "id": 8,
+            "question": "Er spielt ___ Ball.",
+            "answer": "mit"
+          }
+        ]
+      },
+      {
+        "type": "simpletranslation",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Ich sehe den Tag.",
+            "answer": "I see the day."
+          },
+          {
+            "id": 2,
+            "question": "Das ist mein Buch.",
+            "answer": "This is my book."
+          },
+          {
+            "id": 3,
+            "question": "Wir gehen nach Hause.",
+            "answer": "We go home."
+          },
+          {
+            "id": 4,
+            "question": "Du bist sehr groß.",
+            "answer": "You are very tall."
+          },
+          {
+            "id": 5,
+            "question": "I have a house.",
+            "answer": "Ich habe ein Haus."
+          },
+          {
+            "id": 6,
+            "question": "We see a car.",
+            "answer": "Wir sehen ein Auto."
+          },
+          {
+            "id": 7,
+            "question": "She is very nice.",
+            "answer": "Sie ist sehr nett."
+          },
+          {
+            "id": 8,
+            "question": "You are a person.",
+            "answer": "Du bist ein Mensch."
+          }
+        ]
+      }
+    ]
+  }
+  
