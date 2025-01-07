@@ -1,0 +1,95 @@
+{
+    "test": [
+      {
+        "type": "fillthegap",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Das ___ ist sehr groß.",
+            "answer": "Haus"
+          },
+          {
+            "id": 2,
+            "question": "Ich möchte ___ lernen.",
+            "answer": "deutsch"
+          },
+          {
+            "id": 3,
+            "question": "Das ___ ist ein schöner Tag.",
+            "answer": "heute"
+          },
+          {
+            "id": 4,
+            "question": "Die ___ ist schwer.",
+            "answer": "Arbeit"
+          },
+          {
+            "id": 5,
+            "question": "Ich habe eine ___ Frage.",
+            "answer": "kleine"
+          },
+          {
+            "id": 6,
+            "question": "Er möchte das Land ___ .",
+            "answer": "verlassen"
+          },
+          {
+            "id": 7,
+            "question": "Sie ___ gerne Bücher.",
+            "answer": "lesen"
+          },
+          {
+            "id": 8,
+            "question": "Er kann gut ___ .",
+            "answer": "sprechen"
+          }
+        ]
+      },
+      {
+        "type": "simpletranslation",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Das Haus ist groß.",
+            "answer": "The house is big."
+          },
+          {
+            "id": 2,
+            "question": "Ich mag die Arbeit.",
+            "answer": "I like the work."
+          },
+          {
+            "id": 3,
+            "question": "Heute ist ein schöner Tag.",
+            "answer": "Today is a beautiful day."
+          },
+          {
+            "id": 4,
+            "question": "Ich gehe in die Schule.",
+            "answer": "I go to school."
+          },
+          {
+            "id": 5,
+            "question": "The man is tall.",
+            "answer": "Der Mann ist groß."
+          },
+          {
+            "id": 6,
+            "question": "I like the child.",
+            "answer": "Ich mag das Kind."
+          },
+          {
+            "id": 7,
+            "question": "She is learning German.",
+            "answer": "Sie lernt Deutsch."
+          },
+          {
+            "id": 8,
+            "question": "We are reading a book.",
+            "answer": "Wir lesen ein Buch."
+          }
+        ]
+      }
+    ]
+  }
+  

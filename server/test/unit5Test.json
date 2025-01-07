@@ -1,0 +1,95 @@
+{
+    "test": [
+      {
+        "type": "fillthegap",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Der ___ ist sehr schwierig.",
+            "answer": "Krieg"
+          },
+          {
+            "id": 2,
+            "question": "Ich kann das nicht ___ .",
+            "answer": "verstehen"
+          },
+          {
+            "id": 3,
+            "question": "Das ___ ist sehr gut.",
+            "answer": "Ergebnis"
+          },
+          {
+            "id": 4,
+            "question": "Ich ___ ihm bei den Hausaufgaben.",
+            "answer": "helfe"
+          },
+          {
+            "id": 5,
+            "question": "Das ___ ist schwarz.",
+            "answer": "Auto"
+          },
+          {
+            "id": 6,
+            "question": "Ich ___ das Buch jeden Tag.",
+            "answer": "lese"
+          },
+          {
+            "id": 7,
+            "question": "Wir gehen morgen ___ .",
+            "answer": "nach Hause"
+          },
+          {
+            "id": 8,
+            "question": "Er hat viele ___ .",
+            "answer": "Freunde"
+          }
+        ]
+      },
+      {
+        "type": "simpletranslation",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Der Schüler lernt viel.",
+            "answer": "The student learns a lot."
+          },
+          {
+            "id": 2,
+            "question": "Die Regierung hilft den Menschen.",
+            "answer": "The government helps the people."
+          },
+          {
+            "id": 3,
+            "question": "Er hat das Ergebnis verstanden.",
+            "answer": "He understood the result."
+          },
+          {
+            "id": 4,
+            "question": "Die Situation ist schwierig.",
+            "answer": "The situation is difficult."
+          },
+          {
+            "id": 5,
+            "question": "I feel good today.",
+            "answer": "Ich fühle mich gut heute."
+          },
+          {
+            "id": 6,
+            "question": "We offer a new service.",
+            "answer": "Wir bieten einen neuen Service an."
+          },
+          {
+            "id": 7,
+            "question": "The teacher explains the lesson.",
+            "answer": "Der Lehrer erklärt die Lektion."
+          },
+          {
+            "id": 8,
+            "question": "Sie gewinnt das Spiel.",
+            "answer": "She wins the game."
+          }
+        ]
+      }
+    ]
+  }
+  

@@ -1,0 +1,95 @@
+{
+    "test": [
+      {
+        "type": "fillthegap",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Ich ___ in der Abteilung.",
+            "answer": "arbeite"
+          },
+          {
+            "id": 2,
+            "question": "Der ___ ist sehr wichtig.",
+            "answer": "Arbeit"
+          },
+          {
+            "id": 3,
+            "question": "Ich ___ viel in der Woche.",
+            "answer": "arbeite"
+          },
+          {
+            "id": 4,
+            "question": "Sie ___ das Problem sehr gut.",
+            "answer": "verstehen"
+          },
+          {
+            "id": 5,
+            "question": "Wir haben ___ viel zu tun.",
+            "answer": "viel"
+          },
+          {
+            "id": 6,
+            "question": "Das ist eine ___ Möglichkeit.",
+            "answer": "gute"
+          },
+          {
+            "id": 7,
+            "question": "Er ist ein ___ Mensch.",
+            "answer": "netter"
+          },
+          {
+            "id": 8,
+            "question": "Ich möchte ___ eine Frage stellen.",
+            "answer": "dir"
+          }
+        ]
+      },
+      {
+        "type": "simpletranslation",
+        "questions": [
+          {
+            "id": 1,
+            "question": "Ich arbeite täglich.",
+            "answer": "I work daily."
+          },
+          {
+            "id": 2,
+            "question": "Das Leben ist schön.",
+            "answer": "Life is beautiful."
+          },
+          {
+            "id": 3,
+            "question": "Der Gegner ist stark.",
+            "answer": "The opponent is strong."
+          },
+          {
+            "id": 4,
+            "question": "Ich schreibe eine Antwort.",
+            "answer": "I write an answer."
+          },
+          {
+            "id": 5,
+            "question": "I take a chance.",
+            "answer": "Ich nehme eine Chance."
+          },
+          {
+            "id": 6,
+            "question": "She has a possibility.",
+            "answer": "Sie hat eine Möglichkeit."
+          },
+          {
+            "id": 7,
+            "question": "We change the plan.",
+            "answer": "Wir verändern den Plan."
+          },
+          {
+            "id": 8,
+            "question": "They work together.",
+            "answer": "Sie arbeiten zusammen."
+          }
+        ]
+      }
+    ]
+  }
+  
