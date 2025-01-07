@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import  "./css/card.css";
-import { useLoged } from "../contexts/loged/useLoged";
+import  "../css/card.css";
+import { useLoged } from "../../contexts/loged/useLoged";
 import { useNavigate } from "react-router-dom";
 
 interface CardProps {
@@ -11,8 +11,6 @@ const Card: React.FC<CardProps> = ({ unit }) => {
   const [description, setDescription] = useState<string>("");
 
   const navigate = useNavigate()
-
-
 
 
 
@@ -46,7 +44,7 @@ const Card: React.FC<CardProps> = ({ unit }) => {
     <div
       className="card"
       onClick={() => {
-        window.location.href = `/home/flashcards/${unit.replace(".json", "")}`;
+        navigate(`/home/flashcards/${unit.replace(".json", "")}`);
       }}
     >
       <h2>{unit.replace(".json", "")}</h2>

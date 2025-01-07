@@ -15,6 +15,7 @@ function NavBar() {
     fetch("http://localhost:4444/logout", { credentials: "include" })
       .catch((err) => {console.error("Errors during logout:", err)});
       setloged(false);
+
       navigate("/login");
   };
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import volumeMax from "../assets/volume-max.svg";
-import "./css/flashcardlearn.css";
-import { useLoged } from "../contexts/loged/useLoged";
+import "../css/flashcardlearn.css";
+import { useLoged } from "../../contexts/loged/useLoged";
 import { useNavigate } from "react-router-dom";
 
 type WordContainerProps = {
@@ -13,11 +13,7 @@ type WordContainerProps = {
 function WordContainer({ word, onReload, known }: WordContainerProps) {
   const [isKnown, setIsKnown] = useState(known);
 
-
-
   const navigate = useNavigate()
-
-
 
   const changeIsKnown = (wordId: number) => {
     fetch("http://localhost:4444/changeKnown", {
@@ -42,26 +38,10 @@ function WordContainer({ word, onReload, known }: WordContainerProps) {
       });
   };
 
-  // const rotatediv = () => {
-  //   const card = document.querySelector(`.${flashcardStyles.box}`);
-
-  //   if (!card) return;
-
-  //   if (!card.classList.contains('rotated-180')) {
-  //     card.classList.add('rotated-180');
-  //   } else if (card.classList.contains('rotated-180')) {
-  //     card.classList.remove('rotated-180');
-  //     card.classList.add('rotated-360');
-  //   } else {
-  //     card.classList.remove('rotated-360');
-  //   }
-  // };
-
+  
   return (
     <div
-      className={`"box" ${
-        isKnown ? "known" : "unknown"
-      }`}
+    className={`box ${isKnown?"known":"unknown"}`}
     >
       <div className="wordContect">
         <p onClick={() => {return 0 }}>{word.word}</p>

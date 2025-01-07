@@ -9,7 +9,6 @@ export type pointsType = {
 type PointsContextResult = {
     list: pointsType[]; 
     addPoint: (userid: number) => void;
-    setPoint: (newList: pointsType[]) => void;
 };
 
 
