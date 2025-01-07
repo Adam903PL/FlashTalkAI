@@ -30,6 +30,26 @@ function MainRouter() {
     return <div>Ładowanie...</div>;
   }
 
+
+// fetchujecie się do /api/test
+// tam bedziecie mieli unity
+/// useStata i zapisuje unity do statnu 
+// mapa w routerze aby wygenerować podstron
+// {unity_któe_pobraliście.smap((unit, index) => (
+//   <Route
+//     key={index}
+//     path={`/home//${unit.replace(".json", "")}`}
+//     element={<swojego tsx unit={unit} />}
+//   />
+// ))}
+
+
+
+
+
+
+
+
   return (
     <Routes>
       <Route path="/home" element={<Home />} />
@@ -47,6 +67,7 @@ function MainRouter() {
       <Route path="/home/learn/:lesson" element={<LearnAi />} />
       <Route path="/home/Speak" element={<Levels />} />
       <Route path="/home/SpeakingAi" element={<SpeakingAi />} />
+
     </Routes>
   );
 }
