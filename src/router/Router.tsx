@@ -28,6 +28,23 @@ function MainRouter() {
   if (loading) {
     return <div>Ładowanie...</div>;
   }
+// fetchujecie się do /api/test
+// tam bedziecie mieli unity
+/// useStata i zapisuje unity do statnu 
+// mapa w routerze aby wygenerować podstron
+// {unity_któe_pobraliście.smap((unit, index) => (
+//   <Route
+//     key={index}
+//     path={`/home//${unit.replace(".json", "")}`}
+//     element={<swojego tsx unit={unit} />}
+//   />
+// ))}
+
+
+
+
+
+
 
   return (
     <Routes>
