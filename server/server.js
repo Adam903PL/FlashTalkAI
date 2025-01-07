@@ -32,7 +32,7 @@ app.use(session({
     }
 }));
 
-// Konfiguracja CORS
+
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
@@ -232,6 +232,47 @@ app.post('/getAllWords', async (req, res) => {
     }
 });
 
+app.post('/getKnownWordsByUnitId', async (req, res) => {
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
+
+    const { from, to } = req.body;
+
+    // Walidacja danych wejściowych
+    if (typeof from !== "number" || typeof to !== "number" || from > to) {
+        return res.status(400).json({ success: false, message: "Nieprawidłowe wartości zakresu (from, to)." });
+    }
+
+    try {
+        const client = await pool.connect();
+        const query = `
+            SELECT flashcard_id
+            FROM user_flashcards 
+            WHERE user_id = $1 
+              AND flashcard_id BETWEEN $2 AND $3 
+              AND known = false
+            ORDER BY flashcard_id ASC
+        `;
+        const values = [req.session.user.userid, from, to];
+
+        console.log("Wykonane zapytanie:", query);
+        console.log("Wartości:", values);
+
+        const response = await client.query(query, values);
+
+        // Zwracanie tylko listy ID
+        const flashcardIds = response.rows.map(row => row.flashcard_id);
+        res.json(flashcardIds);
+
+        client.release();
+    } catch (err) {
+        console.error("Błąd bazy danych:", err);
+        res.status(500).json({ success: false, message: "Wystąpił błąd podczas przetwarzania zapytania." });
+    }
+});
+
+
 
 app.get('/api/tematData', async (req,res)=>{
     
@@ -341,8 +382,65 @@ app.get('/checkislogedin', (req, res) => {
 
 
 
+app.get('/getuserpoint', async (req, res) => {
+    try {
+        const client = await pool.connect();
+
+        const query = `
+        SELECT 
+            (SELECT COUNT(known) 
+            FROM user_flashcards 
+            WHERE user_id = $1) AS User_Flash_Card_Points,
+            u.points as user_learn_ai_points,
+            u.userlevel as user_learn_ai_level
+        FROM 
+            user_points_and_levels u
+        WHERE 
+            u.userid = $1;`;
+
+
+        const values = [1];
+
+
+        const result = await client.query(query, values);
+
+
+        client.release();
+
+        if (result.rows.length > 0) {
+            const data = result.rows[0]; 
+            return res.status(200).json({
+                success: true,
+                message: "Dane użytkownika zostały pobrane",
+                data: {
+                    UserLearnAiPoints: data.user_learn_ai_points || 0,
+                    UserLearnAiLevel: data.user_learn_ai_level || 0,
+                    UserFlashCardPoints: data.user_flash_card_points || 0
+
+                }
+            });
+        } else {
+            return res.status(404).json({
+                success: false,
+                message: "Nie znaleziono punktów dla tego użytkownika"
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            success: false,
+            message: "Wystąpił błąd serwera",
+            error: err.message
+        });
+    }
+});
+
+
+
+
+
+
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
-
 
