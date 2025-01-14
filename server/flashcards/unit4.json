@@ -1,103 +1,505 @@
 [
-    {"description": "This section covers vocabulary related to daily life, work, family, places, and common activities."},
-    { "id": 401, "word": "Abteilung, die, -en", "translation": "department" },
-    { "id": 402, "word": "Gegner, der, –", "translation": "opponent" },
-    { "id": 403, "word": "Leben, das", "translation": "life" },
-    { "id": 404, "word": "sehen", "translation": "to see" },
-    { "id": 405, "word": "arbeiten", "translation": "to work" },
-    { "id": 406, "word": "groß", "translation": "big, large" },
-    { "id": 407, "word": "täglich", "translation": "daily" },
-    { "id": 408, "word": "schreiben", "translation": "to write" },
-    { "id": 409, "word": "besser", "translation": "better" },
-    { "id": 410, "word": "Freundschaft, die, -en", "translation": "friendship" },
-    { "id": 411, "word": "Arbeit, die, -en", "translation": "work, labor" },
-    { "id": 412, "word": "gehen", "translation": "to go" },
-    { "id": 413, "word": "wichtig", "translation": "important" },
-    { "id": 414, "word": "absolvieren", "translation": " to complete, finish" },
-    { "id": 415, "word": "Antwort, die, -en", "translation": "answer, reply" },
-    { "id": 416, "word": "viel", "translation": "much, many" },
-    { "id": 417, "word": "nötig", "translation": "necessary" },
-    { "id": 418, "word": "arbeiten", "translation": "to work" },
-    { "id": 419, "word": "Verständnis, das", "translation": "understanding" },
-    { "id": 420, "word": "verstehen", "translation": "to understand" },
-    { "id": 421, "word": "Mensch, der, -en", "translation": "person, human being" },
-    { "id": 422, "word": "nehmen", "translation": "to take" },
-    { "id": 423, "word": "Beispiel, das, -e", "translation": "example" },
-    { "id": 424, "word": "Möglichkeit, die, -en", "translation": "possibility" },
-    { "id": 425, "word": "weiter", "translation": "further, more" },
-    { "id": 426, "word": "verändern", "translation": " to change" },
-    { "id": 427, "word": "vermitteln", "translation": " to mediate, to convey" },
-    { "id": 428, "word": "diskutieren", "translation": " to discuss" },
-    { "id": 429, "word": "Zusammenarbeit, die", "translation": "cooperation" },
-    { "id": 430, "word": "wieder", "translation": "again" },
-    { "id": 431, "word": "vollständig", "translation": "complete, full" },
-    { "id": 432, "word": "nehmen", "translation": " to take" },
-    { "id": 433, "word": "verstehen", "translation": " to understand" },
-    { "id": 434, "word": "praktisch", "translation": "practical" },
-    { "id": 435, "word": "natürlich", "translation": "natural, of course" },
-    { "id": 436, "word": "Sicherheit, die", "translation": "security, safety" },
-    { "id": 437, "word": "Antworten, die", "translation": "answers" },
-    { "id": 438, "word": "gerade", "translation": "just, straight" },
-    { "id": 439, "word": "geben", "translation": " to give" },
-    { "id": 440, "word": "während", "translation": "during" },
-    { "id": 441, "word": "schließlich", "translation": "finally, in the end" },
-    { "id": 442, "word": "Lösung, die, -en", "translation": "solution" },
-    { "id": 443, "word": "dagegen", "translation": "against it, on the other hand" },
-    { "id": 444, "word": "als", "translation": "than, as" },
-    { "id": 445, "word": "Schule, die, -n", "translation": "school" },
-    { "id": 446, "word": "im Vergleich zu", "translation": "in comparison to" },
-    { "id": 447, "word": "trotzdem", "translation": "nevertheless" },
-    { "id": 448, "word": "durch", "translation": "through" },
-    { "id": 449, "word": "Art, die, -en", "translation": "type, kind" },
-    { "id": 450, "word": "Woche, die, -n", "translation": "week" },
-    { "id": 451, "word": "verhören", "translation": " to interrogate" },
-    { "id": 452, "word": "alles", "translation": "everything" },
-    { "id": 453, "word": "abgesehen von", "translation": "apart from" },
-    { "id": 454, "word": "absolut", "translation": "absolute" },
-    { "id": 455, "word": "einschließlich", "translation": "including" },
-    { "id": 456, "word": "lassen", "translation": " to let, leave" },
-    { "id": 457, "word": "vorher", "translation": "before" },
-    { "id": 458, "word": "Arzt, der, -e", "translation": "doctor" },
-    { "id": 459, "word": "schwierig", "translation": "difficult" },
-    { "id": 460, "word": "Recht, das", "translation": "right, law" },
-    { "id": 461, "word": "sicher", "translation": "sure, safe" },
-    { "id": 462, "word": "absolut", "translation": "absolute" },
-    { "id": 463, "word": "verändern", "translation": " to change, transform" },
-    { "id": 464, "word": "vermeiden", "translation": " to avoid" },
-    { "id": 465, "word": "unglaublich", "translation": "incredible" },
-    { "id": 466, "word": "teilnehmen", "translation": " to participate" },
-    { "id": 467, "word": "selbstverständlich", "translation": "self-evident" },
-    { "id": 468, "word": "unterschiedlich", "translation": "different" },
-    { "id": 469, "word": "wirklich", "translation": "real, really" },
-    { "id": 470, "word": "aufmerksam", "translation": "attentive, observant" },
-    { "id": 471, "word": "verhalten", "translation": " to behave" },
-    { "id": 472, "word": "unabhängig", "translation": "independent" },
-    { "id": 473, "word": "selbst", "translation": "self" },
-    { "id": 474, "word": "während", "translation": "during" },
-    { "id": 475, "word": "davon", "translation": "from it, of it" },
-    { "id": 476, "word": "niemand", "translation": "no one" },
-    { "id": 477, "word": "wählen", "translation": " to choose" },
-    { "id": 478, "word": "Zweifel, der, -", "translation": "doubt" },
-    { "id": 479, "word": "Erfolg, der, -e", "translation": "success" },
-    { "id": 480, "word": "fast", "translation": "almost" },
-    { "id": 481, "word": "erklären", "translation": " to explain" },
-    { "id": 482, "word": "Beziehung, die, -en", "translation": "relationship" },
-    { "id": 483, "word": "ähnlich", "translation": "similar" },
-    { "id": 484, "word": "vielseitig", "translation": "versatile" },
-    { "id": 485, "word": "näher", "translation": "closer" },
-    { "id": 486, "word": "notwendig", "translation": "necessary" },
-    { "id": 487, "word": "Begriff, der, -e", "translation": "term, concept" },
-    { "id": 488, "word": "durchführen", "translation": " to conduct, carry out" },
-    { "id": 489, "word": "außerdem", "translation": "furthermore, besides" },
-    { "id": 490, "word": "weg", "translation": "away" },
-    { "id": 491, "word": "Kurs, der, -e", "translation": "course" },
-    { "id": 492, "word": "Fehler, der, -", "translation": "mistake, error" },
-    { "id": 493, "word": "verlassen", "translation": " to leave, abandon" },
-    { "id": 494, "word": "entscheiden", "translation": " to decide" },
-    { "id": 495, "word": "möglich", "translation": "possible" },
-    { "id": 496, "word": "Abendessen, das", "translation": "dinner" },
-    { "id": 497, "word": "Lernen, das", "translation": "learning" },
-    { "id": 498, "word": "vorstellen", "translation": " to introduce, imagine" },
-    { "id": 499, "word": "stark", "translation": "strong" },
-    { "id": 500, "word": "meistens", "translation": "mostly" }
+    {
+        "description": "This section covers vocabulary related to daily life, work, family, places, and common activities."
+    },
+    {
+        "id": 301,
+        "word": "Abteilung, die, -en",
+        "translation": "department"
+    },
+    {
+        "id": 302,
+        "word": "Gegner, der, –",
+        "translation": "opponent"
+    },
+    {
+        "id": 303,
+        "word": "Leben, das",
+        "translation": "life"
+    },
+    {
+        "id": 304,
+        "word": "sehen",
+        "translation": "to see"
+    },
+    {
+        "id": 305,
+        "word": "arbeiten",
+        "translation": "to work"
+    },
+    {
+        "id": 306,
+        "word": "groß",
+        "translation": "big, large"
+    },
+    {
+        "id": 307,
+        "word": "täglich",
+        "translation": "daily"
+    },
+    {
+        "id": 308,
+        "word": "schreiben",
+        "translation": "to write"
+    },
+    {
+        "id": 309,
+        "word": "besser",
+        "translation": "better"
+    },
+    {
+        "id": 310,
+        "word": "Freundschaft, die, -en",
+        "translation": "friendship"
+    },
+    {
+        "id": 311,
+        "word": "Arbeit, die, -en",
+        "translation": "work, labor"
+    },
+    {
+        "id": 312,
+        "word": "gehen",
+        "translation": "to go"
+    },
+    {
+        "id": 313,
+        "word": "wichtig",
+        "translation": "important"
+    },
+    {
+        "id": 314,
+        "word": "absolvieren",
+        "translation": " to complete, finish"
+    },
+    {
+        "id": 315,
+        "word": "Antwort, die, -en",
+        "translation": "answer, reply"
+    },
+    {
+        "id": 316,
+        "word": "viel",
+        "translation": "much, many"
+    },
+    {
+        "id": 317,
+        "word": "nötig",
+        "translation": "necessary"
+    },
+    {
+        "id": 318,
+        "word": "arbeiten",
+        "translation": "to work"
+    },
+    {
+        "id": 319,
+        "word": "Verständnis, das",
+        "translation": "understanding"
+    },
+    {
+        "id": 320,
+        "word": "verstehen",
+        "translation": "to understand"
+    },
+    {
+        "id": 321,
+        "word": "Mensch, der, -en",
+        "translation": "person, human being"
+    },
+    {
+        "id": 322,
+        "word": "nehmen",
+        "translation": "to take"
+    },
+    {
+        "id": 323,
+        "word": "Beispiel, das, -e",
+        "translation": "example"
+    },
+    {
+        "id": 324,
+        "word": "Möglichkeit, die, -en",
+        "translation": "possibility"
+    },
+    {
+        "id": 325,
+        "word": "weiter",
+        "translation": "further, more"
+    },
+    {
+        "id": 326,
+        "word": "verändern",
+        "translation": " to change"
+    },
+    {
+        "id": 327,
+        "word": "vermitteln",
+        "translation": " to mediate, to convey"
+    },
+    {
+        "id": 328,
+        "word": "diskutieren",
+        "translation": " to discuss"
+    },
+    {
+        "id": 329,
+        "word": "Zusammenarbeit, die",
+        "translation": "cooperation"
+    },
+    {
+        "id": 330,
+        "word": "wieder",
+        "translation": "again"
+    },
+    {
+        "id": 331,
+        "word": "vollständig",
+        "translation": "complete, full"
+    },
+    {
+        "id": 332,
+        "word": "nehmen",
+        "translation": " to take"
+    },
+    {
+        "id": 333,
+        "word": "verstehen",
+        "translation": " to understand"
+    },
+    {
+        "id": 334,
+        "word": "praktisch",
+        "translation": "practical"
+    },
+    {
+        "id": 335,
+        "word": "natürlich",
+        "translation": "natural, of course"
+    },
+    {
+        "id": 336,
+        "word": "Sicherheit, die",
+        "translation": "security, safety"
+    },
+    {
+        "id": 337,
+        "word": "Antworten, die",
+        "translation": "answers"
+    },
+    {
+        "id": 338,
+        "word": "gerade",
+        "translation": "just, straight"
+    },
+    {
+        "id": 339,
+        "word": "geben",
+        "translation": " to give"
+    },
+    {
+        "id": 340,
+        "word": "während",
+        "translation": "during"
+    },
+    {
+        "id": 341,
+        "word": "schließlich",
+        "translation": "finally, in the end"
+    },
+    {
+        "id": 342,
+        "word": "Lösung, die, -en",
+        "translation": "solution"
+    },
+    {
+        "id": 343,
+        "word": "dagegen",
+        "translation": "against it, on the other hand"
+    },
+    {
+        "id": 344,
+        "word": "als",
+        "translation": "than, as"
+    },
+    {
+        "id": 345,
+        "word": "Schule, die, -n",
+        "translation": "school"
+    },
+    {
+        "id": 346,
+        "word": "im Vergleich zu",
+        "translation": "in comparison to"
+    },
+    {
+        "id": 347,
+        "word": "trotzdem",
+        "translation": "nevertheless"
+    },
+    {
+        "id": 348,
+        "word": "durch",
+        "translation": "through"
+    },
+    {
+        "id": 349,
+        "word": "Art, die, -en",
+        "translation": "type, kind"
+    },
+    {
+        "id": 350,
+        "word": "Woche, die, -n",
+        "translation": "week"
+    },
+    {
+        "id": 351,
+        "word": "verhören",
+        "translation": " to interrogate"
+    },
+    {
+        "id": 352,
+        "word": "alles",
+        "translation": "everything"
+    },
+    {
+        "id": 353,
+        "word": "abgesehen von",
+        "translation": "apart from"
+    },
+    {
+        "id": 354,
+        "word": "absolut",
+        "translation": "absolute"
+    },
+    {
+        "id": 355,
+        "word": "einschließlich",
+        "translation": "including"
+    },
+    {
+        "id": 356,
+        "word": "lassen",
+        "translation": " to let, leave"
+    },
+    {
+        "id": 357,
+        "word": "vorher",
+        "translation": "before"
+    },
+    {
+        "id": 358,
+        "word": "Arzt, der, -e",
+        "translation": "doctor"
+    },
+    {
+        "id": 359,
+        "word": "schwierig",
+        "translation": "difficult"
+    },
+    {
+        "id": 360,
+        "word": "Recht, das",
+        "translation": "right, law"
+    },
+    {
+        "id": 361,
+        "word": "sicher",
+        "translation": "sure, safe"
+    },
+    {
+        "id": 362,
+        "word": "absolut",
+        "translation": "absolute"
+    },
+    {
+        "id": 363,
+        "word": "verändern",
+        "translation": " to change, transform"
+    },
+    {
+        "id": 364,
+        "word": "vermeiden",
+        "translation": " to avoid"
+    },
+    {
+        "id": 365,
+        "word": "unglaublich",
+        "translation": "incredible"
+    },
+    {
+        "id": 366,
+        "word": "teilnehmen",
+        "translation": " to participate"
+    },
+    {
+        "id": 367,
+        "word": "selbstverständlich",
+        "translation": "self-evident"
+    },
+    {
+        "id": 368,
+        "word": "unterschiedlich",
+        "translation": "different"
+    },
+    {
+        "id": 369,
+        "word": "wirklich",
+        "translation": "real, really"
+    },
+    {
+        "id": 370,
+        "word": "aufmerksam",
+        "translation": "attentive, observant"
+    },
+    {
+        "id": 371,
+        "word": "verhalten",
+        "translation": " to behave"
+    },
+    {
+        "id": 372,
+        "word": "unabhängig",
+        "translation": "independent"
+    },
+    {
+        "id": 373,
+        "word": "selbst",
+        "translation": "self"
+    },
+    {
+        "id": 374,
+        "word": "während",
+        "translation": "during"
+    },
+    {
+        "id": 375,
+        "word": "davon",
+        "translation": "from it, of it"
+    },
+    {
+        "id": 376,
+        "word": "niemand",
+        "translation": "no one"
+    },
+    {
+        "id": 377,
+        "word": "wählen",
+        "translation": " to choose"
+    },
+    {
+        "id": 378,
+        "word": "Zweifel, der, -",
+        "translation": "doubt"
+    },
+    {
+        "id": 379,
+        "word": "Erfolg, der, -e",
+        "translation": "success"
+    },
+    {
+        "id": 380,
+        "word": "fast",
+        "translation": "almost"
+    },
+    {
+        "id": 381,
+        "word": "erklären",
+        "translation": " to explain"
+    },
+    {
+        "id": 382,
+        "word": "Beziehung, die, -en",
+        "translation": "relationship"
+    },
+    {
+        "id": 383,
+        "word": "ähnlich",
+        "translation": "similar"
+    },
+    {
+        "id": 384,
+        "word": "vielseitig",
+        "translation": "versatile"
+    },
+    {
+        "id": 385,
+        "word": "näher",
+        "translation": "closer"
+    },
+    {
+        "id": 386,
+        "word": "notwendig",
+        "translation": "necessary"
+    },
+    {
+        "id": 387,
+        "word": "Begriff, der, -e",
+        "translation": "term, concept"
+    },
+    {
+        "id": 388,
+        "word": "durchführen",
+        "translation": " to conduct, carry out"
+    },
+    {
+        "id": 389,
+        "word": "außerdem",
+        "translation": "furthermore, besides"
+    },
+    {
+        "id": 390,
+        "word": "weg",
+        "translation": "away"
+    },
+    {
+        "id": 391,
+        "word": "Kurs, der, -e",
+        "translation": "course"
+    },
+    {
+        "id": 392,
+        "word": "Fehler, der, -",
+        "translation": "mistake, error"
+    },
+    {
+        "id": 393,
+        "word": "verlassen",
+        "translation": " to leave, abandon"
+    },
+    {
+        "id": 394,
+        "word": "entscheiden",
+        "translation": " to decide"
+    },
+    {
+        "id": 395,
+        "word": "möglich",
+        "translation": "possible"
+    },
+    {
+        "id": 396,
+        "word": "Abendessen, das",
+        "translation": "dinner"
+    },
+    {
+        "id": 397,
+        "word": "Lernen, das",
+        "translation": "learning"
+    },
+    {
+        "id": 398,
+        "word": "vorstellen",
+        "translation": " to introduce, imagine"
+    },
+    {
+        "id": 399,
+        "word": "stark",
+        "translation": "strong"
+    },
+    {
+        "id": 400,
+        "word": "meistens",
+        "translation": "mostly"
+    }
 ]

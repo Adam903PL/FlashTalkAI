@@ -1,103 +1,505 @@
 [
-    {"description": "The words cover topics like education, objects, actions, and descriptions in German. They form basic vocabulary for everyday communication."},
-    {"id": 301, "word": "brauchen", "translation": "to need"},
-    {"id": 302, "word": "folgen", "translation": "to follow"},
-    {"id": 303, "word": "lernen", "translation": "to learn"},
-    {"id": 304, "word": "Ende, das, -n", "translation": "end"},
-    {"id": 305, "word": "kurz", "translation": "short"},
-    {"id": 306, "word": "Million, die, -en", "translation": "million"},
-    {"id": 307, "word": "stark", "translation": "strong"},
-    {"id": 308, "word": "Schule, die, -n", "translation": "school"},
-    {"id": 309, "word": "Woche, die, -n", "translation": "week"},
-    {"id": 310, "word": "bestehen", "translation": "to exist, insist"},
-    {"id": 311, "word": "richtig", "translation": "right, correct"},
-    {"id": 312, "word": "dich", "translation": "you"},
-    {"id": 313, "word": "dafür", "translation": "for it"},
-    {"id": 314, "word": "sowie", "translation": " as well as"},
-    {"id": 315, "word": "oft", "translation": "often"},
-    {"id": 316, "word": "Vater, der, -(ä)", "translation": "father"},
-    {"id": 317, "word": "Seite, die, -n", "translation": "side, page"},
-    {"id": 318, "word": "verschieden", "translation": "different"},
-    {"id": 319, "word": "halt", "translation": "just, simply"},
-    {"id": 320, "word": "Leben, das", "translation": "life"},
-    {"id": 321, "word": "allerdings", "translation": "though, indeed"},
-    {"id": 322, "word": "verstehen", "translation": "to understand"},
-    {"id": 323, "word": "fast", "translation": "almost"},
-    {"id": 324, "word": "wohl", "translation": "well; probably"},
-    {"id": 325, "word": "dein", "translation": "your"},
-    {"id": 326, "word": "bestimmt", "translation": "certain, special"},
-    {"id": 327, "word": "Mutter, die, -(ü)", "translation": "mother"},
-    {"id": 328, "word": "setzen", "translation": "to place, set"},
-    {"id": 329, "word": "überhaupt", "translation": "at all, generally"},
-    {"id": 330, "word": "Grund, der, -(ü)-e", "translation": "reason, basis"},
-    {"id": 331, "word": "besser", "translation": "better"},
-    {"id": 332, "word": "dir", "translation": "you"},
-    {"id": 333, "word": "schnell", "translation": "fast"},
-    {"id": 334, "word": "bekommen", "translation": "to get, receive"},
-    {"id": 335, "word": "gern(e)", "translation": "gladly"},
-    {"id": 336, "word": "Auge, das, -n", "translation": "eye"},
-    {"id": 337, "word": "sicher", "translation": "safe, certain"},
-    {"id": 338, "word": "davon", "translation": "from it"},
-    {"id": 339, "word": "beginnen", "translation": "to begin"},
-    {"id": 340, "word": "erzählen", "translation": "to narrate, tell"},
-    {"id": 341, "word": "versuchen", "translation": "to try"},
-    {"id": 342, "word": "besonders", "translation": "especially"},
-    {"id": 343, "word": "Wort, das, -e/-(ö)-er", "translation": "word"},
-    {"id": 344, "word": "neben", "translation": "beside, next to"},
-    {"id": 345, "word": "schreiben", "translation": "to write"},
-    {"id": 346, "word": "warum", "translation": "why"},
-    {"id": 347, "word": "nächst-", "translation": "next"},
-    {"id": 348, "word": "laufen", "translation": "to run"},
-    {"id": 349, "word": "Geld, das", "translation": "money"},
-    {"id": 350, "word": "erklären", "translation": "to explain"},
-    {"id": 351, "word": "Sache, die, -n", "translation": "thing"},
-    {"id": 352, "word": "Art, die, -en", "translation": "kind, type"},
-    {"id": 353, "word": "politisch", "translation": "political"},
-    {"id": 354, "word": "entsprechen", "translation": "to correspond to"},
-    {"id": 355, "word": "klar", "translation": "clear"},
-    {"id": 356, "word": "schwer", "translation": "difficult, heavy"},
-    {"id": 357, "word": "Bereich, der, -e", "translation": "area, region"},
-    {"id": 358, "word": "allein(e)", "translation": "alone"},
-    {"id": 359, "word": "kaum", "translation": "hardly"},
-    {"id": 360, "word": "Weg, der, -e", "translation": "way"},
-    {"id": 361, "word": "sitzen", "translation": "to sit"},
-    {"id": 362, "word": "Stunde, die, -n", "translation": "hour"},
-    {"id": 363, "word": "einzeln", "translation": "individual"},
-    {"id": 364, "word": "deshalb", "translation": "for that reason"},
-    {"id": 365, "word": "deren", "translation": "whose "},
-    {"id": 366, "word": "ziehen", "translation": "to pull, move"},
-    {"id": 367, "word": "na", "translation": "well"},
-    {"id": 368, "word": "beziehungsweise", "translation": "and/or"},
-    {"id": 369, "word": "sogar", "translation": "even, in fact"},
-    {"id": 370, "word": "Name, der, -n", "translation": "name"},
-    {"id": 371, "word": "damals", "translation": "back then"},
-    {"id": 372, "word": "fünf", "translation": "five"},
-    {"id": 373, "word": "Geschichte, die, -n", "translation": "history, story"},
-    {"id": 374, "word": "wegen", "translation": "because of"},
-    {"id": 375, "word": "Gesellschaft, die, -en", "translation": "society, company"},
-    {"id": 376, "word": "scheinen", "translation": "to shine, seem"},
-    {"id": 377, "word": "darüber", "translation": "about it"},
-    {"id": 378, "word": "fallen", "translation": "to fall"},
-    {"id": 379, "word": "Kopf, der, -(ö)-e", "translation": "head"},
-    {"id": 380, "word": "gehören", "translation": "to belong to"},
-    {"id": 381, "word": "entstehen", "translation": "to originate"},
-    {"id": 382, "word": "bekannt", "translation": "well-known"},
-    {"id": 383, "word": "erhalten", "translation": "to receive"},
-    {"id": 384, "word": "besonders", "translation": "especially"},
-    {"id": 385, "word": "beide", "translation": "both"},
-    {"id": 386, "word": "Ort, der, -e", "translation": "place"},
-    {"id": 387, "word": "mehrere", "translation": "several"},
-    {"id": 388, "word": "mehr", "translation": "more"},
-    {"id": 389, "word": "junge", "translation": "young"},
-    {"id": 390, "word": "diese", "translation": "this, these"},
-    {"id": 391, "word": "zeigen", "translation": "to show"},
-    {"id": 392, "word": "wirklich", "translation": "really"},
-    {"id": 393, "word": "frei", "translation": "free"},
-    {"id": 394, "word": "schnell", "translation": "quickly"},
-    {"id": 395, "word": "schwer", "translation": "hard, difficult"},
-    {"id": 396, "word": "darüber", "translation": "over, above"},
-    {"id": 397, "word": "später", "translation": "later"},
-    {"id": 398, "word": "meinen", "translation": "to mean"},
-    {"id": 399, "word": "innerhalb", "translation": "within"},
-    {"id": 400, "word": "wahr", "translation": "true"}
+    {
+        "description": "The words cover topics like education, objects, actions, and descriptions in German. They form basic vocabulary for everyday communication."
+    },
+    {
+        "id": 201,
+        "word": "brauchen",
+        "translation": "to need"
+    },
+    {
+        "id": 202,
+        "word": "folgen",
+        "translation": "to follow"
+    },
+    {
+        "id": 203,
+        "word": "lernen",
+        "translation": "to learn"
+    },
+    {
+        "id": 204,
+        "word": "Ende, das, -n",
+        "translation": "end"
+    },
+    {
+        "id": 205,
+        "word": "kurz",
+        "translation": "short"
+    },
+    {
+        "id": 206,
+        "word": "Million, die, -en",
+        "translation": "million"
+    },
+    {
+        "id": 207,
+        "word": "stark",
+        "translation": "strong"
+    },
+    {
+        "id": 208,
+        "word": "Schule, die, -n",
+        "translation": "school"
+    },
+    {
+        "id": 209,
+        "word": "Woche, die, -n",
+        "translation": "week"
+    },
+    {
+        "id": 210,
+        "word": "bestehen",
+        "translation": "to exist, insist"
+    },
+    {
+        "id": 211,
+        "word": "richtig",
+        "translation": "right, correct"
+    },
+    {
+        "id": 212,
+        "word": "dich",
+        "translation": "you"
+    },
+    {
+        "id": 213,
+        "word": "dafür",
+        "translation": "for it"
+    },
+    {
+        "id": 214,
+        "word": "sowie",
+        "translation": " as well as"
+    },
+    {
+        "id": 215,
+        "word": "oft",
+        "translation": "often"
+    },
+    {
+        "id": 216,
+        "word": "Vater, der, -(ä)",
+        "translation": "father"
+    },
+    {
+        "id": 217,
+        "word": "Seite, die, -n",
+        "translation": "side, page"
+    },
+    {
+        "id": 218,
+        "word": "verschieden",
+        "translation": "different"
+    },
+    {
+        "id": 219,
+        "word": "halt",
+        "translation": "just, simply"
+    },
+    {
+        "id": 220,
+        "word": "Leben, das",
+        "translation": "life"
+    },
+    {
+        "id": 221,
+        "word": "allerdings",
+        "translation": "though, indeed"
+    },
+    {
+        "id": 222,
+        "word": "verstehen",
+        "translation": "to understand"
+    },
+    {
+        "id": 223,
+        "word": "fast",
+        "translation": "almost"
+    },
+    {
+        "id": 224,
+        "word": "wohl",
+        "translation": "well; probably"
+    },
+    {
+        "id": 225,
+        "word": "dein",
+        "translation": "your"
+    },
+    {
+        "id": 226,
+        "word": "bestimmt",
+        "translation": "certain, special"
+    },
+    {
+        "id": 227,
+        "word": "Mutter, die, -(ü)",
+        "translation": "mother"
+    },
+    {
+        "id": 228,
+        "word": "setzen",
+        "translation": "to place, set"
+    },
+    {
+        "id": 229,
+        "word": "überhaupt",
+        "translation": "at all, generally"
+    },
+    {
+        "id": 230,
+        "word": "Grund, der, -(ü)-e",
+        "translation": "reason, basis"
+    },
+    {
+        "id": 231,
+        "word": "besser",
+        "translation": "better"
+    },
+    {
+        "id": 232,
+        "word": "dir",
+        "translation": "you"
+    },
+    {
+        "id": 233,
+        "word": "schnell",
+        "translation": "fast"
+    },
+    {
+        "id": 234,
+        "word": "bekommen",
+        "translation": "to get, receive"
+    },
+    {
+        "id": 235,
+        "word": "gern(e)",
+        "translation": "gladly"
+    },
+    {
+        "id": 236,
+        "word": "Auge, das, -n",
+        "translation": "eye"
+    },
+    {
+        "id": 237,
+        "word": "sicher",
+        "translation": "safe, certain"
+    },
+    {
+        "id": 238,
+        "word": "davon",
+        "translation": "from it"
+    },
+    {
+        "id": 239,
+        "word": "beginnen",
+        "translation": "to begin"
+    },
+    {
+        "id": 240,
+        "word": "erzählen",
+        "translation": "to narrate, tell"
+    },
+    {
+        "id": 241,
+        "word": "versuchen",
+        "translation": "to try"
+    },
+    {
+        "id": 242,
+        "word": "besonders",
+        "translation": "especially"
+    },
+    {
+        "id": 243,
+        "word": "Wort, das, -e/-(ö)-er",
+        "translation": "word"
+    },
+    {
+        "id": 244,
+        "word": "neben",
+        "translation": "beside, next to"
+    },
+    {
+        "id": 245,
+        "word": "schreiben",
+        "translation": "to write"
+    },
+    {
+        "id": 246,
+        "word": "warum",
+        "translation": "why"
+    },
+    {
+        "id": 247,
+        "word": "nächst-",
+        "translation": "next"
+    },
+    {
+        "id": 248,
+        "word": "laufen",
+        "translation": "to run"
+    },
+    {
+        "id": 249,
+        "word": "Geld, das",
+        "translation": "money"
+    },
+    {
+        "id": 250,
+        "word": "erklären",
+        "translation": "to explain"
+    },
+    {
+        "id": 251,
+        "word": "Sache, die, -n",
+        "translation": "thing"
+    },
+    {
+        "id": 252,
+        "word": "Art, die, -en",
+        "translation": "kind, type"
+    },
+    {
+        "id": 253,
+        "word": "politisch",
+        "translation": "political"
+    },
+    {
+        "id": 254,
+        "word": "entsprechen",
+        "translation": "to correspond to"
+    },
+    {
+        "id": 255,
+        "word": "klar",
+        "translation": "clear"
+    },
+    {
+        "id": 256,
+        "word": "schwer",
+        "translation": "difficult, heavy"
+    },
+    {
+        "id": 257,
+        "word": "Bereich, der, -e",
+        "translation": "area, region"
+    },
+    {
+        "id": 258,
+        "word": "allein(e)",
+        "translation": "alone"
+    },
+    {
+        "id": 259,
+        "word": "kaum",
+        "translation": "hardly"
+    },
+    {
+        "id": 260,
+        "word": "Weg, der, -e",
+        "translation": "way"
+    },
+    {
+        "id": 261,
+        "word": "sitzen",
+        "translation": "to sit"
+    },
+    {
+        "id": 262,
+        "word": "Stunde, die, -n",
+        "translation": "hour"
+    },
+    {
+        "id": 263,
+        "word": "einzeln",
+        "translation": "individual"
+    },
+    {
+        "id": 264,
+        "word": "deshalb",
+        "translation": "for that reason"
+    },
+    {
+        "id": 265,
+        "word": "deren",
+        "translation": "whose "
+    },
+    {
+        "id": 266,
+        "word": "ziehen",
+        "translation": "to pull, move"
+    },
+    {
+        "id": 267,
+        "word": "na",
+        "translation": "well"
+    },
+    {
+        "id": 268,
+        "word": "beziehungsweise",
+        "translation": "and/or"
+    },
+    {
+        "id": 269,
+        "word": "sogar",
+        "translation": "even, in fact"
+    },
+    {
+        "id": 270,
+        "word": "Name, der, -n",
+        "translation": "name"
+    },
+    {
+        "id": 271,
+        "word": "damals",
+        "translation": "back then"
+    },
+    {
+        "id": 272,
+        "word": "fünf",
+        "translation": "five"
+    },
+    {
+        "id": 273,
+        "word": "Geschichte, die, -n",
+        "translation": "history, story"
+    },
+    {
+        "id": 274,
+        "word": "wegen",
+        "translation": "because of"
+    },
+    {
+        "id": 275,
+        "word": "Gesellschaft, die, -en",
+        "translation": "society, company"
+    },
+    {
+        "id": 276,
+        "word": "scheinen",
+        "translation": "to shine, seem"
+    },
+    {
+        "id": 277,
+        "word": "darüber",
+        "translation": "about it"
+    },
+    {
+        "id": 278,
+        "word": "fallen",
+        "translation": "to fall"
+    },
+    {
+        "id": 279,
+        "word": "Kopf, der, -(ö)-e",
+        "translation": "head"
+    },
+    {
+        "id": 280,
+        "word": "gehören",
+        "translation": "to belong to"
+    },
+    {
+        "id": 281,
+        "word": "entstehen",
+        "translation": "to originate"
+    },
+    {
+        "id": 282,
+        "word": "bekannt",
+        "translation": "well-known"
+    },
+    {
+        "id": 283,
+        "word": "erhalten",
+        "translation": "to receive"
+    },
+    {
+        "id": 284,
+        "word": "besonders",
+        "translation": "especially"
+    },
+    {
+        "id": 285,
+        "word": "beide",
+        "translation": "both"
+    },
+    {
+        "id": 286,
+        "word": "Ort, der, -e",
+        "translation": "place"
+    },
+    {
+        "id": 287,
+        "word": "mehrere",
+        "translation": "several"
+    },
+    {
+        "id": 288,
+        "word": "mehr",
+        "translation": "more"
+    },
+    {
+        "id": 289,
+        "word": "junge",
+        "translation": "young"
+    },
+    {
+        "id": 290,
+        "word": "diese",
+        "translation": "this, these"
+    },
+    {
+        "id": 291,
+        "word": "zeigen",
+        "translation": "to show"
+    },
+    {
+        "id": 292,
+        "word": "wirklich",
+        "translation": "really"
+    },
+    {
+        "id": 293,
+        "word": "frei",
+        "translation": "free"
+    },
+    {
+        "id": 294,
+        "word": "schnell",
+        "translation": "quickly"
+    },
+    {
+        "id": 295,
+        "word": "schwer",
+        "translation": "hard, difficult"
+    },
+    {
+        "id": 296,
+        "word": "darüber",
+        "translation": "over, above"
+    },
+    {
+        "id": 297,
+        "word": "später",
+        "translation": "later"
+    },
+    {
+        "id": 298,
+        "word": "meinen",
+        "translation": "to mean"
+    },
+    {
+        "id": 299,
+        "word": "innerhalb",
+        "translation": "within"
+    },
+    {
+        "id": 300,
+        "word": "wahr",
+        "translation": "true"
+    }
 ]

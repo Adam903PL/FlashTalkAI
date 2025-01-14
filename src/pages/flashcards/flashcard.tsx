@@ -25,14 +25,10 @@ type Word = {
 
 function Flashcard({ unit }: FlashcardProps) {
   const [wordIndex, setWordIndex] = useState(0);
-  
-  
-  
-  
+
   //
   const [words, setWords] = useState<wordsType[]>([]);
   //
-
 
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
@@ -58,7 +54,7 @@ function Flashcard({ unit }: FlashcardProps) {
     }
     setShowTranslation(false);
   };
-//
+  //
   useEffect(() => {
     fetch(`http://localhost:4444/api/flashcards/${unit}`, {
       credentials: "include",
@@ -73,7 +69,7 @@ function Flashcard({ unit }: FlashcardProps) {
         console.error("Error fetching data:", error);
       });
   }, [unit]);
-//
+  //
   useEffect(() => {
     let lastChar = unit.replace(".json", "");
     const from =
@@ -170,11 +166,8 @@ function Flashcard({ unit }: FlashcardProps) {
       <NavBar></NavBar>
 
       {/* Flashcard Content */}
-      <LearnCards/>
+      <LearnCards unit={unit}/>
 
-
-
-      {/* Mapujemy przez słowa i renderujemy komponent Word */}
       <h1 style={{ margin: "0 0 0 10%" }}>Known Words</h1>
       <div className="linie"></div>
       <div>
