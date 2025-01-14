@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-export const TestPage = () => {
+export const TestPage = ({unit}:any) => {
   const { unitId } = useParams<{ unitId: string }>(); // Zmieniłem na te useParamsy, pobieramy id z URL
   const [questions, setQuestions] = useState<
                   // Tutaj znowu ten taki "szablon" do pytań
