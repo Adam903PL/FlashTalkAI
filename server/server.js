@@ -222,7 +222,7 @@ app.post('/getAllWords', async (req, res) => {
     }
 
     const { from, to } = req.body; 
-
+    console.log(from,to,"heresssss")
     try {
         const client = await pool.connect();
         const query = "SELECT * FROM user_flashcards WHERE user_id = $1 AND flashcard_id BETWEEN $2 AND $3 ORDER BY flashcard_id ASC";
@@ -455,4 +455,3 @@ app.get('/getuserpoint', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server started on http://localhost:${PORT}`);
 });
-
