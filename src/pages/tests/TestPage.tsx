@@ -1,30 +1,35 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-export const Unit1Test = () => {
+export const TestPage = () => {
+  const { unitId } = useParams<{ unitId: string }>(); // Zmieniłem na te useParamsy, pobieramy id z URL
   const [questions, setQuestions] = useState<
+                  // Tutaj znowu ten taki "szablon" do pytań
     { id: number; question: string; type: "fillthegap" | "simpletranslation"; answer: string }[]
   >([]);
-
-  //<Record> to takie narzędzie, które pozwala tworzyć obiekt z kluczami i wartościami, tutaj klucz będzie cyfrą, a wartość stringiem
+        // Record to takie narzędzie, które tworzy obiekty o ustalonych kluczach i wartościach, tutaj klucz jest cyfrą a wartość stringiem
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState<number>(0);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  // Ładowanie pytań z backendu
+  // Ładowanie pytań na podstawie unitId
   useEffect(() => {
-    fetch("../../../../server/test/unit1Test.json")
-      .then((res) => res.json())
-      .then((data) => {
-        // Wyciągamy wszystkie pytania, niezależnie od typu flatMapem, w szkole wam powiem jak to działa but for now trust me
-        const allQuestions = data.test.flatMap(
-          (test: { type: string; questions: any[] }) => test.questions.map((q) => ({ ...q, type: test.type }))
-        );
-        setQuestions(allQuestions);
-      })
-      .catch((error) => console.error("Błąd podczas pobierania pytań:", error));
-  }, []);
+    if (unitId) {
+      fetch(`/api/questions/${unitId}.json`) // Uniersalna ścieżka do backendu
+        .then((res) => res.json())
+        .then((data) => {
+          // Łączymy pytania z różnych typów zadań (w razie czego to wam wyjaśnię w szkole bo już mi się nie chce komentować)
+          const allQuestions = data.test.flatMap(
+            (test: { type: string; questions: any[] }) =>
+              test.questions.map((q) => ({ ...q, type: test.type }))
+          );
+          setQuestions(allQuestions);
+        })
+        .catch((error) => console.error("Błąd podczas pobierania pytań:", error));
+    }
+  }, [unitId]);
 
-  // Obsługujemy odpowiedzi użytkownika
+  // Obsługa wpisywania odpowiedzi
   const handleChange = (id: number, value: string) => {
     setUserAnswers((prev) => ({ ...prev, [id]: value }));
   };
@@ -34,52 +39,48 @@ export const Unit1Test = () => {
     e.preventDefault();
     let correctCount = 0;
 
-    // Tutaj taki prosty kodzik, który sprawdza czy odp jet prawidłowa
     questions.forEach((question) => {
       if (userAnswers[question.id]?.trim().toLowerCase() === question.answer.trim().toLowerCase()) {
         correctCount++;
       }
     });
 
-    //końcowe settery
     setScore(correctCount);
     setIsSubmitted(true);
   };
 
   return (
     <div>
-      <h1>Test z Unit 1</h1>
+      <h1>Test: {unitId}</h1>
       {!isSubmitted ? (
         <form onSubmit={handleSubmit}>
           {questions.map((question) => (
             <div key={question.id} className="question-block">
-              {/* Wyświetlamy pytania zależnie od typu (wydaje mi się, że wszystko robimy po angielskiemu, ale jakby co to piszcie)*/}
               <h2>
                 {question.type === "fillthegap" ? (
                   <>
-                    Fill the gap: <span>{question.question}</span>
+                    Uzupełnij lukę: <span>{question.question}</span>
                   </>
                 ) : (
                   <>
-                    Translate: <span>{question.question}</span>
+                    Przetłumacz: <span>{question.question}</span>
                   </>
                 )}
               </h2>
               <input
                 type="text"
-                placeholder="Your answer"
+                placeholder="Twoja odpowiedź"
                 value={userAnswers[question.id] || ""}
-                //zawsze tego zapominam w formularzach xD
                 onChange={(e) => handleChange(question.id, e.target.value)}
               />
             </div>
           ))}
-          <button type="submit">Submit Your answers</button>
+          <button type="submit">Zakończ test</button>
         </form>
       ) : (
         <div>
           <h2>
-            Your score: {score} / {questions.length}
+            Twój wynik: {score} / {questions.length}
           </h2>
         </div>
       )}
@@ -87,4 +88,4 @@ export const Unit1Test = () => {
   );
 };
 
-export default Unit1Test;
+export default TestPage;
