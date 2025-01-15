@@ -20,16 +20,16 @@ export type TypeFlashCards = {
 
 type UseFlashCardsState = {
   flashCardsUnKnown: TypeFlashCards["data"];
-  changeKnown: (wordID: Flashcard["id"]) => void;
+  changeKnown: (wordID: Flashcard["id"],from: number, to: number, unit: string,falseOrTrue:boolean) => void;
   fetchUnKnownFlashCards: (from: number, to: number) => Promise<void>;
   allWordsFlashcards: (Flashcard | Description)[];
-  fetchAllFlashcards: (unit: string) => Promise<void>;
-  refreshFlashCards:(from: number, to: number, unit: string) =>void
+  fetchAllFlashcards: (unit: string) => Promise<void>
+//   refreshFlashCards:(from: number, to: number, unit: string) =>void
 };
 
 export const useFlashCards = create<UseFlashCardsState>((set, get) => ({
   flashCardsUnKnown: [],
-  changeKnown: async (wordID: Flashcard["id"]) => {
+  changeKnown: async (wordID: Flashcard["id"], from: number, to: number, unit: string, falseOrTrue: boolean)  => {
     try {
     //   const { fetchUnKnownFlashCards, fetchAllFlashcards } = get();
 
@@ -39,7 +39,7 @@ export const useFlashCards = create<UseFlashCardsState>((set, get) => ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ wordId: wordID }),
+        body: JSON.stringify({ wordId: wordID, falseOrTrue: falseOrTrue }), 
       })
         .then((resp) => {
           if (!resp.ok) {
@@ -49,6 +49,15 @@ export const useFlashCards = create<UseFlashCardsState>((set, get) => ({
         })
         .then((data) => {
           console.log("ZUstand changeKnown:", data);
+          const { fetchUnKnownFlashCards, fetchAllFlashcards } = get();
+
+          console.time("fetchUnKnownFlashCards");
+          fetchUnKnownFlashCards(from, to);
+          console.timeEnd("fetchUnKnownFlashCards");
+          
+          console.time("fetchAllFlashcards");
+          fetchAllFlashcards(unit);
+          console.timeEnd("fetchAllFlashcards");
         })
         .catch((err) => console.log("Error changeunknown zustand:", err));
 
@@ -58,29 +67,27 @@ export const useFlashCards = create<UseFlashCardsState>((set, get) => ({
   },
   fetchUnKnownFlashCards: async (from, to) => {
     try {
-         await fetch("http://localhost:4444/getKnownWordsByUnitId", {
+      const resp = await fetch("http://localhost:4444/getKnownWordsByUnitId", {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ from, to }),
-      })
-        .then((resp) => resp.json())
-        .then((data: TypeFlashCards) => {
-          if (data.success) {
-            const datasSend = { flashCardsUnKnown: data.data };
-            console.log(datasSend, "fetchUnKownFlashCards");
-            set(datasSend);
-          } else {
-            console.error("Error: Response unsuccessful");
-          }
-        })
-        .catch((err) => console.log("Error in zustand useFLaschkards unKnown:", err));
-    } catch (error) {
-      console.error("Error fetching flashcards:", error);
+      });
+  
+      const data = await resp.json();
+  
+      if (data.success) {
+        const datasSend = { flashCardsUnKnown: data.data };
+        set(datasSend);
+      } else {
+        console.error("Error: Response unsuccessful");
+      }
+    } catch (err) {
+      console.log("Error fetching flashcards:", err);
     }
-  },
+  },  
   allWordsFlashcards: [],
   fetchAllFlashcards: async (unit) => {
     try {
@@ -96,20 +103,4 @@ export const useFlashCards = create<UseFlashCardsState>((set, get) => ({
       console.error("Błąd podczas pobierania danych:", error);
     }
   },
-  refreshFlashCards: async(from: number, to: number, unit: string) => {
-    try{
-        const { fetchUnKnownFlashCards, fetchAllFlashcards } = get();
-
-        console.time("fetchUnKnownFlashCards");
-        await fetchUnKnownFlashCards(from, to);
-        console.timeEnd("fetchUnKnownFlashCards");
-        
-        console.time("fetchAllFlashcards");
-        await fetchAllFlashcards(unit);
-        console.timeEnd("fetchAllFlashcards");
-        
-    }catch (error) {
-      console.error("Refresh:", error);
-    }
-  }
 }));
