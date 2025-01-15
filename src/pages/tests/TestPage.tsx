@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export const TestPage = ({unit}:any) => {
-  const { unitId } = useParams<{ unitId: string }>(); // Zmieniłem na te useParamsy, pobieramy id z URL
+  const { unitId } = useParams<{ unitId: string }>(); 
   const [questions, setQuestions] = useState<
-                  // Tutaj znowu ten taki "szablon" do pytań
+                
     { id: number; question: string; type: "fillthegap" | "simpletranslation"; answer: string }[]
   >([]);
         // Record to takie narzędzie, które tworzy obiekty o ustalonych kluczach i wartościach, tutaj klucz jest cyfrą a wartość stringiem
@@ -51,7 +51,7 @@ export const TestPage = ({unit}:any) => {
 
   return (
     <div>
-      <h1>Test: {unitId}</h1>
+      <h1>Test: {unit}</h1>
       {!isSubmitted ? (
         <form onSubmit={handleSubmit}>
           {questions.map((question) => (
