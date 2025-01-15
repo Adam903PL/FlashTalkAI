@@ -8,7 +8,7 @@ const session = require('express-session');
 const fs = require('fs');
 const cors = require('cors');
 const { default: axios } = require("axios");
-const dotenv = require('dotenv').config();
+
 
   
 const pool = new Pool({
@@ -179,6 +179,7 @@ app.get("/logout", (req, res) => {
 
 
 app.post("/changeKnown", async (req, res) => {
+    console.log("Wykonywanie changeKnown post")
     if (!req.session.user || !req.session.user.userid) {
         return res.status(401).json({ success: false, message: "Brak autoryzacji" });
     }
@@ -188,9 +189,18 @@ app.post("/changeKnown", async (req, res) => {
 
     try {
         const client = await pool.connect();
-        const query = 'SELECT toggle_known_status($1, $2)';
+        // let query;
+        // if(req.body.trueOrFalse == true){
+        //     query = 'SELECT set_flashcard_known_true(($1, $2)';
+        // }else if(req.body.trueOrFalse==false){
+        //     query = 'SELECT set_flashcard_known_false($1, $2)';
+        // }
+        const query = "select toggle_known_status($1, $2)"
+
+
+        console.log(query,"changeknown")
         const values = [req.session.user.userid,req.body.wordId];
-        
+        console.log(values,"changeknown values 194")
         console.log(values)
         const response = await client.query(query, values);
         console.log(response)
@@ -208,7 +218,7 @@ app.post("/changeKnown", async (req, res) => {
         client.release(); 
 
     } catch (err) {
-        console.error("Błąd bazy danych:", err);
+        console.error("Błąd bazy danych2:", err);
         res.status(500).json({ success: false, message: "Wystąpił błąd podczas przetwarzania zapytania." });
     }
 });
@@ -244,45 +254,85 @@ app.post('/getAllWords', async (req, res) => {
     }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.post('/getKnownWordsByUnitId', async (req, res) => {
-    if (!req.session.user || !req.session.user.userid) {
-        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
-    }
-
-    const { from, to } = req.body;
-
-    // Walidacja danych wejściowych
-    if (typeof from !== "number" || typeof to !== "number" || from > to) {
-        return res.status(400).json({ success: false, message: "Nieprawidłowe wartości zakresu (from, to)." });
-    }
-
+    const { from, to } = req.body; 
+    console.log(from,to,"heresssss")
     try {
         const client = await pool.connect();
-        const query = `
-            SELECT flashcard_id
-            FROM user_flashcards 
-            WHERE user_id = $1 
-              AND flashcard_id BETWEEN $2 AND $3 
-              AND known = false
-            ORDER BY flashcard_id ASC
-        `;
+        const query = "SELECT flashcard_id FROM user_flashcards WHERE user_id = $1 AND flashcard_id BETWEEN $2 AND $3 AND known = false ORDER BY flashcard_id ASC"
+        
         const values = [req.session.user.userid, from, to];
-
+        
         console.log("Wykonane zapytanie:", query);
         console.log("Wartości:", values);
 
         const response = await client.query(query, values);
 
-        // Zwracanie tylko listy ID
-        const flashcardIds = response.rows.map(row => row.flashcard_id);
-        res.json(flashcardIds);
+        console.log(response.rowCount,"very important much")
+        res.json({ success: true, data: response.rows });
+        
+        client.release(); 
 
-        client.release();
     } catch (err) {
         console.error("Błąd bazy danych:", err);
         res.status(500).json({ success: false, message: "Wystąpił błąd podczas przetwarzania zapytania." });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
