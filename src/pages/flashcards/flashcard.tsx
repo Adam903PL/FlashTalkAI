@@ -175,7 +175,7 @@ function Flashcard({ unit }: FlashcardProps) {
           const main = words.find(
             (mainW) => mainW.id === word.flashcard_id && word.known === true
           );
-          console.log("Checking word:", word, "Found main:", main ? main : NaN);
+          // console.log("Checking word:", word, "Found main:", main ? main : NaN);
           if (main !== undefined) {
             return (
               <WordContainer
@@ -197,7 +197,7 @@ function Flashcard({ unit }: FlashcardProps) {
           const main = words.find(
             (mainW) => mainW.id === word.flashcard_id && word.known === false
           );
-          console.log("Checking word:", word, "Found main:", main ? main : NaN);
+          // console.log("Checking word:", word, "Found main:", main ? main : NaN);
           if (main !== undefined) {
             return (
               <WordContainer
