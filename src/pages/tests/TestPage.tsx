@@ -1,45 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 
-export const TestPage = ({unit}:any) => {
+export const TestPage = ({ unit }: { unit: string }) => {
   const [questions, setQuestions] = useState<
-                  // Tutaj znowu ten taki "szablon" do pytań
     { id: number; question: string; type: "fillthegap" | "simpletranslation"; answer: string }[]
   >([]);
-        // Record to takie narzędzie, które tworzy obiekty o ustalonych kluczach i wartościach, tutaj klucz jest cyfrą a wartość stringiem
-  const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [score, setScore] = useState<number>(0);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // Ładowanie pytań na podstawie unitId
+  // Pobieranie pytań z backendu
   useEffect(() => {
-    if (unit) {
-      fetch(`http://localhost:4444/api/test/${unit}`) // Uniersalna ścieżka do backendu
-        .then((res) => res.json())
-        .then((data) => {
-          // Łączymy pytania z różnych typów zadań (w razie czego to wam wyjaśnię w szkole bo już mi się nie chce komentować)
-          const allQuestions = data.test.flatMap(
-            (test: { type: string; questions: any[] }) =>
-              test.questions.map((q) => ({ ...q, type: test.type }))
-          );
-          setQuestions(allQuestions);
-        })
-        .catch((error) => console.error("Błąd podczas pobierania pytań:", error));
-    }
+    fetch(`http://localhost:4444/api/test/${unit}`) // Poprawiłem tego fetch'a
+      .then((res) => res.json())
+      .then((data) => {
+        const allQuestions = data.test.flatMap((test: { type: string; questions: any[] }) =>
+          test.questions.map((q) => ({ ...q, type: test.type }))
+        );
+        setQuestions(allQuestions);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("An error has ocurred during the question downloading process", error);
+        setLoading(false);
+      });
   }, [unit]);
 
-  // Obsługa wpisywania odpowiedzi
-  const handleChange = (id: number, value: string) => {
-    setUserAnswers((prev) => ({ ...prev, [id]: value }));
+  // Handler do inputowania
+  const handleChange = (id: number, type: string, value: string) => {
+    const uniqueKey = `${type}-${id}`;
+    setUserAnswers((prev) => ({ ...prev, [uniqueKey]: value }));
   };
 
-  // Klasyczny submit handler
+  // Klasyczek 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     let correctCount = 0;
 
     questions.forEach((question) => {
-      if (userAnswers[question.id]?.trim().toLowerCase() === question.answer.trim().toLowerCase()) {
+      const uniqueKey = `${question.type}-${question.id}`;
+      if (
+        userAnswers[uniqueKey]?.trim().toLowerCase() === question.answer.trim().toLowerCase()
+      ) {
         correctCount++;
       }
     });
@@ -48,13 +50,17 @@ export const TestPage = ({unit}:any) => {
     setIsSubmitted(true);
   };
 
+  if (loading) {
+    return <h2>Ładowanie testu...</h2>;
+  }
+
   return (
     <div>
       <h1>Test: {unit}</h1>
       {!isSubmitted ? (
         <form onSubmit={handleSubmit}>
           {questions.map((question) => (
-            <div key={question.id} className="question-block">
+            <div key={`${question.type}-${question.id}`} className="question-block">
               <h2>
                 {question.type === "fillthegap" ? (
                   <>
@@ -68,13 +74,15 @@ export const TestPage = ({unit}:any) => {
               </h2>
               <input
                 type="text"
-                placeholder="Your answer:"
-                value={userAnswers[question.id] || ""}
-                onChange={(e) => handleChange(question.id, e.target.value)}
+                placeholder="Your answer"
+                value={userAnswers[`${question.type}-${question.id}`] || ""}
+                onChange={(e) =>
+                  handleChange(question.id, question.type, e.target.value)
+                }
               />
             </div>
           ))}
-          <button type="submit">Submit Your Answers</button>
+          <button type="submit">Submit your answers</button>
         </form>
       ) : (
         <div>
