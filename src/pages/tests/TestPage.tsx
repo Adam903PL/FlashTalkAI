@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-export const TestPage = () => {
-  const { unitId } = useParams<{ unitId: string }>(); // Pobranie unitId z paramsów URL
+export const TestPage = ({unit}:any) => {
+  const { unitId } = useParams<{ unitId: string }>(); // Zmieniłem na te useParamsy, pobieramy id z URL
   const [questions, setQuestions] = useState<
+                  // Tutaj znowu ten taki "szablon" do pytań
     { id: number; question: string; type: "fillthegap" | "simpletranslation"; answer: string }[]
   >([]);
+        // Record to takie narzędzie, które tworzy obiekty o ustalonych kluczach i wartościach, tutaj klucz jest cyfrą a wartość stringiem
   const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
   const [score, setScore] = useState<number>(0);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -13,26 +15,26 @@ export const TestPage = () => {
   // Ładowanie pytań na podstawie unitId
   useEffect(() => {
     if (unitId) {
-      // Ładujemy odpowiedni plik .json
-      fetch(`http://localhost:4444/api/test/${unitId}Test.json`)
+      fetch(`/api/questions/${unitId}.json`) // Uniersalna ścieżka do backendu
         .then((res) => res.json())
         .then((data) => {
+          // Łączymy pytania z różnych typów zadań (w razie czego to wam wyjaśnię w szkole bo już mi się nie chce komentować)
           const allQuestions = data.test.flatMap(
             (test: { type: string; questions: any[] }) =>
               test.questions.map((q) => ({ ...q, type: test.type }))
           );
           setQuestions(allQuestions);
         })
-        .catch((error) => console.error("An error has occured during the loading process:", error));
+        .catch((error) => console.error("Błąd podczas pobierania pytań:", error));
     }
   }, [unitId]);
 
-  // Handler odpowiadania
+  // Obsługa wpisywania odpowiedzi
   const handleChange = (id: number, value: string) => {
     setUserAnswers((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Handler wysyłania testu
+  // Klasyczny submit handler
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     let correctCount = 0;
@@ -53,32 +55,32 @@ export const TestPage = () => {
       {!isSubmitted ? (
         <form onSubmit={handleSubmit}>
           {questions.map((question) => (
-            <div key={question.id} className="questionBlock">
+            <div key={question.id} className="question-block">
               <h2>
                 {question.type === "fillthegap" ? (
                   <>
-                    Fill the gap: <span>{question.question}</span>
+                    Uzupełnij lukę: <span>{question.question}</span>
                   </>
                 ) : (
                   <>
-                    Translate: <span>{question.question}</span>
+                    Przetłumacz: <span>{question.question}</span>
                   </>
                 )}
               </h2>
               <input
                 type="text"
-                placeholder="Your answer"
+                placeholder="Twoja odpowiedź"
                 value={userAnswers[question.id] || ""}
                 onChange={(e) => handleChange(question.id, e.target.value)}
               />
             </div>
           ))}
-          <button type="submit">Submit Your answers</button>
+          <button type="submit">Zakończ test</button>
         </form>
       ) : (
         <div>
           <h2>
-            Your score: {score} / {questions.length}
+            Twój wynik: {score} / {questions.length}
           </h2>
         </div>
       )}
