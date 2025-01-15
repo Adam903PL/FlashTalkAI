@@ -50,43 +50,43 @@
         "questions": [
           {
             "id": 1,
-            "question": "Ich arbeite täglich.",
-            "answer": "I work daily."
+            "question": "Ich arbeite täglich",
+            "answer": "I work daily"
           },
           {
             "id": 2,
-            "question": "Das Leben ist schön.",
-            "answer": "Life is beautiful."
+            "question": "Das Leben ist schön",
+            "answer": "Life is beautiful"
           },
           {
             "id": 3,
-            "question": "Der Gegner ist stark.",
-            "answer": "The opponent is strong."
+            "question": "Der Gegner ist stark",
+            "answer": "The opponent is strong"
           },
           {
             "id": 4,
-            "question": "Ich schreibe eine Antwort.",
-            "answer": "I write an answer."
+            "question": "Ich schreibe eine Antwort",
+            "answer": "I write an answer"
           },
           {
             "id": 5,
-            "question": "I take a chance.",
-            "answer": "Ich nehme eine Chance."
+            "question": "I take a chance",
+            "answer": "Ich nehme eine Chance"
           },
           {
             "id": 6,
-            "question": "She has a possibility.",
-            "answer": "Sie hat eine Möglichkeit."
+            "question": "She has a possibility",
+            "answer": "Sie hat eine Möglichkeit"
           },
           {
             "id": 7,
-            "question": "We change the plan.",
-            "answer": "Wir verändern den Plan."
+            "question": "We change the plan",
+            "answer": "Wir verändern den Plan"
           },
           {
             "id": 8,
-            "question": "They work together.",
-            "answer": "Sie arbeiten zusammen."
+            "question": "They work together",
+            "answer": "Sie arbeiten zusammen"
           }
         ]
       }
