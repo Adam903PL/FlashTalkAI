@@ -4,10 +4,18 @@ import "../css/learnAI.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
 import { usePoint } from "../../contexts/points/usePoints";
+import Lottie, { useLottie } from "lottie-react";
+import loadingAnimation from "../../assets/animations/loading1.json"
+
+
+const style = {
+  height: 450,
+};
+
 
 function LearnTopics() {
   const [topics, setTopics] = useState([]);
-  const { list} = usePoint();
+  const {LearnWithAilist} = usePoint();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,10 +35,26 @@ function LearnTopics() {
       .catch((err) => console.error("Error fetching topics:", err));
   }, []);
 
-  if (list.length === 0) {
-    return <div>Loading...</div>;   
-  }
 
+
+  const options = {
+    animationData: loadingAnimation,
+    loop: true,
+    autoplay: true,
+  };
+
+  const { View } = useLottie(options, style);
+
+
+  useEffect(()=>{
+    console.log(LearnWithAilist,"ksksk")
+  },[LearnWithAilist])
+  if(topics.length === 0){
+    return(<>
+    <NavBar></NavBar>
+    {View}
+    </>)
+  }
   const renderTopicsByLevel = (
     level: number,
     start: number,
@@ -89,7 +113,7 @@ function LearnTopics() {
     <>
       <NavBar />
 
-      <main className="learnAIPage">{gaveAcces(list[0].level)}</main>
+      <main className="learnAIPage">{gaveAcces(LearnWithAilist[0].level)}</main>
     </>
   );
 }

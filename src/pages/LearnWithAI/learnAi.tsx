@@ -3,14 +3,21 @@ import NavBar from "../navbar";
 import "../css/chat.css";
 import { useNavigate, useParams } from "react-router";
 import { useLoged } from "../../contexts/loged/useLoged";
+import Lottie, { useLottie } from "lottie-react";
+import loadingAnimation from "../../assets/animations/loading1.json"
+
+
+const style = {
+  height: 450,
+};
 
 function Learn() {
+
+
   let topic = useParams();
 
   const navigate = useNavigate();
  
-
-
   const [conversation, setConversation] = useState<
     { message: string; maker: string }[]
   >([]);
@@ -80,6 +87,37 @@ function Learn() {
 
     }
   }, [conversation]);
+
+
+  const options = {
+    animationData: loadingAnimation,
+    loop: true,
+    autoplay: true,
+  };
+
+  const { View } = useLottie(options, style);
+
+
+
+  if(conversation.length == 0){
+    return(<>
+    <NavBar></NavBar>
+    <div className="conversation">
+      {/* <Lottie animationData={loadingAnimation}/> */}
+      {View}
+      <div className="lastchildDiv">
+          <input
+            className="messs"
+            disabled
+            placeholder="Wpisz wiadomość..."
+          />
+          <button className="send_mes">
+            Send Mess
+          </button>
+        </div>
+    </div>
+    </>)
+  }
   return (
     <div>
       <NavBar />
