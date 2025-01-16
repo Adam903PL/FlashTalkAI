@@ -6,6 +6,7 @@ import WordContainer from "./wordContainer";
 import NavBar from "../navbar";
 import { useLoged } from "../../contexts/loged/useLoged";
 import LearnCards from "./LearnCards";
+import { useFlashCards } from "../../zustand/useFlashcards";
 type wordsType = {
   id: number;
   word: string;
@@ -22,23 +23,86 @@ type Word = {
   translation: string;
   known: boolean;
 };
+type Flashcard = {
+  id: number;
+  word: string;
+  translation: string;
+};
+
+type Description = {
+  description: string;
+};
 
 function Flashcard({ unit }: FlashcardProps) {
   const [wordIndex, setWordIndex] = useState(0);
-  
-  
-  
-  
-  //
   const [words, setWords] = useState<wordsType[]>([]);
-  //
-
-
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [countWords, setCountWords] = useState(0);
+  
 
-  const [knownWords, setKnownWords] = useState<Word[]>([]);
+
+  const [knownWords, setKnownWords] = useState<(Flashcard | Description)[]>([]); 
+  const [unKnownWords,setUnKnownWords] = useState<((Flashcard | Description)[])>([])
+
+
+  const [fromTo, SetFromTO] = useState<number[]>([]);
+  const {
+    flashCardsUnKnown,
+    changeKnown,
+    fetchUnKnownFlashCards,
+    allWordsFlashcards,
+    fetchAllFlashcards,
+  } = useFlashCards();
+
+
+  useEffect(() => {
+    let from, to;
+    const unitCleaned = unit.replace(".json", "");
+    switch (unitCleaned) {
+      case "unit1":
+        from = 1;
+        to = 100;
+        break;
+      case "unit2":
+        from = 101;
+        to = 200;
+        break;
+      case "unit3":
+        from = 201;
+        to = 300;
+        break;
+      case "unit4":
+        from = 301;
+        to = 400;
+        break;
+      case "unit5":
+        from = 401;
+        to = 500;
+        break;
+      default:
+        console.error("Invalid unit");
+        return;
+    }
+    SetFromTO([from, to]);
+    fetchUnKnownFlashCards(from, to);
+    fetchAllFlashcards(unit);
+    
+
+  }, [unit, fetchUnKnownFlashCards, fetchAllFlashcards]);
+
+
+  useEffect(()=>{
+    const unKnown = flashCardsUnKnown.map((ele)=>ele.flashcard_id)
+    const unknownListWord = allWordsFlashcards.filter((ele)=>{
+      return unKnown.includes(ele.id)
+    })
+    setUnKnownWords(unknownListWord)
+    const knownListWord = allWordsFlashcards.filter((ele)=>{
+      return !unKnown.includes(ele.id)
+    })
+    setKnownWords(knownListWord)
+  },[flashCardsUnKnown,allWordsFlashcards])
 
   const navigate = useNavigate();
 
@@ -58,167 +122,44 @@ function Flashcard({ unit }: FlashcardProps) {
     }
     setShowTranslation(false);
   };
-//
-  useEffect(() => {
-    fetch(`http://localhost:4444/api/flashcards/${unit}`, {
-      credentials: "include",
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        const selectedWords = data.slice(1, 101);
-        setCountWords(selectedWords.length);
-        setWords(selectedWords);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [unit]);
-//
-  useEffect(() => {
-    let lastChar = unit.replace(".json", "");
-    const from =
-      Number(lastChar.charAt(lastChar.length - 1)) == 1
-        ? 1
-        : Number(lastChar.charAt(lastChar.length - 1)) * 100;
-    const to = from == 1 ? from + 99 : from + 100;
-    console.log("Fetching words with range:", { from, to });
-    fetch("http://localhost:4444/getAllWords", {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ from: from, to: to }),
-    })
-      .then((resp) => {
-        if (!resp.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return resp.json();
-      })
-      .then((data: any) => {
-        console.log("Data fetched from API:", data);
-        let known: any[] = [];
-        if (data.success && Array.isArray(data.data)) {
-          data.data.map((val: any) => {
-            known.push(val);
-          });
-
-          setKnownWords(known);
-        } else {
-          console.error("Unexpected response format:", data);
-        }
-      })
-      .catch((error) => {
-        console.error("Błąd przy pobieraniu słów:", error);
-      });
-  }, []);
-
-  const handleReload = () => {
-    fetch(`http://localhost:4444/api/flashcards/${unit}`, {
-      credentials: "include",
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        const selectedWords = data.slice(1, 101);
-        setCountWords(selectedWords.length);
-        setWords(selectedWords);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    let lastChar = unit.replace(".json", "");
-    const from =
-      Number(lastChar.charAt(lastChar.length - 1)) == 1
-        ? 1
-        : Number(lastChar.charAt(lastChar.length - 1)) * 100;
-    const to = from == 1 ? from + 99 : from + 100;
-
-    fetch("http://localhost:4444/getAllWords", {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ from: from, to: to }),
-    })
-      .then((resp) => {
-        if (!resp.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return resp.json();
-      })
-      .then((data: any) => {
-        let known: any[] = [];
-        if (data.success && Array.isArray(data.data)) {
-          data.data.map((val: any) => {
-            known.push(val);
-          });
-
-          setKnownWords(known);
-        } else {
-          console.error("Unexpected response format:", data);
-        }
-      })
-      .catch((error) => {
-        console.error("Błąd przy pobieraniu słów:", error);
-      });
-  };
+  //
 
   return (
     <>
       <NavBar></NavBar>
 
       {/* Flashcard Content */}
-      <LearnCards/>
+      <LearnCards unit={unit}/>
+      
 
 
-
-      {/* Mapujemy przez słowa i renderujemy komponent Word */}
       <h1 style={{ margin: "0 0 0 10%" }}>Known Words</h1>
       <div className="linie"></div>
       <div>
-        {knownWords.map((word, index) => {
-          const main = words.find(
-            (mainW) => mainW.id === word.flashcard_id && word.known === true
-          );
-          console.log("Checking word:", word, "Found main:", main ? main : NaN);
-          if (main !== undefined) {
-            return (
+      {knownWords.map((word, index) => (
               <WordContainer
-                key={main.id}
-                word={main}
-                onReload={handleReload}
+                key={word.id}
+                word={word}
                 known={true}
+                unit={unit}
+                fromTo={fromTo}
               />
-            );
-          } else {
-            return null;
-          }
-        })}
+        ))}
       </div>
       <h1 style={{ margin: "0 0 0 10%" }}>UnKnown Words</h1>
       <div className="linie"></div>
       <div>
-        {knownWords.map((word, index) => {
-          const main = words.find(
-            (mainW) => mainW.id === word.flashcard_id && word.known === false
-          );
-          console.log("Checking word:", word, "Found main:", main ? main : NaN);
-          if (main !== undefined) {
-            return (
+        {unKnownWords.map((word, index) => (
               <WordContainer
-                key={main.id}
-                word={main}
-                onReload={handleReload}
+                key={word.id}
+                word={word}
                 known={false}
+                unit={unit}
+                fromTo={fromTo}
               />
-            );
-          } else {
-            return null;
-          }
-        })}
+        ))}
       </div>
+
     </>
   );
 }
