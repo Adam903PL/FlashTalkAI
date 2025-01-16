@@ -50,43 +50,43 @@
         "questions": [
           {
             "id": 1,
-            "question": "Ich sehe den Tag.",
-            "answer": "I see the day."
+            "question": "Ich sehe den Tag",
+            "answer": "I see the day"
           },
           {
             "id": 2,
-            "question": "Das ist mein Buch.",
-            "answer": "This is my book."
+            "question": "Das ist mein Buch",
+            "answer": "This is my book"
           },
           {
             "id": 3,
-            "question": "Wir gehen nach Hause.",
-            "answer": "We go home."
+            "question": "Wir gehen nach Hause",
+            "answer": "We go home"
           },
           {
             "id": 4,
-            "question": "Du bist sehr groß.",
-            "answer": "You are very tall."
+            "question": "Du bist sehr groß",
+            "answer": "You are very tall"
           },
           {
             "id": 5,
-            "question": "I have a house.",
-            "answer": "Ich habe ein Haus."
+            "question": "I have a house",
+            "answer": "Ich habe ein Haus"
           },
           {
             "id": 6,
-            "question": "We see a car.",
-            "answer": "Wir sehen ein Auto."
+            "question": "We see a car",
+            "answer": "Wir sehen ein Auto"
           },
           {
             "id": 7,
-            "question": "She is very nice.",
-            "answer": "Sie ist sehr nett."
+            "question": "She is very nice",
+            "answer": "Sie ist sehr nett"
           },
           {
             "id": 8,
-            "question": "You are a person.",
-            "answer": "Du bist ein Mensch."
+            "question": "You are a person",
+            "answer": "Du bist ein Mensch"
           }
         ]
       }
