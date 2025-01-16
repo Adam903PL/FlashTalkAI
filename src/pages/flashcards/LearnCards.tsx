@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+import { useRef } from "react";
+import LottieView, { type LottieRefCurrentProps } from "lottie-react";
+import animationJson from "../../assets/Loading.json";
 
 const LearnCards = () => {
   const [flashcards, setFlashcards] = useState<any[]>([]);  
   const [knownWordsIds, setKnownWordsIds] = useState<number[]>([]);  
   const [wordIndex, setWordIndex] = useState<number>(0);  
-  const [showTranslation, setShowTranslation] = useState<boolean>(false);  
+  const [showTranslation, setShowTranslation] = useState<boolean>(false);
+  const lottieRef = useRef<LottieRefCurrentProps | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:4444/getKnownWordsByUnitId", {
@@ -79,7 +83,9 @@ const LearnCards = () => {
           <h1 className="wordsAll">{wordIndex + 1}/{flashcards.length}</h1>
         </div>
       ) : (
-        <p>Ładowanie...</p>
+        <div className={"loading"}>
+          <LottieView animationData={animationJson} lottieRef={lottieRef}/>
+        </div>
       )}
     </div>
   );
