@@ -180,7 +180,7 @@ app.get("/logout", (req, res) => {
 app.post("/changeKnown", async (req, res) => {
     console.log("Wykonywanie changeKnown post");
     if (!req.session.user || !req.session.user.userid) {
-        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+        return res.status(401).json({ success: false, message: "Brak autoryzacji1" });
     }
     if (!req.body.wordId || req.body.falseOrTrue === undefined) {  
         return res.status(400).json({ success: false, message: "Brak wordId lub falseOrTrue w danych" });
@@ -225,7 +225,7 @@ app.post("/changeKnown", async (req, res) => {
 
 app.post('/getAllWords', async (req, res) => {
     if (!req.session.user || !req.session.user.userid) {
-        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+        return res.status(401).json({ success: false, message: "Brak autoryzacji2" });
     }
 
     const { from, to } = req.body; 
@@ -353,7 +353,7 @@ app.get('/api/tematData', async (req,res)=>{
 
 app.get('/getAllTopics', async (req,res)=>{
     if (!req.session.user || !req.session.user.userid) {
-        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+        return res.status(401).json({ success: false, message: "Brak autoryzacji3" });
     }
     try{
         const client = await pool.connect();
@@ -373,7 +373,7 @@ app.get('/getAllTopics', async (req,res)=>{
 
 app.get('/getuserdatas', async (req, res) => {
     if (!req.session.user || !req.session.user.userid) {
-        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+        return res.status(401).json({ success: false, message: "Brak autoryzacji4" });
     }
 
     try {
@@ -405,7 +405,7 @@ app.get('/getuserdatas', async (req, res) => {
 
 app.post('/addpointlearwithai', async (req, res) => {
     if (!req.session.user || !req.session.user.userid) {
-        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+        return res.status(401).json({ success: false, message: "Brak autoryzacji5" });
     }
     try {
         const client = await pool.connect();
@@ -432,7 +432,7 @@ app.post('/addpointlearwithai', async (req, res) => {
 
 app.get('/checkislogedin', (req, res) => {
     if (!req.session.user || !req.session.user.userid) {
-        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+        return res.status(401).json({ success: false, message: "Brak autoryzacji6" });
     } else {
         return res.status(200).json({ 
             success: true, 

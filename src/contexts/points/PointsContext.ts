@@ -7,7 +7,7 @@ export type pointsType = {
 
 
 type PointsContextResult = {
-    list: pointsType[]; 
+    LearnWithAilist: pointsType[]; 
     addPoint: (userid: number) => void;
 };
 
