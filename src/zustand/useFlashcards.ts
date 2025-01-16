@@ -1,11 +1,6 @@
 import { create } from "zustand";
 import Flashcard from "../pages/flashcards/flashcard";
 
-type Flashcard = {
-  id: number;
-  word: string;
-  translation: string;
-};
 
 type Description = {
   description: string;
@@ -31,7 +26,7 @@ export const useFlashCards = create<UseFlashCardsState>((set, get) => ({
   flashCardsUnKnown: [],
   changeKnown: async (wordID: Flashcard["id"], from: number, to: number, unit: string, falseOrTrue: boolean)  => {
     try {
-    //   const { fetchUnKnownFlashCards, fetchAllFlashcards } = get();
+      // const { fetchUnKnownFlashCards, fetchAllFlashcards } = get();
 
       await fetch("http://localhost:4444/changeKnown", {
         method: "POST",
