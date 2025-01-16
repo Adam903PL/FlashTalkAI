@@ -8,43 +8,45 @@ export const LogedProvider = ({ children }: PropsWithChildren) => {
   const location = useLocation(); 
 
   useEffect(() => {
+    // Sprawdź, czy użytkownik jest zalogowany
     fetch("http://localhost:4444/loginsucces", {
       credentials: "include",
     })
       .then((resp) => resp.json())
       .then((data) => {
         if (data.succes) {
-          console.log(data.succes,"is loged in to app")
+          console.log(data.succes, "is logged in to app");
           setLogeds(true);
         }
       });
   }, []);
 
-
-  useEffect(()=>{
-    
-    fetch("http://localhost:4444/loginsucces",{
-      credentials:"include"
-    }).then(resp=>resp.json())
-    .then(data=>console.log(data,"checking"))
-
-
-  },[loged])
+  useEffect(() => {
+    // Gdy loged się zmieni, ponownie sprawdź, czy użytkownik jest zalogowany
+    fetch("http://localhost:4444/loginsucces", {
+      credentials: "include",
+    })
+      .then((resp) => resp.json())
+      .then((data) => console.log(data, "checking"));
+  }, [loged]);
 
   useEffect(() => {
-    if (loged && (location.pathname === "/login" || location.pathname === "/register")) {
-      navigate("/home");
-      // w chuj wazne ^  nie  wrzucać zakomentowanego na gita 
+    if (loged) {
+      // Jeśli zalogowany i na /login lub /register, przekieruj na /home
+      if (location.pathname === "/login" || location.pathname === "/register") {
+        navigate("/home");
+      }
+    } else {
+      // Jeśli niezalogowany i nie jest na /login ani /register, przekieruj na /login
+      if (location.pathname !== "/login" && location.pathname !== "/register") {
+        console.log(loged, location.pathname);
+        navigate("/login");
+      }
     }
-    else if (loged==false && location.pathname !== "/login" && location.pathname !== "/register") {
-      console.log(loged,location.pathname)
-      navigate("/login");
-      // w chuj wazne ^  nie  wrzucać zakomentowanego na gita
-    }
-  }, [loged, location, navigate]);
+  }, [loged, location.pathname, navigate]);
 
   const setloged = (status: boolean) => {
-    console.log(status,"ksksk")
+    console.log(status, "changing login status");
     setLogeds(status);
   };
 
