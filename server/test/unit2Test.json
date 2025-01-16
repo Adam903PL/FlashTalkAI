@@ -50,43 +50,43 @@
         "questions": [
           {
             "id": 1,
-            "question": "Das Haus ist groß.",
-            "answer": "The house is big."
+            "question": "Das Haus ist groß",
+            "answer": "The house is big"
           },
           {
             "id": 2,
-            "question": "Ich mag die Arbeit.",
-            "answer": "I like the work."
+            "question": "Ich mag die Arbeit",
+            "answer": "I like the work"
           },
           {
             "id": 3,
-            "question": "Heute ist ein schöner Tag.",
-            "answer": "Today is a beautiful day."
+            "question": "Heute ist ein schöner Tag",
+            "answer": "Today is a beautiful day"
           },
           {
             "id": 4,
-            "question": "Ich gehe in die Schule.",
-            "answer": "I go to school."
+            "question": "Ich gehe in die Schule",
+            "answer": "I go to school"
           },
           {
             "id": 5,
-            "question": "The man is tall.",
-            "answer": "Der Mann ist groß."
+            "question": "The man is tall",
+            "answer": "Der Mann ist groß"
           },
           {
             "id": 6,
-            "question": "I like the child.",
-            "answer": "Ich mag das Kind."
+            "question": "I like the child",
+            "answer": "Ich mag das Kind"
           },
           {
             "id": 7,
-            "question": "She is learning German.",
-            "answer": "Sie lernt Deutsch."
+            "question": "She is learning German",
+            "answer": "Sie lernt Deutsch"
           },
           {
             "id": 8,
-            "question": "We are reading a book.",
-            "answer": "Wir lesen ein Buch."
+            "question": "We are reading a book",
+            "answer": "Wir lesen ein Buch"
           }
         ]
       }

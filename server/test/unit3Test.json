@@ -50,43 +50,43 @@
         "questions": [
           {
             "id": 1,
-            "question": "Die Mutter ist stark.",
-            "answer": "The mother is strong."
+            "question": "Die Mutter ist stark",
+            "answer": "The mother is strong"
           },
           {
             "id": 2,
-            "question": "Er hat viel Geld.",
-            "answer": "He has a lot of money."
+            "question": "Er hat viel Geld",
+            "answer": "He has a lot of money"
           },
           {
             "id": 3,
-            "question": "Das Kind ist allein.",
-            "answer": "The child is alone."
+            "question": "Das Kind ist allein",
+            "answer": "The child is alone"
           },
           {
             "id": 4,
-            "question": "Ich sehe den Kopf.",
-            "answer": "I see the head."
+            "question": "Ich sehe den Kopf",
+            "answer": "I see the head"
           },
           {
             "id": 5,
-            "question": "I understand the reason.",
-            "answer": "Ich verstehe den Grund."
+            "question": "I understand the reason",
+            "answer": "Ich verstehe den Grund"
           },
           {
             "id": 6,
-            "question": "We write the words.",
-            "answer": "Wir schreiben die Wörter."
+            "question": "We write the words",
+            "answer": "Wir schreiben die Wörter"
           },
           {
             "id": 7,
-            "question": "She learns a lot.",
-            "answer": "Sie lernt viel."
+            "question": "She learns a lot",
+            "answer": "Sie lernt viel"
           },
           {
             "id": 8,
-            "question": "They run to school.",
-            "answer": "Sie laufen zur Schule."
+            "question": "They run to school",
+            "answer": "Sie laufen zur Schule"
           }
         ]
       }
