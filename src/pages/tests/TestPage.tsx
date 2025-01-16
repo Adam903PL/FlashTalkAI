@@ -1,46 +1,68 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import LottieView, { LottieRefCurrentProps } from "lottie-react";
+import { useRef } from "react";
+import "../css/TestListPage.css";
+import animationJson from "../../assets/Loading.json";
+import NavBar from "../navbar";
 
-export const TestPage = ({unit}:any) => {
-  const { unitId } = useParams<{ unitId: string }>(); 
+export const TestPage = ({ unit }: { unit: string }) => {
   const [questions, setQuestions] = useState<
-                
-    { id: number; question: string; type: "fillthegap" | "simpletranslation"; answer: string }[]
+      { id: number; question: string; type: "fillthegap" | "simpletranslation"; answer: string }[]
   >([]);
-        // Record to takie narzędzie, które tworzy obiekty o ustalonych kluczach i wartościach, tutaj klucz jest cyfrą a wartość stringiem
-  const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); // Dodano stan do śledzenia indeksu pytania
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
   const [score, setScore] = useState<number>(0);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const lottieRef = useRef<LottieRefCurrentProps | null>(null);
 
-  // Ładowanie pytań na podstawie unitId
+  // Pobieranie pytań z backendu
   useEffect(() => {
-    if (unitId) {
-      fetch(`/api/questions/${unitId}.json`) // Uniersalna ścieżka do backendu
+    fetch(`http://localhost:4444/api/test/${unit}`)
         .then((res) => res.json())
         .then((data) => {
-          // Łączymy pytania z różnych typów zadań (w razie czego to wam wyjaśnię w szkole bo już mi się nie chce komentować)
-          const allQuestions = data.test.flatMap(
-            (test: { type: string; questions: any[] }) =>
+          const allQuestions = data.test.flatMap((test: { type: string; questions: any[] }) =>
               test.questions.map((q) => ({ ...q, type: test.type }))
           );
           setQuestions(allQuestions);
+          setLoading(false);
         })
-        .catch((error) => console.error("Błąd podczas pobierania pytań:", error));
-    }
-  }, [unitId]);
+        .catch((error) => {
+          console.error("An error has ocurred during the question downloading process", error);
+          setLoading(false);
+        });
+  }, [unit]);
 
-  // Obsługa wpisywania odpowiedzi
-  const handleChange = (id: number, value: string) => {
-    setUserAnswers((prev) => ({ ...prev, [id]: value }));
+  // Handler do inputowania
+  const handleChange = (id: number, type: string, value: string) => {
+    const uniqueKey = `${type}-${id}`;
+    setUserAnswers((prev) => ({ ...prev, [uniqueKey]: value }));
   };
 
-  // Klasyczny submit handler
+  // Przejście do następnego pytania
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  // Powrót do poprzedniego pytania
+  const handlePrev = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
+  // Zatwierdzenie odpowiedzi
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     let correctCount = 0;
 
     questions.forEach((question) => {
-      if (userAnswers[question.id]?.trim().toLowerCase() === question.answer.trim().toLowerCase()) {
+      const uniqueKey = `${question.type}-${question.id}`;
+      if (
+          userAnswers[uniqueKey]?.trim().toLowerCase() === question.answer.trim().toLowerCase()
+      ) {
         correctCount++;
       }
     });
@@ -49,42 +71,78 @@ export const TestPage = ({unit}:any) => {
     setIsSubmitted(true);
   };
 
-  return (
-    <div>
-      <h1>Test: {unit}</h1>
-      {!isSubmitted ? (
-        <form onSubmit={handleSubmit}>
-          {questions.map((question) => (
-            <div key={question.id} className="question-block">
-              <h2>
-                {question.type === "fillthegap" ? (
-                  <>
-                    Uzupełnij lukę: <span>{question.question}</span>
-                  </>
-                ) : (
-                  <>
-                    Przetłumacz: <span>{question.question}</span>
-                  </>
-                )}
-              </h2>
-              <input
-                type="text"
-                placeholder="Twoja odpowiedź"
-                value={userAnswers[question.id] || ""}
-                onChange={(e) => handleChange(question.id, e.target.value)}
-              />
-            </div>
-          ))}
-          <button type="submit">Zakończ test</button>
-        </form>
-      ) : (
-        <div>
-          <h2>
-            Twój wynik: {score} / {questions.length}
-          </h2>
+  if (loading) {
+    return (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+          <LottieView animationData={animationJson} lottieRef={lottieRef} />
         </div>
-      )}
-    </div>
+    );
+  }
+
+  const currentQuestion = questions[currentQuestionIndex]; // Pobierz aktualne pytanie
+
+  return (
+      <div>
+        <NavBar/>
+        <h1 className="test-unit">Test: {unit.replace("Test.json","")}</h1>
+        {!isSubmitted ? (
+            <form onSubmit={handleSubmit} className="test-block">
+              <div className="question-block">
+                <h2>
+                  {currentQuestion.type === "fillthegap" ? (
+                      <>
+                        Fill the gap: <span>{currentQuestion.question}</span>
+                      </>
+                  ) : (
+                      <>
+                        Translate: <span>{currentQuestion.question}</span>
+                      </>
+                  )}
+                </h2>
+                <br/>
+                <input
+                    type="text"
+                    placeholder="Your answer"
+                    className={"test-input"}
+                    value={userAnswers[`${currentQuestion.type}-${currentQuestion.id}`] || ""}
+                    onChange={(e) => handleChange(currentQuestion.id, currentQuestion.type, e.target.value)}
+                />
+              </div>
+              <div className="navigation-buttons">
+                <button
+                    type="button"
+                    onClick={handlePrev}
+                    disabled={currentQuestionIndex === 0}
+                    className="Prev"
+                >
+                  Previous
+                </button>
+                <button
+                    type="button"
+                    onClick={handleNext}
+                    disabled={currentQuestionIndex === questions.length - 1}
+                    className="Next"
+                >
+                  Next
+                </button>
+              </div>
+              {currentQuestionIndex === questions.length - 1 && (
+                  <button type="submit">Submit your answers</button>
+              )}
+            </form>
+        ) : (
+            <div className={"test-score"}>
+              <h2>
+                Your score: {score} / {questions.length}
+              </h2>
+              <p>{score >= 10 ? (
+                  <p>Good Job 😎</p>
+              ) : (
+                  <p>Nice 😀</p>
+              )}</p>
+            </div>
+        )}
+      </div>
   );
 };
 

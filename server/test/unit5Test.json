@@ -50,43 +50,43 @@
         "questions": [
           {
             "id": 1,
-            "question": "Der Schüler lernt viel.",
-            "answer": "The student learns a lot."
+            "question": "Der Schüler lernt viel",
+            "answer": "The student learns a lot"
           },
           {
             "id": 2,
-            "question": "Die Regierung hilft den Menschen.",
-            "answer": "The government helps the people."
+            "question": "Die Regierung hilft den Menschen",
+            "answer": "The government helps the people"
           },
           {
             "id": 3,
-            "question": "Er hat das Ergebnis verstanden.",
-            "answer": "He understood the result."
+            "question": "Er hat das Ergebnis verstanden",
+            "answer": "He understood the result"
           },
           {
             "id": 4,
-            "question": "Die Situation ist schwierig.",
-            "answer": "The situation is difficult."
+            "question": "Die Situation ist schwierig",
+            "answer": "The situation is difficult"
           },
           {
             "id": 5,
-            "question": "I feel good today.",
-            "answer": "Ich fühle mich gut heute."
+            "question": "I feel good today",
+            "answer": "Ich fühle mich gut heute"
           },
           {
             "id": 6,
-            "question": "We offer a new service.",
-            "answer": "Wir bieten einen neuen Service an."
+            "question": "We offer a new service",
+            "answer": "Wir bieten einen neuen Service an"
           },
           {
             "id": 7,
-            "question": "The teacher explains the lesson.",
-            "answer": "Der Lehrer erklärt die Lektion."
+            "question": "The teacher explains the lesson",
+            "answer": "Der Lehrer erklärt die Lektion"
           },
           {
             "id": 8,
-            "question": "Sie gewinnt das Spiel.",
-            "answer": "She wins the game."
+            "question": "Sie gewinnt das Spiel",
+            "answer": "She wins the game"
           }
         ]
       }
