@@ -194,7 +194,7 @@ app.post("/changeKnown", async (req, res) => {
         } else if (req.body.falseOrTrue === false) {
             query = 'SELECT set_flashcard_known_false($1, $2)';
         }
-
+    
         console.log(query, "changeknown");
         const values = [req.session.user.userid, req.body.wordId];
         console.log(values, "changeknown values");
