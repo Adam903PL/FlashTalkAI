@@ -28,7 +28,7 @@ function LearnTopics() {
   }, []);
 
   if (list.length === 0) {
-    return <div>Loading...</div>; // Możesz wyświetlić coś, gdy dane są ładowane
+    return <div>Loading...</div>;   
   }
 
   const renderTopicsByLevel = (

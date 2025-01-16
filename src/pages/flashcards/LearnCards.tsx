@@ -1,87 +1,185 @@
 import { useEffect, useState } from "react";
+import { useFlashCards } from "../../zustand/useFlashcards";
 
-const LearnCards = () => {
-  const [flashcards, setFlashcards] = useState<any[]>([]);  
-  const [knownWordsIds, setKnownWordsIds] = useState<number[]>([]);  
-  const [wordIndex, setWordIndex] = useState<number>(0);  
-  const [showTranslation, setShowTranslation] = useState<boolean>(false);  
+const LearnCards = ({ unit }: { unit: string }) => {
+  const [wordIndex, setWordIndex] = useState<number>(0);
+  const [showTranslation, setShowTranslation] = useState<boolean>(false);
+  type AllowedStates = "LearnAll" | "LearnKnown" | "LearnUnKnown";
+  const [learnFLtype, setLearnFLtype] = useState<AllowedStates>("LearnUnKnown");
+  const [filteredFlashcards, setFilteredFlashcards] = useState<any[]>([]);
+  const [fromTo, SetFromTO] = useState<number[]>([]);
+  const [isKnownWord, setIsKnownWord] = useState<boolean>(false);
 
+  const {
+    flashCardsUnKnown,
+    changeKnown,
+    fetchUnKnownFlashCards,
+    allWordsFlashcards,
+    fetchAllFlashcards,
+  } = useFlashCards();
+
+  // Pobieranie ID znanych słówek z backendu
   useEffect(() => {
-    fetch("http://localhost:4444/getKnownWordsByUnitId", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ from: 1, to: 100 }), 
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        setKnownWordsIds(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching known words:", error);
-      });
-  }, []);
-
-  
-  useEffect(() => {
-    if (knownWordsIds.length > 0) {
-      fetch("http://localhost:4444/api/flashcards/unit1.json", {
-        credentials: "include",
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          const filteredFlashcards = data.filter((flashcard: any) =>
-            knownWordsIds.includes(flashcard.id)
-          );
-          setFlashcards(filteredFlashcards);
-        })
-        .catch((error) => {
-          console.error("Error fetching flashcards:", error);
-        });
+    let from, to;
+    const unitCleaned = unit.replace(".json", "");
+    switch (unitCleaned) {
+      case "unit1":
+        from = 1;
+        to = 100;
+        break;
+      case "unit2":
+        from = 101;
+        to = 200;
+        break;
+      case "unit3":
+        from = 201;
+        to = 300;
+        break;
+      case "unit4":
+        from = 301;
+        to = 400;
+        break;
+      case "unit5":
+        from = 401;
+        to = 500;
+        break;
+      default:
+        console.error("Invalid unit");
+        return;
     }
-  }, [knownWordsIds]);
+    SetFromTO([from, to]);
+    fetchUnKnownFlashCards(from, to);
+    fetchAllFlashcards(unit);
+  }, [unit, fetchUnKnownFlashCards, fetchAllFlashcards]);
 
-  
-  const handleNext = () => {
-    setWordIndex((prevIndex) => (prevIndex + 1) % flashcards.length); 
+  useEffect(() => {
+    if (allWordsFlashcards && flashCardsUnKnown) {
+      switch (learnFLtype) {
+        case "LearnAll":
+          setFilteredFlashcards(allWordsFlashcards);
+          break;
+        case "LearnKnown":
+          const filteredKnown = allWordsFlashcards.filter(
+            (card) =>
+              !flashCardsUnKnown.some(
+                (unknownCard) => unknownCard.flashcard_id === card.id
+              )
+          );
+          setFilteredFlashcards(filteredKnown);
+          break;
+        case "LearnUnKnown":
+          const filteredUnKnown = allWordsFlashcards.filter(
+            (card) =>
+              flashCardsUnKnown.some(
+                (unknownCard) => unknownCard.flashcard_id === card.id
+              )
+          );
+          setFilteredFlashcards(filteredUnKnown);
+          break;
+      }
+    }
+  }, [allWordsFlashcards, flashCardsUnKnown, learnFLtype]);
+
+  const handlePrev = () => {
     setShowTranslation(false);
+    setWordIndex((prevIndex) =>
+      prevIndex === 0 ? filteredFlashcards.length - 1 : prevIndex - 1
+    );
   };
 
-  
-  const handlePrev = () => {
-    setWordIndex((prevIndex) => (prevIndex - 1 + flashcards.length) % flashcards.length);
-    setShowTranslation(false); 
+  const handleNext = () => {
+    setShowTranslation(false);
+    setWordIndex((prevIndex) =>
+      prevIndex === filteredFlashcards.length - 1 ? 0 : prevIndex + 1
+    );
   };
 
   const handleWordClick = () => {
-    setShowTranslation((prev) => !prev);  
+    setShowTranslation((prev) => !prev);
   };
 
+  const handleClick = (value: AllowedStates) => {
+    setLearnFLtype(value);
+  };
+
+  const handleChangeKnown = (id: number, falseOrTrue: boolean) => {
+    changeKnown(id, fromTo[0], fromTo[1], unit, falseOrTrue);
+  };
+
+  // Sprawdzanie, czy dane słowo jest znane po każdej zmianie indeksu słowa
+  useEffect(() => {
+    if (filteredFlashcards.length > 0) {
+      const currentWord = filteredFlashcards[wordIndex];
+      const isKnown = !flashCardsUnKnown.some(
+        (unknownCard) => unknownCard.flashcard_id === currentWord.id
+      );
+      console.log("Current word ID:", currentWord.id);
+      console.log("Is this word known?", isKnown);
+      setIsKnownWord(isKnown); // Ustawienie stanu isKnownWord
+    }
+  }, [wordIndex, filteredFlashcards, flashCardsUnKnown]); // Użycie zależności do aktualizacji po zmianie indeksu słowa
+
   return (
-    <div className="cardLearnContainer">
-      {flashcards.length > 0 ? (
-        <div className="cardLearnWrapper">
-          <div className="cardLearn">
-            <div className="arrow" onClick={handlePrev}>
-              {"<"}
+    <>
+      <div className="cardLearnContainer">
+        {filteredFlashcards.length > 0 ? (
+          <>
+            <div
+              className="cardLearnWrapper"
+              style={isKnownWord ? { border: "2px solid #28a745",boxShadow:"0 4px 16px rgba(40, 167, 69, 0.5)" } : { border: "2px solid #dc3545",boxShadow:"0 4px 16px rgba(220, 53, 69, 0.5)" }}
+            >
+              <div className="cardLearn">
+                <div className="arrow" onClick={handlePrev}>
+                  {"<"}
+                </div>
+                <div className="word" onClick={handleWordClick}>
+                  {showTranslation
+                    ? filteredFlashcards[wordIndex].translation
+                    : filteredFlashcards[wordIndex].word}
+                </div>
+                <div className="arrow" onClick={handleNext}>
+                  {">"}
+                </div>
+              </div>
+              <h1 className="wordsAll">
+                <button
+                  style={{ margin: "0px" }}
+                  onClick={() => {
+                    handleChangeKnown(filteredFlashcards[wordIndex].id, true);
+                  }}
+                >
+                  <b>Known</b>
+                </button>
+                <p style={{ alignSelf: "center", justifySelf: "center" }}>
+                  {wordIndex + 1}/{filteredFlashcards.length}
+                </p>
+                <button
+                  style={{ margin: "0px" }}
+                  onClick={() => {
+                    handleChangeKnown(filteredFlashcards[wordIndex].id, false);
+                  }}
+                >
+                  <b>UnKnown</b>
+                </button>
+              </h1>
             </div>
-            <div className="word" onClick={handleWordClick}>
-              {showTranslation
-                ? flashcards[wordIndex].translation
-                : flashcards[wordIndex].word}
+            <div className="buttonsLearnCards">
+              <button value="LearnAll" onClick={(event) => handleClick(event.currentTarget.value)}>
+                Learn All
+              </button>
+              <button value="LearnKnown" onClick={(event) => handleClick(event.currentTarget.value)}>
+                Learn Known
+              </button>
+              <button value="LearnUnKnown" onClick={(event) => handleClick(event.currentTarget.value)}>
+                Learn UnKnown
+              </button>
             </div>
-            <div className="arrow" onClick={handleNext}>
-              {">"}
-            </div>
-          </div>
-          <h1 className="wordsAll">{wordIndex + 1}/{flashcards.length}</h1>
-        </div>
-      ) : (
-        <p>Ładowanie...</p>
-      )}
-    </div>
+          </>
+        ) : (
+          <p>Ładowanie...</p>
+        )}
+      </div>
+    </>
   );
 };
 

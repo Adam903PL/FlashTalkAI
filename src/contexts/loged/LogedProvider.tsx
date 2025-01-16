@@ -22,7 +22,6 @@ export const LogedProvider = ({ children }: PropsWithChildren) => {
 
 
   useEffect(()=>{
-    console.log(loged,'sksk');
     
     fetch("http://localhost:4444/loginsucces",{
       credentials:"include"
@@ -34,13 +33,13 @@ export const LogedProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (loged && (location.pathname === "/login" || location.pathname === "/register")) {
-      // navigate("/home");
-      // w chuj wazne ^  nie  wżucać zakomentowanego na gita 
+      navigate("/home");
+      // w chuj wazne ^  nie  wrzucać zakomentowanego na gita 
     }
     else if (loged==false && location.pathname !== "/login" && location.pathname !== "/register") {
       console.log(loged,location.pathname)
-      // navigate("/login");
-      // w chuj wazne ^  nie  wżucać zakomentowanego na gita
+      navigate("/login");
+      // w chuj wazne ^  nie  wrzucać zakomentowanego na gita
     }
   }, [loged, location, navigate]);
 

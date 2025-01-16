@@ -3,45 +3,30 @@ import volumeMax from "../assets/volume-max.svg";
 import "../css/flashcardlearn.css";
 import { useLoged } from "../../contexts/loged/useLoged";
 import { useNavigate } from "react-router-dom";
+import { useFlashCards } from "../../zustand/useFlashcards";
 
 type WordContainerProps = {
   word: { id: number; word: string; translation: string };
-  onReload: () => void;
   known: boolean;
+  unit:string;
+  fromTo: number[];
 };
 
-function WordContainer({ word, onReload, known }: WordContainerProps) {
-  const [isKnown, setIsKnown] = useState(known);
+function WordContainer({ word, known,unit,fromTo }: WordContainerProps) {
 
-  const navigate = useNavigate()
+  const {changeKnown} = useFlashCards();
 
-  const changeIsKnown = (wordId: number) => {
-    fetch("http://localhost:4444/changeKnown", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ wordId }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then(() => {
-        setIsKnown((prev) => !prev);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+
+
+  const handleChangeKnown = (id: number, falseOrTrue: boolean) => {
+    changeKnown(id, fromTo[0], fromTo[1], unit, falseOrTrue);
   };
-
-  
+  const handleChangeUnKnown = (id: number, falseOrTrue: boolean) => {
+    changeKnown(id, fromTo[0], fromTo[1], unit, falseOrTrue);
+  };
   return (
     <div
-    className={`box ${isKnown?"known":"unknown"}`}
+    className={`box ${known?"known":"unknown"}`}
     >
       <div className="wordContect">
         <p onClick={() => {return 0 }}>{word.word}</p>
@@ -49,8 +34,8 @@ function WordContainer({ word, onReload, known }: WordContainerProps) {
         <p>{word.translation}</p>
       </div>
       <div className="wordEmoji">
-        <button onClick={() => changeIsKnown(word.id)}>
-          {isKnown ? "✔️" : "❌"}
+        <button onClick={() => {known ? handleChangeUnKnown(word.id, false) : handleChangeKnown(word.id, true)}}>
+          {known ? "✔️" : "❌"}
         </button>
       </div>
       {/* <img alt="volumeMax" src={volumeMax} /> */}

@@ -1,21 +1,18 @@
+fetch("http://localhost:4444/getKnownWordsByUnitId", {
+  method: "POST",
+  credentials: "include",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ from:1, to:100 }),
+})
+  .then((resp) => resp.json())
+  .then((data) => {
+    console.log(data);
+  })
+  .catch((error) => {
+    console.error("Error fetching known words:", error);
+  }); 
 
 
-const path = require("path");
-
-
-const fs = require('fs');
-
-
-function getTestData(directory = './test') {
-  try {
-      const files = fs.readdirSync(directory);
-      return files.filter(file => fs.statSync(path.join(directory, file)).isFile());
-  } catch (err) {
-      console.error(`Error reading directory: ${err}`);
-      return [];
-  }
-}
-
-
-
-console.log(getTestData())
+  
