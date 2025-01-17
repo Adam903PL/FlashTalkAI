@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import "./css/registration.css";
 import { useState } from "react";
 
 type FormData = {
@@ -25,16 +24,16 @@ function Registration() {
   const navigate = useNavigate();
   const [showMainData, setShowMainData] = useState<boolean>(true);
   const [showError, setShowError] = useState<boolean>(false);
-  const [isPremium, setIsPremium] = useState<boolean>(false); // Stan dla Premium
+  const [isPremium, setIsPremium] = useState<boolean>(false);
   const email = watch("email");
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
   const profileType = watch("profileType");
 
   const sendData = (data: FormData) => {
-    const updatedFormData = { 
-      email: data.email, 
-      password: data.password, 
+    const updatedFormData = {
+      email: data.email,
+      password: data.password,
       profileType: data.profileType,
       card_number: data.card_number,
       expiration_date: data.expiration_date,
@@ -58,10 +57,7 @@ function Registration() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
-
         if (data.success) {
-          console.log("Registration successful:", data.message);
           navigate("/login");
         } else {
           console.log("Registration error:", data.message);
@@ -73,26 +69,25 @@ function Registration() {
   const handleNext = () => {
     if (email && password && confirmPassword) {
       setShowMainData(false);
-      setShowError(false); // Ukryj komunikat o błędzie
+      setShowError(false);
       if (profileType === "premium") {
-        setIsPremium(true); // Jeśli wybrano premium, pokazujemy formularz karty
+        setIsPremium(true);
       }
     } else {
-      setShowError(true); // Pokaż komunikat o błędzie
+      setShowError(true);
     }
   };
 
   return (
-    <div className="registrationBody">
-      <div className="maincontainer">
-        <h1 className="title">Register</h1>
-        <form onSubmit={handleSubmit(sendData)}>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tl from-indigo-900 to-blue-700">
+      <div className="bg-opacity-90 bg-gray-800 p-10 rounded-xl shadow-xl max-w-md w-full">
+        <h1 className="text-3xl text-center text-white mb-8">Create Account</h1>
+        <form onSubmit={handleSubmit(sendData)} className="space-y-4">
           {showMainData ? (
             <>
               <input
                 type="text"
-                placeholder="Type Email"
-                id="email"
+                placeholder="Email Address"
                 {...register("email", {
                   required: "Email jest wymagany",
                   pattern: {
@@ -100,57 +95,58 @@ function Registration() {
                     message: "Nieprawidłowy format email",
                   },
                 })}
+                className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
               />
               {errors.email && (
-                <span style={{ color: "red" }}>{errors.email.message}</span>
+                <span className="text-red-500 text-sm">{errors.email.message}</span>
               )}
 
               <input
                 type="password"
-                placeholder="Type Password"
-                id="password"
+                placeholder="Password"
                 {...register("password", { required: "Hasło jest wymagane" })}
+                className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
               />
               {errors.password && (
-                <span style={{ color: "red" }}>{errors.password.message}</span>
+                <span className="text-red-500 text-sm">{errors.password.message}</span>
               )}
 
               <input
                 type="password"
                 placeholder="Confirm Password"
-                id="confirmPassword"
                 {...register("confirmPassword", {
                   required: "Potwierdzenie hasła jest wymagane",
                 })}
+                className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
               />
               {errors.confirmPassword && (
-                <span style={{ color: "red" }}>
+                <span className="text-red-500 text-sm">
                   {errors.confirmPassword.message}
                 </span>
               )}
 
               <div className="mt-4">
-                <label className="mr-2">Profile Type:</label>
+                <label className="text-sm text-white">Profile Type</label>
                 <select
                   {...register("profileType", { required: "Wybierz typ profilu" })}
-                  className="border p-2"
+                  className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
                 >
                   <option value="normal">Normal</option>
-                  <option value="premium">Premium - 10.99 USD</option>
+                  <option value="premium">Premium - $10.99</option>
                 </select>
               </div>
-              
-              {errors.profileType && (
-                <span style={{ color: "red" }}>{errors.profileType.message}</span>
-              )}
 
               {showError && (
-                <p className="text-red-500 mt-2">
+                <p className="text-red-500 text-sm">
                   Proszę wypełnić wszystkie wymagane pola.
                 </p>
               )}
 
-              <button type="button" onClick={handleNext}>
+              <button
+                type="button"
+                onClick={handleNext}
+                className="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition"
+              >
                 Next
               </button>
             </>
@@ -158,81 +154,88 @@ function Registration() {
             <>
               {isPremium && (
                 <>
-                  <div className="mt-4">
-                    <h2 className="text-xl font-semibold">Payment Information</h2>
+                  <h2 className="text-xl text-white font-semibold mb-4">
+                    Payment Information
+                  </h2>
 
+                  <input
+                    type="text"
+                    placeholder="Card Number"
+                    {...register("card_number", {
+                      required: "Numer karty jest wymagany",
+                    })}
+                    className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
+                  />
+                  {errors.card_number && (
+                    <span className="text-red-500 text-sm">{errors.card_number.message}</span>
+                  )}
+
+                  <div className="flex space-x-4">
                     <input
                       type="text"
-                      placeholder="Card Number"
-                      {...register("card_number", {
-                        required: "Numer karty jest wymagany",
+                      placeholder="Expiration Date (MM/YY)"
+                      {...register("expiration_date", {
+                        required: "Data wygaśnięcia jest wymagana",
                       })}
-                      className="border p-2 w-full mt-2"
+                      className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
                     />
-                    {errors.card_number && (
-                      <span style={{ color: "red" }}>{errors.card_number.message}</span>
-                    )}
-
-                    <div className="flex space-x-4">
-                      <input
-                        type="text"
-                        placeholder="Expiration Date (MM/YY)"
-                        {...register("expiration_date", {
-                          required: "Data wygaśnięcia jest wymagana",
-                        })}
-                        className="border p-2 w-full mt-2"
-                      />
-                      <input
-                        type="text"
-                        placeholder="CVV"
-                        {...register("cvv", { required: "CVV jest wymagane" })}
-                        className="border p-2 w-full mt-2"
-                      />
-                    </div>
-                    {errors.expiration_date && (
-                      <span style={{ color: "red" }}>{errors.expiration_date.message}</span>
-                    )}
-                    {errors.cvv && (
-                      <span style={{ color: "red" }}>{errors.cvv.message}</span>
-                    )}
-
                     <input
                       type="text"
-                      placeholder="Billing Address"
-                      {...register("billing_address", {
-                        required: "Adres rozliczeniowy jest wymagany",
-                      })}
-                      className="border p-2 w-full mt-2"
+                      placeholder="CVV"
+                      {...register("cvv", { required: "CVV jest wymagane" })}
+                      className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
                     />
-                    {errors.billing_address && (
-                      <span style={{ color: "red" }}>
-                        {errors.billing_address.message}
-                      </span>
-                    )}
-
-                    <select
-                      {...register("card_type", { required: "Typ karty jest wymagany" })}
-                      className="border p-2 w-full mt-2"
-                    >
-                      <option value="">Select Card Type</option>
-                      <option value="visa">Visa</option>
-                      <option value="mastercard">MasterCard</option>
-                    </select>
-                    {errors.card_type && (
-                      <span style={{ color: "red" }}>{errors.card_type.message}</span>
-                    )}
                   </div>
+                  {errors.expiration_date && (
+                    <span className="text-red-500 text-sm">{errors.expiration_date.message}</span>
+                  )}
+                  {errors.cvv && (
+                    <span className="text-red-500 text-sm">{errors.cvv.message}</span>
+                  )}
+
+                  <input
+                    type="text"
+                    placeholder="Billing Address"
+                    {...register("billing_address", {
+                      required: "Adres rozliczeniowy jest wymagany",
+                    })}
+                    className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
+                  />
+                  {errors.billing_address && (
+                    <span className="text-red-500 text-sm">
+                      {errors.billing_address.message}
+                    </span>
+                  )}
+
+                  <select
+                    {...register("card_type", { required: "Typ karty jest wymagany" })}
+                    className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
+                  >
+                    <option value="">Select Card Type</option>
+                    <option value="visa">Visa</option>
+                    <option value="mastercard">MasterCard</option>
+                  </select>
+                  {errors.card_type && (
+                    <span className="text-red-500 text-sm">{errors.card_type.message}</span>
+                  )}
                 </>
               )}
 
-              <button type="submit" className="mt-4">
+              <button
+                type="submit"
+                className="w-full py-3 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition"
+              >
                 Register
               </button>
             </>
           )}
         </form>
-        <button className="redirectButton" onClick={() => navigate("/login")}>
-          Masz konto? Zaloguj się
+
+        <button
+          onClick={() => navigate("/login")}
+          className="w-full mt-4 py-3 bg-transparent text-blue-500 border border-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition"
+        >
+          Already have an account? Login
         </button>
       </div>
     </div>

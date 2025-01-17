@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/headerNav.css";
 import { useLoged } from "../contexts/loged/useLoged";
 
 function NavBar() {
@@ -13,61 +12,111 @@ function NavBar() {
   const toggleNavMenu = () => setNavMenuVisible(!navMenuVisible);
   const logout = () => {
     fetch("http://localhost:4444/logout", { credentials: "include" })
-      .catch((err) => {console.error("Errors during logout:", err)});
-      setloged(false);
-
-      navigate("/login");
+      .catch((err) => {console.error("Error during logout:", err)});
+    setloged(false);
+    navigate("/login");
   };
 
   return (
     <>
       {/* Header */}
-      <header className="header">
-        <div className="logo" onClick={() => navigate("/home")}>
-          <h1>FlashTalkAI</h1>
-        </div>
+      <header className="bg-gray-900 shadow-md">
+        <div className="max-w-7xl mx-auto px-4 py-5 flex items-center justify-between">
+          {/* Logo */}
+          <div className="cursor-pointer" onClick={() => navigate("/home")}>
+            <h1 className="text-2xl font-semibold text-white">FlashTalkAI</h1>
+          </div>
 
-        <div className="searchContainer">
-          <input
-            type="text"
-            placeholder="Wyszukaj..."
-            className="searchInput"
-          />
-        </div>
+          {/* Search Bar */}
+          <div className="relative flex-grow max-w-xs">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full px-4 py-2 rounded-full bg-gray-800 border-2 border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
 
-        <div className="menuToggle" onClick={toggleNavMenu}>
-          <i className={`fas fa-bars "hamburgerIcon"`}></i>
-        </div>
+          {/* Hamburger Icon */}
+          <button
+            className="lg:hidden p-2 text-white hover:text-blue-400"
+            onClick={toggleNavMenu}
+          >
+            <i className="fas fa-bars"></i>
+          </button>
 
-        <div className="userContainer" onClick={toggleUserMenu}>
-          <i className={`fas fa-user "userIcon"`}></i>
-          <div className="userMenu">
-            <ul>
-              <li onClick={() => navigate("/settings")}>Ustawienia</li>
-              <li
-                onClick={logout}
-              >
-                Wyloguj się
-              </li>
-              <li onClick={() => navigate("/options")}>Opcje strony</li>
-            </ul>
+          {/* User Icon */}
+          <div className="relative">
+            <button
+              onClick={toggleUserMenu}
+              className="text-white hover:text-blue-400 transition-all"
+            >
+              <i className="fas fa-user"></i>
+            </button>
+
+            {/* User Menu */}
+            {userMenuVisible && (
+              <div className="absolute right-0 mt-2 bg-gray-800 shadow-lg rounded-lg border border-gray-700 w-40">
+                <ul>
+                  <li
+                    className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                    onClick={() => navigate("/settings")}
+                  >
+                    Settings
+                  </li>
+                  <li
+                    className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                    onClick={logout}
+                  >
+                    Logout
+                  </li>
+                  <li
+                    className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
+                    onClick={() => navigate("/options")}
+                  >
+                    Site Options
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </header>
 
       {/* Navigation Menu */}
-      {(navMenuVisible || window.innerWidth > 768) && (
-        <nav className="navMenu">
-          <ul>
-            <li onClick={() => navigate("/home/learn")}>Ucz się AI</li>
-            <li onClick={() => navigate("/home/voice-practice")}>
-              Praktyka Głosowa
-            </li>
-            <li onClick={() => navigate("/home/flashcards")}>Fiszki</li>
-            <li onClick={() => navigate("/home/test")}>Test</li>
-          </ul>
-        </nav>
-      )}
+      <nav
+        className={`${
+          navMenuVisible || window.innerWidth > 1024
+            ? "block"
+            : "hidden"
+        } bg-gray-900 lg:flex justify-center items-center space-x-6 py-4 border-t-2 border-gray-700`}
+      >
+        <ul className="flex space-x-6">
+          <li
+            className="cursor-pointer text-white hover:text-blue-400 transition-all"
+            onClick={() => navigate("/home/learn")}
+          >
+            Learn AI
+          </li>
+          <li
+            className="cursor-pointer text-white hover:text-blue-400 transition-all"
+            onClick={() => navigate("/home/voice-practice")}
+          >
+            Voice Practice
+          </li>
+          <li
+            className="cursor-pointer text-white hover:text-blue-400 transition-all"
+            onClick={() => navigate("/home/flashcards")}
+          >
+            Flashcards
+          </li>
+          <li
+            className="cursor-pointer text-white hover:text-blue-400 transition-all"
+            onClick={() => navigate("/home/test")}
+          >
+            Test
+          </li>
+        </ul>
+      </nav>
     </>
   );
 }

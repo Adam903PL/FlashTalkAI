@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import NavBar from "../navbar";
-import "../css/chat.css";
+// import "../css/chat.css";
 import { useNavigate, useParams } from "react-router";
 import { useLoged } from "../../contexts/loged/useLoged";
 import Lottie, { useLottie } from "lottie-react";

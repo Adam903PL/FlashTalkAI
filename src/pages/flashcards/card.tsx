@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import  "../css/card.css";
-import { useLoged } from "../../contexts/loged/useLoged";
 import { useNavigate } from "react-router-dom";
 
 interface CardProps {
@@ -9,19 +7,13 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ unit }) => {
   const [description, setDescription] = useState<string>("");
-
-  const navigate = useNavigate()
-
-
-
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:4444/api/flashcards/${unit}`, {
       credentials: "include",
     })
       .then((resp) => {
-        console.log(unit, "lsl");
         if (!resp.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -42,13 +34,13 @@ const Card: React.FC<CardProps> = ({ unit }) => {
 
   return (
     <div
-      className="card"
+      className="bg-gray-800 text-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer max-w-sm w-full mx-auto mb-6"
       onClick={() => {
         navigate(`/home/flashcards/${unit.replace(".json", "")}`);
       }}
     >
-      <h2>{unit.replace(".json", "")}</h2>
-      <p className="description">Description: {description}</p>
+      <h2 className="text-xl font-semibold mb-4">{unit.replace(".json", "")}</h2>
+      <p className="text-sm text-gray-300">{description}</p>
     </div>
   );
 };
