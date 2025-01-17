@@ -9,6 +9,12 @@ function NavBar() {
   const { loged, setloged } = useLoged();
   const navigate = useNavigate();
 
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
   const toggleNavMenu = () => setNavMenuVisible(!navMenuVisible);
   const logout = () => {
@@ -40,7 +46,8 @@ function NavBar() {
         </div>
 
         <div className="userContainer" onClick={toggleUserMenu}>
-          <i className={`fas fa-user "userIcon"`}></i>
+          <h1 className={`Options`} onClick={toggleExpand}>Options ⚙️</h1>
+          {isExpanded && (
           <div className="userMenu">
             <ul>
               <li onClick={() => navigate("/settings")}>Ustawienia</li>
@@ -52,6 +59,7 @@ function NavBar() {
               <li onClick={() => navigate("/options")}>Opcje strony</li>
             </ul>
           </div>
+              )}
         </div>
       </header>
 
@@ -68,7 +76,7 @@ function NavBar() {
           </ul>
         </nav>
       )}
-    </>
+</>
   );
 }
 
