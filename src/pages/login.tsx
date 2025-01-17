@@ -59,7 +59,7 @@ function Login() {
         <h1 className="title">Login</h1>
         <form onSubmit={handleSubmit(sendData)}>
           <input
-            type="text"
+            type="email"
             placeholder="Type Email"
             id="email"
             {...register("email")}
