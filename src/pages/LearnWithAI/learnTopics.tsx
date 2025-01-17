@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import NavBar from "../navbar";
-import "../css/learnAI.css";
+// import "../css/learnAI.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
 import { usePoint } from "../../contexts/points/usePoints";

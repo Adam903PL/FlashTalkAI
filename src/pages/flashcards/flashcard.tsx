@@ -1,12 +1,11 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "../css/flashcardlearn.css";
-
 import WordContainer from "./wordContainer";
 import NavBar from "../navbar";
 import { useLoged } from "../../contexts/loged/useLoged";
 import LearnCards from "./LearnCards";
 import { useFlashCards } from "../../zustand/useFlashcards";
+
 type wordsType = {
   id: number;
   word: string;
@@ -23,6 +22,7 @@ type Word = {
   translation: string;
   known: boolean;
 };
+
 type Flashcard = {
   id: number;
   word: string;
@@ -39,12 +39,9 @@ function Flashcard({ unit }: FlashcardProps) {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [countWords, setCountWords] = useState(0);
-  
 
-
-  const [knownWords, setKnownWords] = useState<(Flashcard | Description)[]>([]); 
-  const [unKnownWords,setUnKnownWords] = useState<((Flashcard | Description)[])>([])
-
+  const [knownWords, setKnownWords] = useState<(Flashcard | Description)[]>([]);
+  const [unKnownWords, setUnKnownWords] = useState<((Flashcard | Description)[])>([]);
 
   const [fromTo, SetFromTO] = useState<number[]>([]);
   const {
@@ -54,7 +51,6 @@ function Flashcard({ unit }: FlashcardProps) {
     allWordsFlashcards,
     fetchAllFlashcards,
   } = useFlashCards();
-
 
   useEffect(() => {
     let from, to;
@@ -87,25 +83,21 @@ function Flashcard({ unit }: FlashcardProps) {
     SetFromTO([from, to]);
     fetchUnKnownFlashCards(from, to);
     fetchAllFlashcards(unit);
-    
-
   }, [unit, fetchUnKnownFlashCards, fetchAllFlashcards]);
 
-
-  useEffect(()=>{
-    const unKnown = flashCardsUnKnown.map((ele)=>ele.flashcard_id)
-    const unknownListWord = allWordsFlashcards.filter((ele)=>{
-      return unKnown.includes(ele.id)
-    })
-    setUnKnownWords(unknownListWord)
-    const knownListWord = allWordsFlashcards.filter((ele)=>{
-      return !unKnown.includes(ele.id)
-    })
-    setKnownWords(knownListWord)
-  },[flashCardsUnKnown,allWordsFlashcards])
+  useEffect(() => {
+    const unKnown = flashCardsUnKnown.map((ele) => ele.flashcard_id);
+    const unknownListWord = allWordsFlashcards.filter((ele) => {
+      return unKnown.includes(ele.id);
+    });
+    setUnKnownWords(unknownListWord);
+    const knownListWord = allWordsFlashcards.filter((ele) => {
+      return !unKnown.includes(ele.id);
+    });
+    setKnownWords(knownListWord);
+  }, [flashCardsUnKnown, allWordsFlashcards]);
 
   const navigate = useNavigate();
-
   const cardRef = useRef<HTMLDivElement>(null);
 
   const toggleUserMenu = () => setUserMenuVisible(!userMenuVisible);
@@ -122,44 +114,49 @@ function Flashcard({ unit }: FlashcardProps) {
     }
     setShowTranslation(false);
   };
-  //
 
   return (
     <>
-      <NavBar></NavBar>
+      <NavBar />
 
       {/* Flashcard Content */}
-      <LearnCards unit={unit}/>
-      
+      <LearnCards unit={unit} />
 
+      {/* Known Words Section */}
+      <div className="bg-[rgb(17_24_39/_var(--tw-bg-opacity,_1))]">
+        <h1 className="text-2xl font-bold text-center text-white mb-4">Known Words</h1>
+        <div className="border-t border-gray-300 mx-auto w-4/5 mb-4"></div>
 
-      <h1 style={{ margin: "0 0 0 10%" }}>Known Words</h1>
-      <div className="linie"></div>
-      <div>
-      {knownWords.map((word, index) => (
-              <WordContainer
-                key={word.id}
-                word={word}
-                known={true}
-                unit={unit}
-                fromTo={fromTo}
-              />
-        ))}
-      </div>
-      <h1 style={{ margin: "0 0 0 10%" }}>UnKnown Words</h1>
-      <div className="linie"></div>
-      <div>
-        {unKnownWords.map((word, index) => (
-              <WordContainer
-                key={word.id}
-                word={word}
-                known={false}
-                unit={unit}
-                fromTo={fromTo}
-              />
-        ))}
+        <div className="p-6 rounded-lg shadow-lg">
+          {knownWords.map((word, index) => (
+            <WordContainer
+              key={word.id}
+              word={word}
+              known={true}
+              unit={unit}
+              fromTo={fromTo}
+            />
+          ))}
+        </div>
       </div>
 
+      {/* UnKnown Words Section */}
+      <div className="bg-[rgb(17_24_39/_var(--tw-bg-opacity,_1))]">
+        <h1 className="text-2xl font-bold text-center text-white mb-4">Known Words</h1>
+        <div className="border-t border-gray-300 mx-auto w-4/5 mb-4"></div>
+
+        <div className="p-6 rounded-lg shadow-lg">
+          {unKnownWords.map((word, index) => (
+            <WordContainer
+              key={word.id}
+              word={word}
+              known={false}
+              unit={unit}
+              fromTo={fromTo}
+            />
+          ))}
+        </div>
+      </div>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../navbar";
 import { UnitSelctComponent } from "./UnitsSelectComponent";
-import "../css/TestListPage.css"; 
+// import "../css/TestListPage.css"; 
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import LottieView, { type LottieRefCurrentProps } from "lottie-react";

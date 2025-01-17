@@ -4,8 +4,9 @@ import { useFlashCards } from "../../zustand/useFlashcards";
 const LearnCards = ({ unit }: { unit: string }) => {
   const [wordIndex, setWordIndex] = useState<number>(0);
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
-  type AllowedStates = "LearnAll" | "LearnKnown" | "LearnUnKnown";
-  const [learnFLtype, setLearnFLtype] = useState<AllowedStates>("LearnUnKnown");
+  const [learnFLtype, setLearnFLtype] = useState<
+    "LearnAll" | "LearnKnown" | "LearnUnKnown"
+  >("LearnUnKnown");
   const [filteredFlashcards, setFilteredFlashcards] = useState<any[]>([]);
   const [fromTo, SetFromTO] = useState<number[]>([]);
   const [isKnownWord, setIsKnownWord] = useState<boolean>(false);
@@ -18,7 +19,6 @@ const LearnCards = ({ unit }: { unit: string }) => {
     fetchAllFlashcards,
   } = useFlashCards();
 
-  // Pobieranie ID znanych słówek z backendu
   useEffect(() => {
     let from, to;
     const unitCleaned = unit.replace(".json", "");
@@ -68,11 +68,10 @@ const LearnCards = ({ unit }: { unit: string }) => {
           setFilteredFlashcards(filteredKnown);
           break;
         case "LearnUnKnown":
-          const filteredUnKnown = allWordsFlashcards.filter(
-            (card) =>
-              flashCardsUnKnown.some(
-                (unknownCard) => unknownCard.flashcard_id === card.id
-              )
+          const filteredUnKnown = allWordsFlashcards.filter((card) =>
+            flashCardsUnKnown.some(
+              (unknownCard) => unknownCard.flashcard_id === card.id
+            )
           );
           setFilteredFlashcards(filteredUnKnown);
           break;
@@ -98,7 +97,7 @@ const LearnCards = ({ unit }: { unit: string }) => {
     setShowTranslation((prev) => !prev);
   };
 
-  const handleClick = (value: AllowedStates) => {
+  const handleClick = (value: "LearnAll" | "LearnKnown" | "LearnUnKnown") => {
     setLearnFLtype(value);
   };
 
@@ -106,82 +105,100 @@ const LearnCards = ({ unit }: { unit: string }) => {
     changeKnown(id, fromTo[0], fromTo[1], unit, falseOrTrue);
   };
 
-  // Sprawdzanie, czy dane słowo jest znane po każdej zmianie indeksu słowa
   useEffect(() => {
     if (filteredFlashcards.length > 0) {
       const currentWord = filteredFlashcards[wordIndex];
       const isKnown = !flashCardsUnKnown.some(
         (unknownCard) => unknownCard.flashcard_id === currentWord.id
       );
-      console.log("Current word ID:", currentWord.id);
-      console.log("Is this word known?", isKnown);
-      setIsKnownWord(isKnown); // Ustawienie stanu isKnownWord
-    }else{
-      console.log(filteredFlashcards,"is < 0")
+      setIsKnownWord(isKnown);
     }
-  }, [wordIndex, filteredFlashcards, flashCardsUnKnown]); // Użycie zależności do aktualizacji po zmianie indeksu słowa
+  }, [wordIndex, filteredFlashcards, flashCardsUnKnown]);
 
   return (
-    <>
-      <div className="cardLearnContainer">
-        {filteredFlashcards.length > 0 ? (
-          <>
-            <div
-              className="cardLearnWrapper"
-              style={isKnownWord ? { border: "2px solid #28a745",boxShadow:"0 4px 16px rgba(40, 167, 69, 0.5)" } : { border: "2px solid #dc3545",boxShadow:"0 4px 16px rgba(220, 53, 69, 0.5)" }}
-            >
-              <div className="cardLearn">
-                <div className="arrow" onClick={handlePrev}>
-                  {"<"}
-                </div>
-                <div className="word" onClick={handleWordClick}>
-                  {showTranslation
-                    ? filteredFlashcards[wordIndex].translation
-                    : filteredFlashcards[wordIndex].word}
-                </div>
-                <div className="arrow" onClick={handleNext}>
-                  {">"}
-                </div>
+    <div className="min-h-screen bg-gray-900 text-white py-20">
+      {filteredFlashcards.length > 0 ? (
+        <div className="flex justify-center items-center">
+          <div
+            className={`w-[100%] lg:w-[80%] xl:w-[80%] p-16 rounded-3xl shadow-xl transition-all ${
+              isKnownWord
+                ? "bg-green-500 border-8 border-green-700"
+                : "bg-red-500 border-8 border-red-700"
+            } flex flex-col items-center`}
+          >
+            <div className="flex justify-between w-full mb-16">
+              <button
+                onClick={handlePrev}
+                className="text-5xl text-white hover:text-gray-200 transition-all"
+              >
+                &lt;
+              </button>
+              <div
+                onClick={handleWordClick}
+                className="text-6xl font-semibold text-center cursor-pointer px-6"
+              >
+                {showTranslation
+                  ? filteredFlashcards[wordIndex].translation
+                  : filteredFlashcards[wordIndex].word}
               </div>
-              <h1 className="wordsAll">
-                <button
-                  style={{ margin: "0px" }}
-                  onClick={() => {
-                    handleChangeKnown(filteredFlashcards[wordIndex].id, true);
-                  }}
-                >
-                  <b>Known</b>
-                </button>
-                <p style={{ alignSelf: "center", justifySelf: "center" }}>
-                  {wordIndex + 1}/{filteredFlashcards.length}
-                </p>
-                <button
-                  style={{ margin: "0px" }}
-                  onClick={() => {
-                    handleChangeKnown(filteredFlashcards[wordIndex].id, false);
-                  }}
-                >
-                  <b>UnKnown</b>
-                </button>
-              </h1>
-            </div>
-            <div className="buttonsLearnCards">
-              <button value="LearnAll" onClick={(event) => handleClick(event.currentTarget.value)}>
-                Learn All
-              </button>
-              <button value="LearnKnown" onClick={(event) => handleClick(event.currentTarget.value)}>
-                Learn Known
-              </button>
-              <button value="LearnUnKnown" onClick={(event) => handleClick(event.currentTarget.value)}>
-                Learn UnKnown
+              <button
+                onClick={handleNext}
+                className="text-5xl text-white hover:text-gray-200 transition-all"
+              >
+                &gt;
               </button>
             </div>
-          </>
-        ) : (
-          <p>Ładowanie...</p>
-        )}
+            <div className="mt-16 flex justify-between items-center w-full text-xl">
+              <button
+                className="bg-green-700 text-white py-4 px-12 rounded-lg text-2xl"
+                onClick={() =>
+                  handleChangeKnown(filteredFlashcards[wordIndex].id, true)
+                }
+              >
+                Known
+              </button>
+              <p className="text-3xl font-bold">
+                {wordIndex + 1}/{filteredFlashcards.length}
+              </p>
+              <button
+                className="bg-red-700 text-white py-4 px-12 rounded-lg text-2xl"
+                onClick={() =>
+                  handleChangeKnown(filteredFlashcards[wordIndex].id, false)
+                }
+              >
+                UnKnown
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <p className="text-center text-xl">Ładowanie...</p>
+      )}
+
+      <div className="flex justify-center mt-16 space-x-8">
+        <button
+          value="LearnAll"
+          onClick={() => handleClick("LearnAll")}
+          className="bg-blue-600 text-white py-6 px-12 rounded-xl text-3xl hover:bg-blue-500"
+        >
+          Learn All
+        </button>
+        <button
+          value="LearnKnown"
+          onClick={() => handleClick("LearnKnown")}
+          className="bg-yellow-600 text-white py-6 px-12 rounded-xl text-3xl hover:bg-yellow-500"
+        >
+          Learn Known
+        </button>
+        <button
+          value="LearnUnKnown"
+          onClick={() => handleClick("LearnUnKnown")}
+          className="bg-gray-600 text-white py-6 px-12 rounded-xl text-3xl hover:bg-gray-500"
+        >
+          Learn UnKnown
+        </button>
       </div>
-    </>
+    </div>
   );
 };
 

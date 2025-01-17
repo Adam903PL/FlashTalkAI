@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import LottieView, { LottieRefCurrentProps } from "lottie-react";
 import { useRef } from "react";
-import "../css/TestListPage.css";
+// import "../css/TestListPage.css";
 import animationJson from "../../assets/Loading.json";
 import NavBar from "../navbar";
 
