@@ -3,11 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "concurrently \"vite\" \"npm run server\"",
-    "server": "nodemon server/server.js",
-    "build": "vite build --prefix .."
-  },
+"scripts": {
+  "dev": "concurrently \"vite\" \"npm run server\"",
+  "server": "nodemon server/server.js",
+  "build": "vite build"
+},
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
