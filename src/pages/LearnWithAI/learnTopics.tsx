@@ -94,7 +94,7 @@ function LearnTopics() {
   };
 
   const gaveAcces = (lvl: number) => {
-    console.log(lvl, "lvl");
+    console.log(lvl, "lvls");
     const topics = [];
     for (let i = 1; i <= 4; i++) {
       let j = (i - 1) * 25; // Początek zakresu dla danego poziomu

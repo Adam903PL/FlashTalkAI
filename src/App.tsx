@@ -2,7 +2,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { LogedProvider } from "./contexts/loged/LogedProvider";
 import MainRouter from "./router/Router";
 import { PointsProvider } from "./contexts/points/PointProvider";
-
+import "./index.css"
 function App() {
   return (
     <Router> 
