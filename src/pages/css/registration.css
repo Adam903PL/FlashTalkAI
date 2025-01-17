@@ -40,7 +40,8 @@
   text-align: center;
 }
 
-input[type="text"],
+input[type="email"],
+input[type="test"],
 input[type="password"] {
   width: 100%;
   padding: 15px;
@@ -53,7 +54,8 @@ input[type="password"] {
   transition: border-color 0.3s ease;
 }
 
-input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="test"]:focus,
 input[type="password"]:focus {
   border-color: #0099ff;
   outline: none;
@@ -81,7 +83,8 @@ button:focus {
   outline: none;
 }
 
-input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="test"]:hover,
 input[type="password"]:hover {
   border-color: #0099ff;
 }
