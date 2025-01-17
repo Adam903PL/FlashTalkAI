@@ -101,7 +101,7 @@ export const TestPage = ({ unit }: { unit: string }) => {
                 </h2>
                 <br/>
                 <input
-                    type="text"
+                    type="test"
                     placeholder="Your answer"
                     className={"test-input"}
                     value={userAnswers[`${currentQuestion.type}-${currentQuestion.id}`] || ""}
