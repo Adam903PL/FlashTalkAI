@@ -116,6 +116,8 @@ const LearnCards = ({ unit }: { unit: string }) => {
       console.log("Current word ID:", currentWord.id);
       console.log("Is this word known?", isKnown);
       setIsKnownWord(isKnown); // Ustawienie stanu isKnownWord
+    }else{
+      console.log(filteredFlashcards,"is < 0")
     }
   }, [wordIndex, filteredFlashcards, flashCardsUnKnown]); // Użycie zależności do aktualizacji po zmianie indeksu słowa
 

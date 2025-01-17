@@ -106,7 +106,8 @@ app.post("/loginData", async (req, res) => {
         const values = [datas.email, datas.password];
         const response = await client.query(query, values);
         const databseResp = response.rows[0]?.check_user_credentials;
-
+        
+        console.log(databseResp)
         if (databseResp != null) {
             req.session.user = { userid: databseResp, role: 'user' };
             console.log('Sesja po zalogowaniu:', req.session);  
@@ -142,11 +143,11 @@ app.post("/registerData", async (req, res) => {
         email: req.body.email,
         password: CryptoJS.SHA256(req.body.password).toString(),
     };
-
+    console.log(datas)
     try {
         const client = await pool.connect();
-        const query = 'SELECT create_user($1, $2)';
-        const values = [datas.email, datas.password];
+        const query = 'SELECT create_user($1, $2, $3, $4)';
+        const values = [datas.email, datas.password,'USA California',true];
         const response = await client.query(query, values);
 
         if (response.rows[0].create_user === true) {
@@ -388,7 +389,7 @@ app.get('/getuserdatas', async (req, res) => {
         
         if (response.rows.length > 0) {
             const { points, userlevel } = response.rows[0]; 
-            console.log(points, userlevel, "ksksksk");
+            console.log(points, userlevel, "kskskskServer");
             res.json({ points, level: userlevel });
         } else {
             res.status(404).json({ success: false, message: "No data found for user." });
