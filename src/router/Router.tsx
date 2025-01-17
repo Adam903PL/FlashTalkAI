@@ -9,6 +9,7 @@ import LearnTopics from "../pages/LearnWithAI/learnTopics";
 import LearnAi from "../pages/LearnWithAI/learnAi";
 import TestPage from "../pages/tests/TestPage";
 import { TestListPage } from "../pages/tests/TestListPage";
+import Settings from "../pages/settings.tsx";
 
 function MainRouter() {
   const [units, setUnits] = useState<string[]>([]);
@@ -65,6 +66,7 @@ function MainRouter() {
       <Route path="/register" element={<Registration />} />
       <Route path="/home/learn" element={<LearnTopics />} />
       <Route path="/home/learn/:lesson" element={<LearnAi />} />
+      <Route path="settings" element={<Settings />} />
 
       {/* Generate dynamic test routes */}
       <Route path="/home/test" element={<TestListPage/>}/>
