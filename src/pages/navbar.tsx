@@ -54,8 +54,7 @@ function NavBar() {
             </button>
 
             {/* User Menu */}
-            {userMenuVisible && (
-              <div className="absolute right-0 mt-2 bg-gray-800 shadow-lg rounded-lg border border-gray-700 w-40">
+            <div className="absolute right-0 mt-2 bg-gray-800 shadow-lg rounded-lg border border-gray-700 w-40">
                 <ul>
                   <li
                     className="px-4 py-2 hover:bg-gray-700 cursor-pointer"
@@ -77,7 +76,6 @@ function NavBar() {
                   </li>
                 </ul>
               </div>
-            )}
           </div>
         </div>
       </header>

@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useFlashCards } from "../../zustand/useFlashcards";
+import LottieView, { type LottieRefCurrentProps } from "lottie-react";
+import animationJson from "../../assets/Loading.json";
 
 const LearnCards = ({ unit }: { unit: string }) => {
   const [wordIndex, setWordIndex] = useState<number>(0);
@@ -10,6 +12,7 @@ const LearnCards = ({ unit }: { unit: string }) => {
   const [filteredFlashcards, setFilteredFlashcards] = useState<any[]>([]);
   const [fromTo, SetFromTO] = useState<number[]>([]);
   const [isKnownWord, setIsKnownWord] = useState<boolean>(false);
+  const lottieRef = useRef<LottieRefCurrentProps | null>(null);
 
   const {
     flashCardsUnKnown,
@@ -172,7 +175,9 @@ const LearnCards = ({ unit }: { unit: string }) => {
           </div>
         </div>
       ) : (
-        <p className="text-center text-xl">Ładowanie...</p>
+        <div className={"loading"}>
+          <LottieView animationData={animationJson} lottieRef={lottieRef}/>
+      </div>
       )}
 
       <div className="flex justify-center mt-16 space-x-8">

@@ -34,7 +34,7 @@ const Card: React.FC<CardProps> = ({ unit }) => {
 
   return (
     <div
-      className="bg-gray-800 text-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer max-w-sm w-full mx-auto mb-6"
+      className="bg-gray-800 text-white p-6 rounded-lg shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 cursor-pointer max-w-sm w-full mx-6 mb-6"
       onClick={() => {
         navigate(`/home/flashcards/${unit.replace(".json", "")}`);
       }}
@@ -46,3 +46,4 @@ const Card: React.FC<CardProps> = ({ unit }) => {
 };
 
 export default Card;
+  

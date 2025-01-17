@@ -46,7 +46,7 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tl from-indigo-900 to-blue-700">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tl bg-gradient-to-r from-gray-800 to-black min-h-screen">
       <div className="bg-opacity-90 bg-gray-800 p-10 rounded-xl shadow-xl max-w-md w-full">
         <h1 className="text-3xl text-center text-white mb-8">Logowanie</h1>
         <form onSubmit={handleSubmit(sendData)} className="space-y-4">

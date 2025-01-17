@@ -9,7 +9,8 @@ import LearnTopics from "../pages/LearnWithAI/learnTopics";
 import LearnAi from "../pages/LearnWithAI/learnAi";
 import TestPage from "../pages/tests/TestPage";
 import { TestListPage } from "../pages/tests/TestListPage";
-
+import { Link } from './links';
+import NotFound from '../pages/errors/NotFound'
 function MainRouter() {
   const [units, setUnits] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,8 +37,6 @@ function MainRouter() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-
-        
         setTestUnits(data);
         setIsTestUnitsLoaded(true);
       });
@@ -49,32 +48,33 @@ function MainRouter() {
 
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
-      <Route path="/home/flashcards" element={<Flashcards />} />
+      <Route path={Link.HOME} element={<Home />} />
+      <Route path={Link.FLASHCARDS} element={<Flashcards />} />
       
       {/* Generate dynamic flashcard routes */}
       {units.map((unit, index) => (
         <Route
           key={index}
-          path={`/home/flashcards/${unit.replace(".json", "")}`}
+          path={Link.FLASHCARD.replace(':unit', unit.replace(".json", ""))}
           element={<Flashcard unit={unit} />}
         />
       ))}
       
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Registration />} />
-      <Route path="/home/learn" element={<LearnTopics />} />
-      <Route path="/home/learn/:lesson" element={<LearnAi />} />
+      <Route path={Link.LOGIN} element={<Login />} />
+      <Route path={Link.REGISTER} element={<Registration />} />
+      <Route path={Link.LEARN} element={<LearnTopics />} />
+      <Route path={Link.LEARN_AI} element={<LearnAi />} />
 
       {/* Generate dynamic test routes */}
-      <Route path="/home/test" element={<TestListPage/>}/>
+      <Route path={Link.TEST_LIST} element={<TestListPage />} />
       {testUnits.map((unit, index) => (
         <Route
           key={index}
-          path={`/home/test/${unit.replace("Test.json","")}`}
+          path={Link.TEST.replace(':unit', unit.replace("Test.json", ""))}
           element={<TestPage unit={unit} />}
         />
       ))}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
