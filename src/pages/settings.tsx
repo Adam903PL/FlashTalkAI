@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useUserSettings } from "../zustand/useUserSettings"; // Import store zustand
-import "../pages/settings.tsx"
+import "../pages/css/settings.css"
+import NavBar from "./navbar.tsx";
 
 const Settings: React.FC = () => {
   const {
@@ -55,12 +56,16 @@ const Settings: React.FC = () => {
   };
 
   return (
+      <>
+      <NavBar/>
+
     <div className="settings-page">
-      <h1>Settings</h1>
+      <h1 className={"settings"} >Settings</h1>
       <form onSubmit={handleSubmit} className="settings-form">
         {/* Hasło */}
+        <h1 className={"topic"}>Sensitive data</h1>
         <label>
-          Password:
+          <h3 className="password">Password:</h3>
           <input
             type="password"
             name="password"
@@ -72,7 +77,7 @@ const Settings: React.FC = () => {
 
         {/* Email */}
         <label>
-          Email:
+          <h3 className="email">Email:</h3>
           <input
             type="email"
             name="email"
@@ -84,31 +89,39 @@ const Settings: React.FC = () => {
 
         {/* Lokalizacja */}
         <label>
-          Location:
-          <input
+          <h3 className="location">Location:</h3>
+          <input className={"location-input"}
             type="text"
             name="location"
             value={tempSettings.location}
             onChange={handleChange}
             placeholder="Enter your location"
           />
-        </label>
+        </label> <br/>
+
+        <hr className="separation"/>
 
         {/* Weryfikacja dwuetapowa */}
-        <label>
-          Two-Step Verification:
+        <h1 className={"topic"}>Security option</h1>
+        <span className={"Two-Step-Verification-whole"}>
+          <h3 className="Two-Step-Verification">Two-Step Verification:</h3>
           <input
+            className={"Two-Step-Verification-Input"}
             type="checkbox"
             name="isTwoStepVerificationEnabled"
             checked={tempSettings.isTwoStepVerificationEnabled}
             onChange={handleChange}
           />
-        </label>
+        </span> <br/>
+
+        <hr className={"separation"}/>
 
         {/* Typ konta */}
-        <label>
-          Account Type:
+        <h1 className={"topic"}>Account Type</h1>
+        <span className="Account-Type-Whole">
+          <h3 className="Account-Type">Change account type:</h3>
           <select
+            className="Account-Type-Input"
             name="accountType"
             value={tempSettings.accountType}
             onChange={handleChange}
@@ -116,55 +129,60 @@ const Settings: React.FC = () => {
             <option value="basic">Basic</option>
             <option value="premium">Premium</option>
           </select>
-        </label>
+        </span> <br/>
 
         {/* Dane karty - widoczne tylko, gdy konto premium */}
         {tempSettings.accountType === "premium" && (
-          <>
-            <h2>Credit Card Details</h2>
-            <label>
-              Card Number:
+          <div className="Credit-Card-Details-Whole">
+            <h2 className="Credit-Card-Details">Credit Card Details</h2>
+            <label >
+              <div className="separation-title">Card Number:</div>
               <input
+                className={"Card-Number"}
                 type="text"
                 name="cardDetails.cardNumber"
                 value={tempSettings.cardDetails.cardNumber}
                 onChange={handleChange}
                 placeholder="Enter 16-digit card number"
               />
-            </label>
-            <label>
-              Expiry Date:
+            </label> <br/>
+            <label >
+              <div className="separation-title">Expiry Date:</div>
               <input
+                className={"Expiry-Date"}
                 type="text"
                 name="cardDetails.expiryDate"
                 value={tempSettings.cardDetails.expiryDate}
                 onChange={handleChange}
                 placeholder="MM/YY"
               />
-            </label>
-            <label>
-              CVV:
+            </label> <br/>
+            <label >
+              <div className="separation-title">CVV:</div>
               <input
+                className={"CVV"}
                 type="text"
                 name="cardDetails.cvv"
                 value={tempSettings.cardDetails.cvv}
                 onChange={handleChange}
                 placeholder="3-digit CVV"
               />
-            </label>
-            <label>
-              Billing Address:
+            </label> <br/>
+            <label >
+              <div className="separation-title">Billing Address:</div>
               <input
+                className={"Billing-Address"}
                 type="text"
                 name="cardDetails.billingAddress"
                 value={tempSettings.cardDetails.billingAddress}
                 onChange={handleChange}
                 placeholder="Enter billing address"
               />
-            </label>
-            <label>
+            </label> <br/>
+            <label className={"Card-Type-Whole"}>
               Card Type:
               <select
+                className="Card-Type"
                 name="cardDetails.cardType"
                 value={tempSettings.cardDetails.cardType}
                 onChange={handleChange}
@@ -175,9 +193,11 @@ const Settings: React.FC = () => {
                 <option value="American Express">American Express</option>
                 <option value="Discover">Discover</option>
               </select>
-            </label>
-          </>
+            </label> <br/>
+          </div>
         )}
+
+        <hr className="separation"/>
 
         {/* Zapis ustawień */}
         <button type="submit" className="save-button">
@@ -185,6 +205,7 @@ const Settings: React.FC = () => {
         </button>
       </form>
     </div>
+      </>
   );
 };
 
