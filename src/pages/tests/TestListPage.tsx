@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NavBar from "../NavBars/navbar";
 import { UnitSelctComponent } from "./UnitsSelectComponent";
-import "../css/TestListPage.css"; 
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import LottieView, { type LottieRefCurrentProps } from "lottie-react";
@@ -37,11 +36,11 @@ export const TestListPage = () => {
     <>
       <NavBar />
       <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white py-10">
-        <div className="unit-container">
+        <div className="flex flex-wrap justify-center gap-8 mx-auto">
           {testUnits.map((unit, index) => (
             <div
               key={index}
-              className="unit-item"
+              className="bg-gray-900 rounded-lg p-8 transition-transform duration-300 ease-in-out cursor-pointer max-w-full flex flex-col justify-center items-center hover:scale-105 hover:bg-blue-500 hover:shadow-lg"
               onClick={() => {
                 const unitName = unit.split("Test.json")[0];
                 navigate(`/home/test/${unitName}`);
