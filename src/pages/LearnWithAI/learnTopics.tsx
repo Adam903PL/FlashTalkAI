@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import NavBar from "../navbar";
-import { useLocation, useNavigate } from "react-router-dom";
+import NavBar from "../NavBars/navbar";
+import { useNavigate } from "react-router-dom";
 import { usePoint } from "../../contexts/points/usePoints";
 import Lottie, { useLottie } from "lottie-react";
 import loadingAnimation from "../../assets/animations/loading1.json";
+import { LockClosedIcon } from "@heroicons/react/solid";
+
 
 const style = {
   height: 450,
@@ -15,7 +17,7 @@ function LearnTopics() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Fetchowanie do getalltopics");
+    console.log("Fetching all topics");
     fetch("http://localhost:4444/getAllTopics", {
       method: "GET",
       credentials: "include",
@@ -25,7 +27,7 @@ function LearnTopics() {
     })
       .then((resp) => resp.json())
       .then((data) => {
-        console.log(data, "thissss");
+        console.log(data, "Fetched topics");
         setTopics(data.data);
       })
       .catch((err) => console.error("Error fetching topics:", err));
@@ -40,17 +42,15 @@ function LearnTopics() {
   const { View } = useLottie(options, style);
 
   useEffect(() => {
-    console.log(LearnWithAilist, "ksksk");
+    console.log(LearnWithAilist, "Current user level");
   }, [LearnWithAilist]);
 
   if (topics.length === 0) {
     return (
-      <>
-        <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white">
-          <NavBar />
-          {View}  
-        </div>
-      </>
+      <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white">
+        <NavBar />
+        {View}
+      </div>
     );
   }
 
@@ -99,11 +99,11 @@ function LearnTopics() {
   };
 
   const gaveAcces = (lvl: number) => {
-    console.log(lvl, "lvls");
+    console.log(lvl, "Current level");
     const topics = [];
     for (let i = 1; i <= 4; i++) {
-      let j = (i - 1) * 25; // Początek zakresu dla danego poziomu
-      let l = i * 25; // Koniec zakresu dla danego poziomu
+      let j = (i - 1) * 25; // Start range for current level
+      let l = i * 25; // End range for current level
 
       if (lvl >= i) {
         topics.push(renderTopicsByLevel(i, j, l, true));
@@ -115,12 +115,12 @@ function LearnTopics() {
   };
 
   return (
-    <>
+    <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white">
       <NavBar />
-      <main className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white flex flex-col items-center p-5 min-h-screen font-sans">
+      <main className="flex flex-col items-center p-5 min-h-screen font-sans">
         {gaveAcces(LearnWithAilist[0].level)}
       </main>
-    </>
+    </div>
   );
 }
 

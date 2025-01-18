@@ -11,6 +11,7 @@ import TestPage from "../pages/tests/TestPage";
 import { TestListPage } from "../pages/tests/TestListPage";
 import { Link } from './links';
 import NotFound from '../pages/errors/NotFound'
+import Settings from "../pages/settings";
 function MainRouter() {
   const [units, setUnits] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,6 +75,7 @@ function MainRouter() {
           element={<TestPage unit={unit} />}
         />
       ))}
+      <Route path={Link.SETTINGS} element={<Settings/>}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

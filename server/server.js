@@ -140,28 +140,24 @@ app.get("/loginsucces", async (req, res) => {
 
 
 app.post("/registerData", async (req, res) => {
-    let datas = {
-        email: req.body.email,
-        password: CryptoJS.SHA256(req.body.password).toString(),
-    };
-    console.log(datas)
-    try {
-        const client = await pool.connect();
-        const query = 'SELECT create_user($1, $2, $3, $4)';
-        const values = [datas.email, datas.password,'USA California',true];
-        const response = await client.query(query, values);
+    console.log(req.body)
+    // try {
+    //     const client = await pool.connect();
+    //     const query = 'SELECT create_user($1, $2, $3, $4)';
+    //     const values = [datas.email, datas.password,'USA California',true];
+    //     const response = await client.query(query, values);
 
-        if (response.rows[0].create_user === true) {
-            res.json({ success: true, message: "Dodano użytkownika pomyślnie" });
-        } else {
-            res.json({ success: false, message: "Błąd podczas rejestracji użytkownika" });
-        }
+    //     if (response.rows[0].create_user === true) {
+    //         res.json({ success: true, message: "Dodano użytkownika pomyślnie" });
+    //     } else {
+    //         res.json({ success: false, message: "Błąd podczas rejestracji użytkownika" });
+    //     }
 
-        client.release();  
-    } catch (err) {
-        console.error("Błąd podczas połączenia z bazą danych:", err);
-        res.json({ success: false, message: "Błąd serwera" });
-    }
+    //     client.release();  
+    // } catch (err) {
+    //     console.error("Błąd podczas połączenia z bazą danych:", err);
+    //     res.json({ success: false, message: "Błąd serwera" });
+    // }
 });
 
 

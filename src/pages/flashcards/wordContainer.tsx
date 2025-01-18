@@ -50,7 +50,7 @@ function WordContainer({ word, known, unit, fromTo }: WordContainerProps) {
   };
 
   return (
-    <div className={`flex items-center justify-between p-4 w-4/5 mx-auto mb-4 rounded-lg shadow-lg ${known ? 'border-green-500 bg-green-200' : 'border-red-500 bg-red-200'}`}>
+    <div className={`flex items-center justify-between p-4 w-4/5 mx-auto mb-4 rounded-lg shadow-lg ${known ? 'border-green-500 bg-green-400' : 'border-red-500 bg-red-400'}`}>
       {/* Left side - Word and Translation */}
       <div className="flex-1 pr-4">
         <p className="text-2xl font-bold text-gray-800">{word.word}</p>

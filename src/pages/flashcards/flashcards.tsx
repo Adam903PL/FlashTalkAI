@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 // import navStyles from "./css/headerNav.module.css";
 // import "../css/card.css";
 import Card from "./card";
-import NavBar from "../navbar";
+import NavBar from "../NavBars/navbar";
 import { useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
 function Flashcards() {

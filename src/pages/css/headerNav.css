@@ -2,31 +2,39 @@
 .header {
   display: flex;
   justify-content: space-between;
-  gap: 1vw;
+  gap: 3vw;
   align-items: center;
   background-color: #1e1e1e;
   padding: 10px 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  border-radius: 60px;
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 15px;
   font-weight: bold;
   color: #1e90ff;
   cursor: pointer;
+  margin-left: 50px;
 }
 
 .searchContainer {
   flex: 1;
   display: flex;
   justify-content: center;
+  margin-right: 65px;
 }
 
 .searchInput {
   width: 60%;
-  padding: 10px;
+  padding: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
   border: none;
-  border-radius: 5px;
+  border-radius: 40px;
   background-color: #333;
   color: #fff;
 }
@@ -47,19 +55,21 @@
 
 .userMenu {
   position: absolute;
-  top: 40px;
+  top: 35px;
   right: 0;
-  background-color: #1e1e1e;
+  background-color: #262626;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
   padding: 10px;
   z-index: 1000;
+  margin-right: 47px;
 }
 
 .userMenu ul {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: inline-block;
 }
 
 .userMenu li {
@@ -80,6 +90,12 @@
   background-color: #1e1e1e;
   padding: 10px 0;
   box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.5);
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
 }
 
 .navMenu ul {
@@ -110,6 +126,30 @@
   color: #fff;
   cursor: pointer;
 }
+
+.Options{
+  font-size: 20px;
+  margin-right: 50px;
+}
+
+
+.content {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  max-height: 200px;
+}
+
+.content.userMenu {
+  max-height: 0;
+}
+
+
+
+
+
+
+
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
