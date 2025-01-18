@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import WordContainer from "./wordContainer";
-import NavBar from "../navbar";
+import NavBar from "../NavBars/navbar";
 import { useLoged } from "../../contexts/loged/useLoged";
 import LearnCards from "./LearnCards";
 import { useFlashCards } from "../../zustand/useFlashcards";
@@ -123,7 +123,7 @@ function Flashcard({ unit }: FlashcardProps) {
       <LearnCards unit={unit} />
 
       {/* Known Words Section */}
-      <div className="bg-[rgb(17_24_39/_var(--tw-bg-opacity,_1))]">
+      <div className="">
         <h1 className="text-2xl font-bold text-center text-white mb-4">Known Words</h1>
         <div className="border-t border-gray-300 mx-auto w-4/5 mb-4"></div>
 
@@ -141,7 +141,7 @@ function Flashcard({ unit }: FlashcardProps) {
       </div>
 
       {/* UnKnown Words Section */}
-      <div className="bg-[rgb(17_24_39/_var(--tw-bg-opacity,_1))]">
+      <div className="">
         <h1 className="text-2xl font-bold text-center text-white mb-4">Known Words</h1>
         <div className="border-t border-gray-300 mx-auto w-4/5 mb-4"></div>
 

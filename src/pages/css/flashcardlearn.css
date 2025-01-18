@@ -26,6 +26,7 @@
   transition: transform 0.5s ease;
   position: relative;
   animation: rotate360 0.5s ease-in-out forwards;
+  margin-top: 50px;
 }
 
 .cardLearnWrapper:hover {
@@ -70,6 +71,9 @@
   -moz-user-select: none;
   -ms-user-select: none;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 .arrow:hover {

@@ -1,14 +1,13 @@
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useFlashCards } from "../../zustand/useFlashcards";
 import LottieView, { type LottieRefCurrentProps } from "lottie-react";
 import animationJson from "../../assets/Loading.json";
+import { FaArrowLeft, FaArrowRight, FaCheck, FaTimes } from "react-icons/fa"; // ikony do przycisków
 
 const LearnCards = ({ unit }: { unit: string }) => {
   const [wordIndex, setWordIndex] = useState<number>(0);
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
-  const [learnFLtype, setLearnFLtype] = useState<
-    "LearnAll" | "LearnKnown" | "LearnUnKnown"
-  >("LearnUnKnown");
+  const [learnFLtype, setLearnFLtype] = useState<"LearnAll" | "LearnKnown" | "LearnUnKnown">("LearnUnKnown");
   const [filteredFlashcards, setFilteredFlashcards] = useState<any[]>([]);
   const [fromTo, SetFromTO] = useState<number[]>([]);
   const [isKnownWord, setIsKnownWord] = useState<boolean>(false);
@@ -119,7 +118,7 @@ const LearnCards = ({ unit }: { unit: string }) => {
   }, [wordIndex, filteredFlashcards, flashCardsUnKnown]);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white py-20">
+    <div className="min-h-screen bg-gradient-to-r from-gray-800 to-black text-white py-20">
       {filteredFlashcards.length > 0 ? (
         <div className="flex justify-center items-center">
           <div
@@ -134,7 +133,7 @@ const LearnCards = ({ unit }: { unit: string }) => {
                 onClick={handlePrev}
                 className="text-5xl text-white hover:text-gray-200 transition-all"
               >
-                &lt;
+                <FaArrowLeft />
               </button>
               <div
                 onClick={handleWordClick}
@@ -148,7 +147,7 @@ const LearnCards = ({ unit }: { unit: string }) => {
                 onClick={handleNext}
                 className="text-5xl text-white hover:text-gray-200 transition-all"
               >
-                &gt;
+                <FaArrowRight />
               </button>
             </div>
             <div className="mt-16 flex justify-between items-center w-full text-xl">
@@ -158,7 +157,7 @@ const LearnCards = ({ unit }: { unit: string }) => {
                   handleChangeKnown(filteredFlashcards[wordIndex].id, true)
                 }
               >
-                Known
+                <FaCheck /> Known
               </button>
               <p className="text-3xl font-bold">
                 {wordIndex + 1}/{filteredFlashcards.length}
@@ -169,15 +168,15 @@ const LearnCards = ({ unit }: { unit: string }) => {
                   handleChangeKnown(filteredFlashcards[wordIndex].id, false)
                 }
               >
-                UnKnown
+                <FaTimes /> UnKnown
               </button>
             </div>
           </div>
         </div>
       ) : (
-        <div className={"loading"}>
-          <LottieView animationData={animationJson} lottieRef={lottieRef}/>
-      </div>
+        <div className="flex justify-center items-center">
+          <LottieView animationData={animationJson} lottieRef={lottieRef} />
+        </div>
       )}
 
       <div className="flex justify-center mt-16 space-x-8">
