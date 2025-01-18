@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useUserSettings } from "../zustand/useUserSettings"; // Import store zustand
+import "../pages/settings.tsx"
 
 const Settings: React.FC = () => {
   const {

@@ -41,7 +41,7 @@
 }
 
 input[type="email"],
-input[type="test"],
+input[type="radio"],
 input[type="password"] {
   width: 100%;
   padding: 15px;
@@ -55,7 +55,7 @@ input[type="password"] {
 }
 
 input[type="email"]:focus,
-input[type="test"]:focus,
+input[type="radio"]:focus,
 input[type="password"]:focus {
   border-color: #0099ff;
   outline: none;
@@ -84,7 +84,7 @@ button:focus {
 }
 
 input[type="email"]:hover,
-input[type="test"]:hover,
+input[type="radio"]:hover,
 input[type="password"]:hover {
   border-color: #0099ff;
 }

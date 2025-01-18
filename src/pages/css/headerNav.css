@@ -13,6 +13,10 @@
   border-radius: 60px;
 }
 
+hr {
+  color: #0099ff;
+}
+
 .logo {
   font-size: 15px;
   font-weight: bold;
@@ -25,18 +29,31 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  margin-right: 65px;
+  margin-left: 65px;
 }
 
 .searchInput {
-  width: 60%;
+  width: 65%;
+  height: 44px;
   padding: 15px;
   padding-left: 30px;
   padding-right: 30px;
-  border: none;
+  margin-left: 35px;
+  border: 1px solid #333;
   border-radius: 40px;
   background-color: #333;
   color: #fff;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+.searchInput:focus {
+  border-color: #0099ff;
+  outline: none;
+}
+
+.searchInput:hover {
+  border-color: #0099ff;
 }
 
 .searchInput::placeholder {
@@ -96,6 +113,11 @@
   margin-top: 10px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out, transform 0.3s ease-out;
 }
 
 .navMenu ul {
@@ -130,6 +152,7 @@
 .Options{
   font-size: 20px;
   margin-right: 50px;
+  margin-bottom: 3px;
 }
 
 
@@ -142,14 +165,20 @@
 .content.userMenu {
   max-height: 0;
 }
+/* NavMenu visible */
+.navMenu.expanded {
+  max-height: 500px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: max-height 0.3s ease-in, opacity 0.3s ease-in, transform 0.3s ease-in;
+}
 
-
-
-
-
-
-
-
+/* Additional styling for the toggle button */
+.navToggleBtn {
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {

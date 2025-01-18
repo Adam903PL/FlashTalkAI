@@ -4,11 +4,13 @@ import MainRouter from "./router/Router";
 
 function App() {
   return (
-    <Router> 
-      <LogedProvider> 
-          <MainRouter />
-      </LogedProvider>
-    </Router>
+      <>
+          <Router>
+              <LogedProvider>
+                  <MainRouter />
+              </LogedProvider>
+          </Router>
+      </>
   );
 }
 

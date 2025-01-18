@@ -131,6 +131,28 @@ button {
   padding-top: 70px;
 }
 
+.test-input {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background-color: #2c2c2c;
+  color: #fff;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.test-input:focus {
+  border-color: #0099ff;
+  outline: none;
+}
+
+.test-input:hover {
+  border-color: #0099ff;
+}
+
+
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
   .unit-container {
