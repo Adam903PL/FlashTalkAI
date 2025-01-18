@@ -4,7 +4,7 @@ import NavBar from "../navbar";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import PageNotFoundAnimation from "../../assets/animations/404Anim.json";
 const NotFound = () => {
-  const style = { height: 700 };
+  const style = { height: 600 };
   const options = {
     animationData: PageNotFoundAnimation,
     loop: true,
