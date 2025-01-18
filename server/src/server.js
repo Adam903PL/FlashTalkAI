@@ -8,8 +8,7 @@ const session = require('express-session');
 const fs = require('fs');
 const cors = require('cors');
 const { default: axios } = require("axios");
-
-
+const nodemailer = require("nodemailer");
   
 const pool = new Pool({
     user: 'flashtalkai_user',
@@ -42,7 +41,7 @@ app.use(cors({
 
 app.use(express.json());
 
-function getFlashcardFiles(directory = './flashcards') {
+function getFlashcardFiles(directory = '../flashcards') {
     try {
         const files = fs.readdirSync(directory);
         return files.filter(file => fs.statSync(path.join(directory, file)).isFile());
@@ -54,7 +53,7 @@ function getFlashcardFiles(directory = './flashcards') {
   
   
 app.get('/api/test', (req, res) => {
-    const files = getFlashcardFiles(path.join(__dirname, 'test'));
+    const files = getFlashcardFiles(path.join(__dirname, '../test'));
     res.json(files);
 });
 
@@ -62,11 +61,11 @@ app.get('/api/test', (req, res) => {
 
 
 app.get('/api/flashcards', (req, res) => {
-    const files = getFlashcardFiles(path.join(__dirname, 'flashcards'));
+    const files = getFlashcardFiles(path.join(__dirname, '../flashcards'));
     res.json(files);
 });
 
-function generateFlashcardEndpoints(directory = './flashcards') {
+function generateFlashcardEndpoints(directory = '../flashcards') {
     const files = fs.readdirSync(directory);
     const fileList = files.filter(file => fs.statSync(path.join(directory, file)).isFile());
 
@@ -92,8 +91,148 @@ function generateFlashcardEndpoints(directory = './flashcards') {
 
 
 
-generateFlashcardEndpoints(path.join(__dirname, 'flashcards'));
-generateFlashcardEndpoints(path.join(__dirname, 'test'));
+generateFlashcardEndpoints(path.join(__dirname, '../flashcards'));
+generateFlashcardEndpoints(path.join(__dirname, '../test'));
+
+
+function sendVerificationEmail(receiverEmail) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let verificationCode = '';
+    for (let i = 0; i < 8; i++) {
+      verificationCode += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    const transporter = nodemailer.createTransport({
+      service: "gmail", 
+      auth: {
+        user: "pukaluk.adam505@gmail.com", 
+        pass: "rkev ztlc xwcr splo", 
+      },
+    });
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Verification Code</title>
+          <style>
+              body {
+                  margin: 0;
+                  padding: 0;
+                  background-color: #000;
+                  font-family: Arial, sans-serif;
+                  color: #fff;
+                  text-align: center;
+              }
+              .container {
+                  max-width: 500px;
+                  margin: 50px auto;
+                  background: linear-gradient(145deg, #0d1f33, #112b4d);
+                  border: 2px solid #007bff;
+                  border-radius: 15px;
+                  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5), 0 0 30px rgba(0, 123, 255, 0.3);
+                  padding: 20px;
+              }
+              h1 {
+                  font-size: 24px;
+                  margin-bottom: 20px;
+                  color: #00bfff;
+                  text-shadow: 0 0 5px #00bfff, 0 0 10px #00bfff;
+              }
+              p {
+                  font-size: 16px;
+                  margin-bottom: 30px;
+                  color: #d9d9d9;
+              }
+              .code {
+                  font-size: 32px;
+                  font-weight: bold;
+                  color: #007bff;
+                  text-shadow: 0 0 10px #007bff, 0 0 20px #007bff;
+                  padding: 10px 20px;
+                  border: 2px solid #007bff;
+                  border-radius: 10px;
+                  display: inline-block;
+                  background: rgba(0, 0, 0, 0.5);
+              }
+              .footer {
+                  margin-top: 20px;
+                  font-size: 12px;
+                  color: #777;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h1>Verification Code</h1>
+              <p>Use the code below to complete your verification process. This code is valid for the next 10 minutes.</p>
+              <div class="code">${verificationCode}</div>
+              <p>If you did not request this code, please ignore this email or contact support.</p>
+              <div class="footer">© 2025 FlashTalkAI. All rights reserved.</div>
+          </div>
+      </body>
+      </html>
+    `;
+  
+    const mailOptions = {
+      from: "FlashTalkAI <pukaluk.adam505@gmail.com>", 
+      to: receiverEmail, 
+      subject: "Your Verification Code", 
+      html: htmlContent, 
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Błąd podczas wysyłania e-maila:", error);
+      } else {
+        console.log("E-mail został wysłany:", info.response);
+      }
+    });
+    return verificationCode
+  }
+  
+
+app.post("/needverification",async (req,res)=>{
+    let datas = {
+        email: req.body.email,
+        password: CryptoJS.SHA256(req.body.password).toString(),
+    };
+    try{
+        const client = await pool.connect();
+        const query1 = 'select twostepverification from users where password = $1 and email = $2'
+        const values1 = [datas.password,datas.email];
+        console.log(values1,"values1")
+        const response1 = await client.query(query1, values1);
+        const databseResp1 = response1.rows[0]?.twostepverification;
+        console.log("wykonywanie neefverify post",databseResp1)
+        res.json({needverify:databseResp1})
+        client.release();  
+    }catch(err){
+        console.error("Error during connection to database needverification:", err);
+        res.json({ success: false, message: "Błąd serwera" });
+    }
+})
+
+app.post("/generateverificationcode", async (req, res) => {
+    console.log("wykonuje się");
+
+    let datas = {
+        email: req.body.email,
+        password: CryptoJS.SHA256(req.body.password).toString(),
+    };
+
+    try {
+        console.log("Wykonywanie generowania kodu weryfikacyjnego");
+        
+        const code = sendVerificationEmail(datas.email);
+        console.log(code,"ksks")
+        res.json({ success: true, message: code });
+    } catch (err) {
+        console.error("Błąd serwera:", err);
+        res.json({ success: false, message: "Błąd serwera" });
+    }
+});
+
 app.post("/loginData", async (req, res) => {
     let datas = {
         email: req.body.email,
@@ -104,10 +243,11 @@ app.post("/loginData", async (req, res) => {
         const client = await pool.connect();
         const query = 'SELECT check_user_credentials($1, $2)';
         const values = [datas.email, datas.password];
+        console.log(values)
         const response = await client.query(query, values);
         const databseResp = response.rows[0]?.check_user_credentials;
         
-        console.log(databseResp)
+        console.log(databseResp,"databaseResp")
         if (databseResp != null) {
             req.session.user = { userid: databseResp, role: 'user' };
             console.log('Sesja po zalogowaniu:', req.session);  
@@ -137,29 +277,49 @@ app.get("/loginsucces", async (req, res) => {
     }
 });
 
-
-
 app.post("/registerData", async (req, res) => {
-    console.log(req.body)
-    // try {
-    //     const client = await pool.connect();
-    //     const query = 'SELECT create_user($1, $2, $3, $4)';
-    //     const values = [datas.email, datas.password,'USA California',true];
-    //     const response = await client.query(query, values);
+    console.log(req.body);
+    let response;
+    try {
+        if (req.body.profileType === "premium") {
+            const client = await pool.connect();
+            const query = 'SELECT create_user($1::VARCHAR, $2::VARCHAR, $3::BOOLEAN, $4::VARCHAR, $5::VARCHAR, $6::VARCHAR, $7::VARCHAR, $8::VARCHAR, $9::VARCHAR)';
+            const values = [
+                req.body.email,
+                CryptoJS.SHA256(req.body.password).toString(),
+                req.body.enable2FA,
+                req.body.profileType,
+                req.body.card_number,
+                req.body.expiration_date,
+                req.body.cvv,
+                req.body.billing_address,
+                req.body.card_type
+            ];            
+            response = await client.query(query, values);
+            client.release();
+        } else if (req.body.profileType === "normal") {
+            const client = await pool.connect();
+            const query = 'SELECT create_user($1, $2, $3, $4)';
+            const values = [
+                req.body.email,
+                CryptoJS.SHA256(req.body.password).toString(), // poprawienie wartości
+                req.body.enable2FA,
+                req.body.profileType
+            ];
+            response = await client.query(query, values);
+            client.release();
+        }
 
-    //     if (response.rows[0].create_user === true) {
-    //         res.json({ success: true, message: "Dodano użytkownika pomyślnie" });
-    //     } else {
-    //         res.json({ success: false, message: "Błąd podczas rejestracji użytkownika" });
-    //     }
-
-    //     client.release();  
-    // } catch (err) {
-    //     console.error("Błąd podczas połączenia z bazą danych:", err);
-    //     res.json({ success: false, message: "Błąd serwera" });
-    // }
+        if (response && response.rows && response.rows[0].create_user === true) {
+            res.json({ success: true, message: "Dodano użytkownika pomyślnie" });
+        } else {
+            res.json({ success: false, message: "Błąd podczas rejestracji użytkownika" });
+        }
+    } catch (err) {
+        console.error("Błąd podczas połączenia z bazą danych:", err);
+        res.json({ success: false, message: "Błąd serwera" });
+    }
 });
-
 
 app.get("/logout", (req, res) => {
     req.session.destroy((err) => {
