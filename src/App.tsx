@@ -8,7 +8,9 @@ function App() {
     <Router> 
       <LogedProvider> 
           <PointsProvider>
-          <MainRouter />
+            <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white">
+              <MainRouter />
+            </div>
           </PointsProvider>
       </LogedProvider>
     </Router>
