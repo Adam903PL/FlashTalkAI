@@ -33,6 +33,7 @@ function Registration() {
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
   const profileType = watch("profileType");
+  const enable2FA = watch("enable2FA");
 
   const sendData = (data: FormData) => {
     // Ensure all the optional fields are set to null if they are not provided
@@ -155,6 +156,15 @@ function Registration() {
                   <option value="normal">Normal</option>
                   <option value="premium">Premium - $10.99</option>
                 </select>
+              </div>
+
+              <div className="mt-4 flex items-center">
+                <input
+                  type="checkbox"
+                  {...register("enable2FA")}
+                  className="w-4 h-4 mr-2"
+                />
+                <label className="text-white text-sm">Enable Two-Factor Authentication</label>
               </div>
 
               {showError && (

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import {
   UserCircleIcon,
   LockClosedIcon,
@@ -7,48 +8,45 @@ import {
 } from "@heroicons/react/solid";
 import NavBar from "./NavBars/navbar";
 
+type FormData = {
+  password: string;
+  email: string;
+  location: string;
+  isTwoStepVerificationEnabled: boolean;
+  accountType: string;
+  cardDetails: {
+    cardNumber: string;
+    expiryDate: string;
+    cvv: string;
+    billingAddress: string;
+    cardType: string;
+  };
+};
+
 const Settings: React.FC = () => {
-  const [settings, setSettings] = useState({
-    password: "",
-    email: "",
-    location: "",
-    isTwoStepVerificationEnabled: false,
-    accountType: "basic",
-    cardDetails: {
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-      billingAddress: "",
-      cardType: "",
+  const { control, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+      location: "",
+      isTwoStepVerificationEnabled: false,
+      accountType: "basic",
+      cardDetails: {
+        cardNumber: "",
+        expiryDate: "",
+        cvv: "",
+        billingAddress: "",
+        cardType: "",
+      },
     },
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type, checked } = e.target;
-
-    if (name.startsWith("cardDetails.")) {
-      const field = name.split(".")[1];
-      setSettings((prev) => ({
-        ...prev,
-        cardDetails: {
-          ...prev.cardDetails,
-          [field]: value,
-        },
-      }));
-    } else {
-      setSettings((prev) => ({
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: FormData) => {
+    console.log(data);
     alert("Settings updated successfully!");
   };
+
+  const accountType = watch("accountType");
 
   return (
     <>
@@ -56,7 +54,7 @@ const Settings: React.FC = () => {
       <div className="min-h-screen text-white flex flex-col items-center p-6">
         <h1 className="text-4xl font-bold mb-8 text-blue-500">User Settings</h1>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-2xl space-y-6"
         >
           {/* Email */}
@@ -64,15 +62,29 @@ const Settings: React.FC = () => {
             <MailIcon className="w-6 h-6 text-blue-400" />
             <label className="flex-1">
               Email:
-              <input
-                type="email"
+              <Controller
                 name="email"
-                value={settings.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                control={control}
+                rules={{
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Invalid email format",
+                  },
+                }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="email"
+                    placeholder="Enter your email"
+                    className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                  />
+                )}
               />
             </label>
+            {errors.email && (
+              <span className="text-red-500 text-sm">{errors.email.message}</span>
+            )}
           </div>
 
           {/* Password */}
@@ -80,15 +92,23 @@ const Settings: React.FC = () => {
             <LockClosedIcon className="w-6 h-6 text-blue-400" />
             <label className="flex-1">
               Password:
-              <input
-                type="password"
+              <Controller
                 name="password"
-                value={settings.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                control={control}
+                rules={{ required: "Password is required" }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="password"
+                    placeholder="Enter your password"
+                    className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                  />
+                )}
               />
             </label>
+            {errors.password && (
+              <span className="text-red-500 text-sm">{errors.password.message}</span>
+            )}
           </div>
 
           {/* Location */}
@@ -96,49 +116,61 @@ const Settings: React.FC = () => {
             <UserCircleIcon className="w-6 h-6 text-blue-400" />
             <label className="flex-1">
               Location:
-              <input
-                type="text"
+              <Controller
                 name="location"
-                value={settings.location}
-                onChange={handleChange}
-                placeholder="Enter your location"
-                className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                control={control}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    type="text"
+                    placeholder="Enter your location"
+                    className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                  />
+                )}
               />
             </label>
           </div>
 
           {/* Two-Step Verification */}
           <div className="flex items-center gap-4">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="isTwoStepVerificationEnabled"
-                checked={settings.isTwoStepVerificationEnabled}
-                onChange={handleChange}
-                className="w-5 h-5 text-blue-500 bg-gray-700 rounded focus:ring-2 focus:ring-blue-500"
-              />
-              <span className="ml-3">Enable Two-Step Verification</span>
-            </label>
+            <Controller
+              name="isTwoStepVerificationEnabled"
+              control={control}
+              render={({ field }) => (
+                <label className="flex items-center">
+                  <input
+                    {...field}
+                    type="checkbox"
+                    className="w-5 h-5 text-blue-500 bg-gray-700 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="ml-3">Enable Two-Step Verification</span>
+                </label>
+              )}
+            />
           </div>
 
           {/* Account Type */}
           <div>
             <label>
               Account Type:
-              <select
+              <Controller
                 name="accountType"
-                value={settings.accountType}
-                onChange={handleChange}
-                className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="basic">Basic</option>
-                <option value="premium">Premium</option>
-              </select>
+                control={control}
+                render={({ field }) => (
+                  <select
+                    {...field}
+                    className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="basic">Basic</option>
+                    <option value="premium">Premium</option>
+                  </select>
+                )}
+              />
             </label>
           </div>
 
-          {/* Credit Card Details */}
-          {settings.accountType === "premium" && (
+          {/* Credit Card Details (only for premium users) */}
+          {accountType === "premium" && (
             <div className="space-y-4">
               <h2 className="text-xl font-semibold text-blue-400">
                 Credit Card Details
@@ -147,25 +179,95 @@ const Settings: React.FC = () => {
                 <CreditCardIcon className="w-6 h-6 text-blue-400" />
                 <label className="flex-1">
                   Card Number:
-                  <input
-                    type="text"
+                  <Controller
                     name="cardDetails.cardNumber"
-                    value={settings.cardDetails.cardNumber}
-                    onChange={handleChange}
-                    placeholder="Enter 16-digit card number"
-                    className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                    control={control}
+                    rules={{ required: "Card number is required" }}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        type="text"
+                        placeholder="Enter 16-digit card number"
+                        className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                      />
+                    )}
                   />
                 </label>
+                {errors.cardDetails?.cardNumber && (
+                  <span className="text-red-500 text-sm">
+                    {errors.cardDetails.cardNumber.message}
+                  </span>
+                )}
               </div>
+
+              <div className="flex space-x-4">
+                <div className="flex-1">
+                  <label>
+                    Expiry Date:
+                    <Controller
+                      name="cardDetails.expiryDate"
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="text"
+                          placeholder="MM/YY"
+                          className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                        />
+                      )}
+                    />
+                  </label>
+                </div>
+                <div className="flex-1">
+                  <label>
+                    CVV:
+                    <Controller
+                      name="cardDetails.cvv"
+                      control={control}
+                      render={({ field }) => (
+                        <input
+                          {...field}
+                          type="text"
+                          placeholder="CVV"
+                          className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                        />
+                      )}
+                    />
+                  </label>
+                </div>
+              </div>
+
               <label>
-                Expiry Date:
-                <input
-                  type="text"
-                  name="cardDetails.expiryDate"
-                  value={settings.cardDetails.expiryDate}
-                  onChange={handleChange}
-                  placeholder="MM/YY"
-                  className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                Billing Address:
+                <Controller
+                  name="cardDetails.billingAddress"
+                  control={control}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="text"
+                      placeholder="Billing address"
+                      className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+                    />
+                  )}
+                />
+              </label>
+
+              <label>
+                Card Type:
+                <Controller
+                  name="cardDetails.cardType"
+                  control={control}
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="">Select card type</option>
+                      <option value="visa">Visa</option>
+                      <option value="mastercard">MasterCard</option>
+                    </select>
+                  )}
                 />
               </label>
             </div>

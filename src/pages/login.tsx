@@ -8,43 +8,105 @@ type FormData = {
 };
 
 function Login() {
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [needVerCode, setneedVerCode] = useState<boolean>(false);
+  const [verificationCode, setverificationCode] = useState();
+  const [logData,setLogData] = useState({})
   const sendData = async (data: FormData) => {
     const updatedFormData = { email: data.email, password: data.password };
-
+    setLogData(updatedFormData)
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:4444/loginData", {
+      await fetch("http://localhost:4444/needverification", {
         method: "POST",
-        credentials: 'include',
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(updatedFormData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Błąd logowania: " + response.statusText);
-      }
-
-      const result = await response.json();
-      if (result.success) {
-        navigate("/home");
-      } else {
-        setErrorMessage(result.message || "Nieznany błąd.");
-      }
-    } catch (error) {
-      setErrorMessage("Wystąpił problem z połączeniem.");
-      console.error("Błąd:", error);
-    } finally {
-      setLoading(false);
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log(data, "needverify");
+          if (data.needverify) {
+            fetch("http://localhost:4444/generateverificationcode", {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedFormData),
+            })
+              .then((resp) => resp.json())
+              .then((data) => {
+                console.log("here w posc genvercod")
+                if (data.success) {
+                  console.log(data.message, "this");
+                  setverificationCode(data.message);
+                  setneedVerCode(true);
+                } else if (data.success === false) {
+                  console.log(
+                    "Error during generating verificationcode data succes == false"
+                  );
+                } else {
+                  console.log("Coś się zjebało");
+                }
+              });
+          } else {
+            fetch("http://localhost:4444/loginData", {
+              method: "POST",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedFormData),
+            })
+              .then((resp) => resp.json())
+              .then((data) => {
+                if (data.success) {
+                  navigate("/home");
+                } else {
+                  setErrorMessage(data.message || "Nieznany błąd.");
+                }
+              });
+          }
+        });
+    } catch (err) {
+      console.log(err);
     }
   };
 
+  const checkCodeVerification = (e) => {
+    if(verificationCode == e.target.value){
+      fetch("http://localhost:4444/loginData", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(logData),
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          if (data.success) {
+            navigate("/home");
+          } else {
+            setErrorMessage(data.message || "Nieznany błąd.");
+          }
+        });
+    }
+    else{
+      console.log(e.target.value,verificationCode,"kod")
+    }
+  }
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-tl bg-gradient-to-r from-gray-800 to-black min-h-screen">
       <div className="bg-opacity-90 bg-gray-800 p-10 rounded-xl shadow-xl max-w-md w-full">
@@ -53,12 +115,12 @@ function Login() {
           <input
             type="text"
             placeholder="Email Address"
-            {...register("email", { 
-              required: "Email jest wymagany", 
-              pattern: { 
-                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 
-                message: "Nieprawidłowy format email" 
-              } 
+            {...register("email", {
+              required: "Email jest wymagany",
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Nieprawidłowy format email",
+              },
             })}
             className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
           />
@@ -73,11 +135,28 @@ function Login() {
             className="w-full p-4 bg-gray-700 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
           />
           {errors.password && (
-            <span className="text-red-500 text-sm">{errors.password.message}</span>
+            <span className="text-red-500 text-sm">
+              {errors.password.message}
+            </span>
+          )}
+          {needVerCode && (
+            <div className="mt-6 bg-gray-700 p-6 rounded-xl shadow-lg">
+              <h2 className="text-xl text-white mb-4">
+                Wpisz Kod Weryfikacyjny
+              </h2>
+              <div className="flex items-center space-x-4">
+                <input
+                  type="text"
+                  placeholder="Kod weryfikacyjny"
+                  onChange={(e) => {checkCodeVerification(e)}}
+                  className="w-full p-4 bg-gray-800 text-white border border-gray-600 rounded-md focus:outline-none focus:border-blue-400"
+                />
+              </div>
+            </div>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading}
             className="w-full py-3 mt-4 bg-blue-600 text-white rounded-md hover:bg-blue-500 transition"
           >
