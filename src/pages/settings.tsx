@@ -106,7 +106,7 @@ const Settings: React.FC = () => {
         <span className={"Two-Step-Verification-whole"}>
           <h3 className="Two-Step-Verification">Two-Step Verification:</h3>
           <input
-            className={"Two-Step-Verification-Input"}
+            className="Two-Step-Verification-Input"
             type="checkbox"
             name="isTwoStepVerificationEnabled"
             checked={tempSettings.isTwoStepVerificationEnabled}
@@ -205,7 +205,7 @@ const Settings: React.FC = () => {
         </button>
       </form>
     </div>
-      </>
+  </>
   );
 };
 
