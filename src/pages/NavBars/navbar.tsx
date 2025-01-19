@@ -8,6 +8,19 @@ function NavBar() {
   const { loged, setloged } = useLoged();
   const navigate = useNavigate();
 
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log("Wyszukiwanie:", searchQuery); 
+  };
+
+
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -42,6 +55,8 @@ function NavBar() {
           <input
             type="text"
             placeholder="Wyszukaj..."
+            value={searchQuery}
+            onChange={handleSearchChange}
             className="w-3/5 p-3 rounded-full bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

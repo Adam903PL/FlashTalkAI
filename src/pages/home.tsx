@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBars/navbar";
+import { useLoged } from "../contexts/loged/useLoged";
 
 const Home: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white">

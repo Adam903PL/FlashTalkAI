@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import Home from "../pages/home";
 import Flashcards from "../pages/flashcards/flashcards";
 import Flashcard from "../pages/flashcards/flashcard";
-import Login from "../pages/login";
-import Registration from "../pages/registration";
+import Login from "../auth/login";
+import Registration from "../auth/registration";
 import LearnTopics from "../pages/LearnWithAI/learnTopics";
 import LearnAi from "../pages/LearnWithAI/learnAi";
 import TestPage from "../pages/tests/TestPage";
@@ -12,6 +12,7 @@ import { TestListPage } from "../pages/tests/TestListPage";
 import { Link } from './links';
 import NotFound from '../pages/errors/NotFound'
 import Settings from "../pages/settings";
+import { ForgotPassword } from "../auth/forgotpassword";
 function MainRouter() {
   const [units, setUnits] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,6 +64,7 @@ function MainRouter() {
       
       <Route path={Link.LOGIN} element={<Login />} />
       <Route path={Link.REGISTER} element={<Registration />} />
+      <Route path={Link.FORGOT_PASSWORD} element={<ForgotPassword/>}/>
       <Route path={Link.LEARN} element={<LearnTopics />} />
       <Route path={Link.LEARN_AI} element={<LearnAi />} />
 

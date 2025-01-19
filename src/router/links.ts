@@ -2,6 +2,7 @@ export enum Link {
     HOME = '/home',
     LOGIN = '/login',
     REGISTER = '/register',
+    FORGOT_PASSWORD = '/forgot-password',
     SETTINGS = '/settings',
     FLASHCARDS = '/home/flashcards',
     FLASHCARD = '/home/flashcards/:unit',

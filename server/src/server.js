@@ -218,7 +218,6 @@ app.post("/generateverificationcode", async (req, res) => {
 
     let datas = {
         email: req.body.email,
-        password: CryptoJS.SHA256(req.body.password).toString(),
     };
 
     try {
@@ -232,6 +231,29 @@ app.post("/generateverificationcode", async (req, res) => {
         res.json({ success: false, message: "Błąd serwera" });
     }
 });
+
+app.post("/changepassword",async (req,res)=>{
+    console.log("wykonwyanie changepassword")
+    let datas = {
+        email: req.body.email,
+        password: CryptoJS.SHA256(req.body.password).toString(),
+    };
+    try{
+        const client = await pool.connect();
+        const query1 = 'UPDATE users SET password = $1 where email = $2'
+        const values1 = [datas.password,datas.email];
+        const response1 = await client.query(query1, values1);
+        if (response1.rowCount > 0) {
+            res.json({ success: true, message: "Hasło zostało zmienione pomyślnie." });
+          } else {
+            res.json({ success: false, message: "Nie znaleziono użytkownika o podanym adresie email." });
+          }
+        client.release();  
+    }catch(err){
+        console.error("Error during connection to database changepassword:", err);
+        res.json({ success: false, message: "Błąd serwera" });
+    }
+})
 
 app.post("/loginData", async (req, res) => {
     let datas = {
@@ -262,7 +284,179 @@ app.post("/loginData", async (req, res) => {
     }
 });
 
+app.get("/usersettings", async (req, res) => {
+    console.log(req.session)
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+      }
+  
+    try {
+      const client = await pool.connect();
+      const query = 'SELECT email, password, twostepverification,profiletype FROM users WHERE id = $1';
+      const values = [req.session.user.userid];
+      console.log(values);
+  
+   
+      const response = await client.query(query, values);
+      if (response.rows.length > 0) {
+        const userData = response.rows[0]; 
+        console.log(userData, "databaseResp");
+  
+        res.json({ success: true, data: userData });
+      } else {
+        res.status(404).json({ success: false, message: "Nie znaleziono użytkownika" });
+      }
+  
+      client.release();
+    } catch (err) {
+      console.error('Błąd podczas pobierania danych o ustawieniach użytkownika:', err);
+      res.status(500).json({ success: false, message: 'Błąd serwera', error: err });
+    }
+  });
 
+  app.get("/cancelpremiumplan", async (req, res) => {
+    try {
+      const client = await pool.connect();
+  
+      const updateQuery = 'UPDATE users SET profiletype = $1 WHERE id = $2';
+      const deleteQuery = 'DELETE FROM creditcard WHERE user_id = $1';
+  
+      const values = [ "normal", req.session.user.userid ];
+  
+
+      await client.query(updateQuery, values);
+
+      await client.query(deleteQuery, [req.session.user.userid]);
+  
+      res.status(200).json({ success: true, message: 'Premium plan anulowany i dane usunięte' });
+  
+      client.release();
+    } catch (err) {
+      console.error('Błąd podczas anulowania planu premium', err);
+      res.status(500).json({ success: false, message: 'Błąd serwera', error: err });
+    }
+  });
+  
+ 
+  app.post("/delete-account", async (req, res) => {
+    const { password } = req.body;
+    const pass = CryptoJS.SHA256(password).toString();
+  
+    try {
+      const client = await pool.connect();
+  
+      const updateQuery = "SELECT id FROM users WHERE id = $1 AND password = $2";
+      const deleteQuery = "SELECT usun_dane_z_baz($1)";
+  
+      const updateValues = [req.session.user.userid, pass];
+  
+      // Weryfikacja użytkownika
+      const updateResult = await client.query(updateQuery, updateValues);
+  
+      if (updateResult.rows.length === 0) {
+        return res.status(400).json({ success: false, message: "Invalid password or user does not exist." });
+      }
+  
+      // Usuwanie danych użytkownika
+      const deleteValues = [req.session.user.userid];
+      await client.query(deleteQuery, deleteValues);
+  
+      // Niszczymy sesję użytkownika
+      req.session.destroy((err) => {
+        if (err) {
+          console.error("Error destroying session after account deletion:", err);
+          return res.status(500).json({ success: false, message: "Account deleted, but failed to destroy session." });
+        }
+  
+        // Zwracamy sukces, jeśli wszystko się powiodło
+        return res.status(200).json({
+          success: true,
+          message: "Your account has been successfully deleted, and your session has been destroyed.",
+        });
+      });
+  
+      client.release();
+    } catch (err) {
+      console.error("Error deleting account:", err);
+      res.status(500).json({
+        success: false,
+        message: "Server error. Please try again later.",
+        error: err,
+      });
+    }
+  });
+  
+  
+
+  app.post("/update-credit-card", async (req, res) => {
+    const {
+      newCardNumber,
+      newExpirationDate,
+      newCvv,
+      newBillingAddress,
+      newCardType,
+    } = req.body;
+  
+    try {
+      const client = await pool.connect();
+  
+
+      const query = 'SELECT update_credit_card($1, $2, $3, $4, $5, $6)';
+      const values = [
+        req.session.user.userid,      
+        newCardNumber,                
+        newExpirationDate,            
+        newCvv,                       
+        newBillingAddress,           
+        newCardType                  
+      ];
+  
+      console.log(query); 
+      console.log(values); 
+  
+
+      const result = await client.query(query, values);
+      client.release();
+  
+      if (result.rows && result.rows.length > 0) {
+        res.json({ success: true, message: "Card details updated successfully." });
+      } else {
+        res.json({ success: false, message: "Failed to update card details." });
+      }
+    } catch (err) {
+      console.error("Error during card update:", err);
+      res.status(500).json({ success: false, message: "Server error", error: err });
+    }
+  });
+  
+
+app.post("/changebasicsettings", async (req, res) => {
+    const data = {
+      email: req.body.email, 
+      password: CryptoJS.SHA256(req.body.password).toString(), 
+      twostepverification: req.body.twostepverification, 
+    };
+  
+    try {
+      const client = await pool.connect();
+      const query = 'SELECT update_user_basic_settings($1, $2, $3, $4);';
+      const values = [req.session.user.userid, data.email, data.password, data.twostepverification]; // Zmienione na data.twostepverification
+      console.log(values);
+      const response = await client.query(query, values);
+      const databaseResp = response.rows[0]?.update_user_basic_settings;
+      
+      if (databaseResp) {
+        res.json({ success: databaseResp, message: "Zmieniono dane użytkownika" });
+      } else {
+        res.json({ success: databaseResp, message: "Błąd podczas zmieniania danych użytkownika" });
+      }
+      client.release();
+    } catch (err) {
+      console.error('Błąd podczas zmieniania basic danych:', err);
+      res.status(500).json({ success: false, message: 'Błąd serwera', error: err });
+    }
+  });
+  
 
 app.get("/loginsucces", async (req, res) => {
     try { 
@@ -322,6 +516,7 @@ app.post("/registerData", async (req, res) => {
 });
 
 app.get("/logout", (req, res) => {
+    
     req.session.destroy((err) => {
         if (err) {
             return res.json({ success: false, message: "Błąd podczas wylogowywania" });
@@ -516,6 +711,7 @@ app.get('/getAllTopics', async (req,res)=>{
     try{
         const client = await pool.connect();
         const query = "SELECT lat.topicid, lat.topicdescription,lap.point FROM learn_ai_topics AS lat LEFT JOIN learn_ai_points AS lap ON lap.topicid = lat.topicid AND lap.userid = $1 order by topicid asc"
+        console.log(query,"ksks")
         const values = [req.session.user.userid];
         const response = await client.query(query,values);
         res.json({data:response.rows})
