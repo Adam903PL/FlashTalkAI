@@ -177,3 +177,72 @@ button {
     grid-template-columns: 1fr; /* Single column layout for mobile */
   }
 }
+
+/* General container responsiveness */
+.unit-container {
+  padding: 10px; /* Add padding for smaller screens */
+}
+
+/* Responsive design for medium screens */
+@media (max-width: 768px) {
+  .unit-container {
+    grid-template-columns: 1fr; /* Single column layout for smaller screens */
+  }
+
+  .test-block {
+    margin: 20px; /* Reduce side margins */
+    padding: 40px; /* Adjust padding */
+  }
+
+  .test-unit {
+    font-size: 40px; /* Smaller heading size */
+    margin: 20px;
+  }
+
+  .test-score {
+    margin: 20px; /* Adjust margin for score block */
+    font-size: 20px;
+  }
+
+  button {
+    font-size: 14px; /* Adjust button text size */
+    padding: 10px 15px; /* Adjust button padding */
+  }
+
+  .descriptionUnitTest {
+    max-width: 90%; /* Adapt width for smaller devices */
+  }
+}
+
+/* Responsive design for small screens (e.g., mobile devices) */
+@media (max-width: 480px) {
+  .test-block {
+    padding: 20px; /* Reduce padding for mobile screens */
+  }
+
+  .test-unit {
+    font-size: 30px; /* Smaller font size for mobile */
+    margin: 10px;
+  }
+
+  .test-score {
+    font-size: 18px; /* Smaller score text */
+    padding: 20px;
+  }
+
+  button {
+    font-size: 12px; /* Smaller button text */
+    padding: 8px 10px; /* Smaller padding */
+  }
+
+  .descriptionUnitTest {
+    font-size: 0.8rem; /* Adjust font size for smaller screens */
+    padding: 5px;
+  }
+}
+
+/* Adjust input fields for small screens */
+.test-input {
+  font-size: 14px; /* Adjust font size */
+  padding: 10px; /* Smaller padding */
+}
