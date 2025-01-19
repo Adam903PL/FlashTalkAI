@@ -5,7 +5,6 @@ const { Pool } = require("pg");
 
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
-
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
@@ -118,7 +117,7 @@ async function callChatGPT(messages) {
     const url = "https://api.openai.com/v1/chat/completions";
     const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
     };
 
     const data = {
