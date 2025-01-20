@@ -2,7 +2,6 @@
 module.exports = {
   content: [
     "./src/**/*.{html,js,ts,jsx,tsx}",
-    // Add other paths where you use Tailwind CSS classes
   ],
   theme: {
     extend: {
