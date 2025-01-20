@@ -35,7 +35,7 @@ export const TestListPage = () => {
   return (
     <>
       <NavBar />
-      <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white py-10">
+      <div className="min-h-screen text-white py-10">
         <div className="flex flex-wrap justify-center gap-8 mx-auto">
           {testUnits.map((unit, index) => (
             <div

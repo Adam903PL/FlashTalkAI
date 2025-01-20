@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { UserCircleIcon, LockClosedIcon, MailIcon, CreditCardIcon } from "@heroicons/react/solid";
-import NavBar from "./NavBars/navbar";
+import NavBar from "../NavBars/navbar";
 import Lottie from "lottie-react";
-import animationData from '../assets/animations/success.json'; // Example Lottie animation
+import animationData from '../../assets/animations/success.json'; // Example Lottie animation
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaCreditCard, FaRegLightbulb, FaArrowRight } from "react-icons/fa";
 
-import CancelPremiumModal from "./modals/ModalComp";
-import DeleteAccount from "./modals/ModalDeleteAccount";
+import CancelPremiumModal from "../modals/ModalComp";
+import DeleteAccount from "../modals/ModalDeleteAccount";
 import { isObject } from "util";
+import ProfilePictureUploader from "./pfpuploder";
 ;
 type FormData = {
   password: string;
@@ -32,7 +33,7 @@ type typeBasicSettings = {
   twostepverification:boolean
 }
 const Settings: React.FC = () => {
-  const { control, handleSubmit, watch, formState: { errors } } = useForm<FormData>({
+  const { control, handleSubmit, watch,setValue, formState: { errors } } = useForm<FormData>({
     defaultValues: {
       email: "",
       password: "",
@@ -56,9 +57,9 @@ const Settings: React.FC = () => {
   const [showCardDetails, setShowCardDetails] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [basicSettings, setbasicSettings] = useState<typeBasicSettings>({
-    email: '', 
+    email: '',
     password: '',
-    twostepverification: false,
+    twostepverification: false, 
   });
   const [isOpen, setIsOpen] = useState(false);
 
@@ -72,29 +73,33 @@ const Settings: React.FC = () => {
 
 
   const onSubmitBasic = (data: FormData) => {
+    console.log("wywołuje się")
+    console.log(data,"to")
     const { email, password, location, isTwoStepVerificationEnabled } = data;
     const basicData = { email, password, location, isTwoStepVerificationEnabled };
-    
-    console.log(basicData); 
+  
+    console.log(basicData,"important");
     toast.success("Basic settings updated successfully!");
     setShowSuccess(true);
-
-    fetch("http://localhost:4444/changebasicsettings",{
-      method:"POST",
+  
+    fetch("http://localhost:4444/changebasicsettings", {
+      method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body:JSON.stringify(basicData)
-    }).then(resp=>resp.json())
-    .then((data)=>{
-      console.log(data,"here")
-    }).catch((err)=>{
-      console.log("Error druing change basicsetting:",err)
-      throw new Error(err)
+      body: JSON.stringify(basicData),
     })
-
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data, "here");
+      })
+      .catch((err) => {
+        console.log("Error during change basic settings:", err);
+        throw new Error(err);
+      });
   };
+  
   
   const onSubmitCard = (data: FormData) => {
     console.log(data.cardDetails); 
@@ -141,73 +146,84 @@ const Settings: React.FC = () => {
     fetch("http://localhost:4444/usersettings", {
       credentials: "include",
     })
-    .then((resp) => resp.json())
-    .then((data) => {
-      console.log(data, "basicSettings");
-      if (data.success) {
-        const data2:typeBasicSettings = {email:data.data.email,password:data.data.password,twostepverification:data.data.twostepverification ===null? false : true}
-        setbasicSettings(data2)
-        setPremium2(data.data.profiletype === "normal" ? false : true)
-      }
-    })
-    .catch((err) => {
-      console.error("Błąd w fetch:", err);
-    });
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.success) {
+          const { email, password, twostepverification } = data.data;
+          // setValue("email", email || "");
+          // setValue("password", password || "");
+          // setValue("isTwoStepVerificationEnabled", twostepverification || false);
+        }
+      })
+      .catch((err) => {
+        console.error("Error in fetch:", err);
+      });
   }, []);
+  
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target; 
-    setbasicSettings((prevState) => ({
-      ...prevState, 
-      [name]: value, 
-    }));
+    const { name, value, type, checked } = e.target;
+    
+    if (type === "checkbox") {
+      setbasicSettings((prevState) => ({
+        ...prevState,
+        [name]: checked, 
+      }));
+    } else {
+      setbasicSettings((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
-
+  useEffect(()=>{
+    console.log(basicSettings)
+  },[basicSettings])
   return (
     <>
       <NavBar />
-      <div className="min-h-screen text-white flex flex-col items-center p-6">
-        <h1 className="text-4xl font-bold mb-8 text-blue-500">User Settings</h1>
 
+      <div className="min-h-screen text-white flex flex-col items-center p-6">
+
+        <h1 className="text-4xl font-bold mb-0 text-blue-500">User Settings</h1>
+        <ProfilePictureUploader/>
         <div className="w-full max-w-2xl space-y-6">
           {/* General Settings */}
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
             <h2 className="text-2xl font-semibold text-blue-400">General Settings</h2>
 
-            {/* Email */}
+
             <div className="flex items-center gap-4">
-              <MailIcon className="w-6 h-6 text-blue-400" />
-              <label className="flex-1">
-                Email:
-                <Controller
-                  name="email"
-                  control={control}
-        
-                  rules={{
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message: "Invalid email format",
-                    },
-                  }}
-                  render={({ field }) => (
-                    <input
-                      {...field}
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder="Enter your new email"
-                      value={basicSettings.email} 
-                      onChange={handleInputChange}
-                      className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
-                    />
-                  )}
-                />
-              </label>
-              {errors.email && (
-                <span className="text-red-500 text-sm">{errors.email.message}</span>
-              )}
-            </div>
+  <MailIcon className="w-6 h-6 text-blue-400" />
+  <label className="flex-1">
+    Email:
+    <Controller
+      name="email"
+      control={control}
+      rules={{
+        pattern: {
+          value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+          message: "Invalid email format",
+        },
+      }}
+      render={({ field }) => (
+        <input
+          {...field}
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your new email"
+          className="block w-full mt-1 p-2 bg-gray-700 rounded-md text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500"
+        />
+      )}
+    />
+  </label>
+  {errors.email && (
+    <span className="text-red-500 text-sm">{errors.email.message}</span>
+  )}
+</div>
 
             {/* Password */}
             <div className="flex items-center gap-4">
@@ -250,23 +266,23 @@ const Settings: React.FC = () => {
             </div>
 
             {/* Two-Step Verification */}
-            <div className="flex items-center gap-4">
-              <Controller
-                name="isTwoStepVerificationEnabled"
-                control={control}
-                render={({ field }) => (
-                  <label className="flex items-center">
-                    <input
-                      {...field}
-                      checked={basicSettings?.twostepverification}
-                      type="checkbox"
-                      className="w-5 h-5 text-blue-500 bg-gray-700 rounded focus:ring-2 focus:ring-blue-500"
-                    />
-                    <span className="ml-3">Enable Two-Step Verification</span>
-                  </label>
-                )}
-              />
-            </div>
+<div className="flex items-center gap-4">
+  <Controller
+    name="isTwoStepVerificationEnabled"
+    control={control}
+    render={({ field }) => (
+      <label className="flex items-center">
+        <input
+          {...field}
+          type="checkbox"
+          className="w-5 h-5 text-blue-500 bg-gray-700 rounded focus:ring-2 focus:ring-blue-500"
+        />
+        <span className="ml-3">Enable Two-Step Verification</span>
+      </label>
+    )}
+  />
+</div>
+
 
             {/* Submit Button for Basic Settings */}
             <button

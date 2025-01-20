@@ -11,7 +11,7 @@ import TestPage from "../pages/tests/TestPage";
 import { TestListPage } from "../pages/tests/TestListPage";
 import { Link } from './links';
 import NotFound from '../pages/errors/NotFound'
-import Settings from "../pages/settings";
+import Settings from "../pages/settingspages/settings";
 import { ForgotPassword } from "../auth/forgotpassword";
 function MainRouter() {
   const [units, setUnits] = useState<string[]>([]);
@@ -44,9 +44,9 @@ function MainRouter() {
       });
   }, []);
 
-  if (loading || !isTestUnitsLoaded) {
-    return <div>Ładowanie...</div>;
-  }
+  // if (loading || !isTestUnitsLoaded) {
+  //   return <div>Ładowanie...</div>;
+  // }
 
   return (
     <Routes>

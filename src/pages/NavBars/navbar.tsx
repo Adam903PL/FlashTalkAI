@@ -1,25 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
+import { useSpring, animated } from "react-spring"; // Importujemy react-spring
 
 function NavBar() {
   const [userMenuVisible, setUserMenuVisible] = useState(false);
   const [navMenuVisible, setNavMenuVisible] = useState(false);
+  const [userId, setUserId] = useState();
+
+  useEffect(() => {
+    fetch("http://localhost:4444/get-userid", {
+      credentials: "include",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data.userId);
+        setUserId(data.userId);
+      })
+      .catch((err) => console.error("Błąd podczas pobierania userId:", err));
+  }, []);
   const { loged, setloged } = useLoged();
   const navigate = useNavigate();
 
-  const [searchQuery, setSearchQuery] = useState('');
-
+  const [searchQuery, setSearchQuery] = useState("");
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
   const handleSearchSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("Wyszukiwanie:", searchQuery); 
+    console.log("Wyszukiwanie:", searchQuery);
   };
-
-
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -37,6 +48,14 @@ function NavBar() {
     setloged(false);
     navigate("/login");
   };
+
+  // Animacja pulsowania neonowego efektu na ikonie
+  const userIconSpring = useSpring({
+    opacity: userMenuVisible ? 1 : 0.8,
+    transform: userMenuVisible ? "scale(1.1)" : "scale(1)",
+    boxShadow: userMenuVisible ? "0 0 10px 5px rgba(0, 255, 255, 0.8)" : "none",
+    config: { tension: 250, friction: 12 },
+  });
 
   return (
     <>
@@ -75,7 +94,17 @@ function NavBar() {
             className="text-lg font-semibold cursor-pointer mr-6"
             onClick={toggleExpand}
           >
-            Options ⚙️
+            {/* Neonowy efekt na ikonie */}
+            <animated.div
+              style={userIconSpring}
+              className="w-12 h-12 rounded-full border-4 border-blue-400 overflow-hidden cursor-pointer"
+            >
+              <img
+                src={`https://storage.googleapis.com/flashtalkai/ProfilePictures/user${userId}.png?timestamp=${Date.now()}`} // Wstaw URL zdjęcia użytkownika
+                alt="User Profile"
+                className="w-full h-full object-cover"
+              />
+            </animated.div>
           </h1>
           {isExpanded && (
             <div className="absolute right-0 bg-gray-800 text-white rounded-lg shadow-lg mt-2 p-4 z-50">
@@ -84,19 +113,19 @@ function NavBar() {
                   className="cursor-pointer hover:bg-gray-700 p-2 rounded"
                   onClick={() => navigate("/settings")}
                 >
-                  Ustawienia
+                  Settings
                 </li>
                 <li
                   className="cursor-pointer hover:bg-gray-700 p-2 rounded"
                   onClick={logout}
                 >
-                  Wyloguj się
+                  Logout
                 </li>
                 <li
                   className="cursor-pointer hover:bg-gray-700 p-2 rounded"
                   onClick={() => navigate("/options")}
                 >
-                  Opcje strony
+                  Page options
                 </li>
               </ul>
             </div>
@@ -113,7 +142,7 @@ function NavBar() {
           >
             <i className="fas fa-brain text-lg mb-1 text-neon-blue group-hover:text-white transition"></i>
             <span className="text-sm text-neon-blue group-hover:text-white transition">
-              Ucz się AI
+              Learn With AI
             </span>
           </div>
           <div
@@ -122,7 +151,7 @@ function NavBar() {
           >
             <i className="fas fa-microphone text-lg mb-1 text-neon-pink group-hover:text-white transition"></i>
             <span className="text-sm text-neon-pink group-hover:text-white transition">
-              Praktyka Głosowa
+              Voice Practice
             </span>
           </div>
           <div
@@ -131,7 +160,7 @@ function NavBar() {
           >
             <i className="fas fa-clone text-lg mb-1 text-neon-green group-hover:text-white transition"></i>
             <span className="text-sm text-neon-green group-hover:text-white transition">
-              Fiszki
+              Flashcards
             </span>
           </div>
           <div

@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-
+import { useRef, useState } from "react";
+import LoadingDots from "../assets/animations/loadingDots.json"
+import { useLottie } from "lottie-react";
+import Lottie from "lottie-react";
+import BackgroundAnimation from "../assets/animations/backround.json"
 type FormData = {
   email: string;
   password: string;
@@ -19,6 +22,20 @@ function Login() {
   const [needVerCode, setneedVerCode] = useState<boolean>(false);
   const [verificationCode, setverificationCode] = useState();
   const [logData,setLogData] = useState({})
+
+  const style = {
+    height: "100vh", 
+  };
+  const options = {
+    animationData: BackgroundAnimation,
+    loop: true,
+    autoplay: true,
+  };
+
+  const { View } = useLottie(options, style);
+
+
+
   const sendData = async (data: FormData) => {
     const updatedFormData = { email: data.email, password: data.password };
     setLogData(updatedFormData)
@@ -71,8 +88,12 @@ function Login() {
               .then((resp) => resp.json())
               .then((data) => {
                 if (data.success) {
+                  setTimeout(() => {
+                    console.log("Odczekano 5 sekund");
+                  }, 5000); 
                   navigate("/home");
                 } else {
+                  setLoading(false)
                   setErrorMessage(data.message || "Nieznany błąd.");
                 }
               });
@@ -106,9 +127,10 @@ function Login() {
       console.log(e.target.value,verificationCode,"kod")
     }
   }
-  
+
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tl bg-gradient-to-r from-gray-800 to-black min-h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tl min-h-screen">
       <div className="bg-opacity-90 bg-gray-800 p-10 rounded-xl shadow-xl max-w-md w-full">
         <h1 className="text-3xl text-center text-white mb-8">Logowanie</h1>
         <form onSubmit={handleSubmit(sendData)} className="space-y-4">
@@ -162,6 +184,7 @@ function Login() {
           >
             {loading ? "Trwa logowanie..." : "Zaloguj się"}
           </button>
+
 
           {errorMessage && (
             <p className="text-red-500 text-sm mt-2">{errorMessage}</p>

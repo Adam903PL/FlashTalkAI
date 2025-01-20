@@ -9,7 +9,14 @@ const fs = require('fs');
 const cors = require('cors');
 const { default: axios } = require("axios");
 const nodemailer = require("nodemailer");
-  
+const multer = require('multer');
+const { Storage } = require('@google-cloud/storage');
+require('dotenv').config();
+const bodyParser = require("body-parser");
+
+
+
+
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
@@ -39,7 +46,7 @@ app.use(cors({
 }));
 
 
-app.use(express.json());
+app.use(bodyParser.json());
 
 function getFlashcardFiles(directory = '../flashcards') {
     try {
@@ -58,7 +65,53 @@ app.get('/api/test', (req, res) => {
 });
 
 
+const storageMulter = multer.memoryStorage();
+const upload = multer({ storage: storageMulter });
 
+app.post("/upload-profile-picture", upload.single('profilePicture'), async (req, res) => {
+    try {
+        console.log("Received file:", req.file);
+        console.log("Received body:", req.body);
+        if (!req.file) {
+          return res.status(400).json({ success: false, message: "No file uploaded." });
+        }
+        const projectId = 661203166313;
+        const keyFilename = path.join(__dirname, 'passwords-437219-b892ec591698.json');
+        const storage = new Storage({ projectId, keyFilename });
+
+        const bucket = storage.bucket("flashtalkai");
+        const file = req.file; 
+        const userId = req.body.userid || 'default'; 
+        const destination = `ProfilePictures/user${req.session.user.userid}.png`;
+        console.log(`${bucket},${file},${req.session.user.userid},${destination}`) 
+        const blob = bucket.file(destination);
+        const blobStream = blob.createWriteStream({
+            resumable: false,
+            metadata: {
+                cacheControl: 'no-cache, max-age=0',
+                contentType: file.mimetype, 
+            },
+        });
+
+        blobStream.on('error', (err) => {
+            console.error("BlobStream error:", err);
+            res.status(500).json({ success: false, message: 'File upload error', error: err.message });
+        });
+
+        
+        blobStream.on('finish', () => {
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+            console.log(`File uploaded to ${publicUrl}`);
+            res.status(200).json({ success: true, message: 'File uploaded successfully', url: publicUrl });
+        });
+
+
+        blobStream.end(file.buffer);
+    } catch (error) {
+        console.error("Error during file upload:", error);
+        res.status(500).json({ success: false, message: 'Server error during upload' });
+    }
+});
 
 app.get('/api/flashcards', (req, res) => {
     const files = getFlashcardFiles(path.join(__dirname, '../flashcards'));
@@ -431,12 +484,13 @@ app.get("/usersettings", async (req, res) => {
   
 
 app.post("/changebasicsettings", async (req, res) => {
+    console.log(req.body,"this")
     const data = {
       email: req.body.email, 
-      password: CryptoJS.SHA256(req.body.password).toString(), 
-      twostepverification: req.body.twostepverification, 
+      password: req.body.password === '' ? null : CryptoJS.SHA256(req.body.password).toString(), 
+      twostepverification: req.body.isTwoStepVerificationEnabled === true ? true : null, 
     };
-  
+    console.log(data,"this")
     try {
       const client = await pool.connect();
       const query = 'SELECT update_user_basic_settings($1, $2, $3, $4);';
@@ -622,20 +676,35 @@ app.post('/getAllWords', async (req, res) => {
 
 
 
+app.get("/get-userid", async (req, res) => { 
+    if (!req.session.user || !req.session.user.userid) {
+        return res.status(401).json({ success: false, message: "Brak autoryzacji" });
+    }
+
+    try {   
+        res.json({ success: true, userId: req.session.user.userid });
+    } catch (err) {
+        console.log("getUserId:", err);
+        res.status(500).json({ success: false, message: "Błąd serwera" });
+    }
+});
 
 
+ 
+app.get("/checkpfppossession",async(req,res)=>{
+    try{
+        const files = getFiles(); 
+        const checkingArr = files.forEach(file=>{
+            checkingArr.push(parseInt(file.name.replace('user','').replace(".png",'')))
 
-
-
-
-
-
-
-
-
-
-
-
+        })
+        if(req.session.user.userid in checkingArr){
+            res.json({success:true,pfpPossession:true})
+        }else{res.json({success:false,pfpPossession:true})}
+    }catch (err) {
+        console.error("Error:", err);
+    }
+})
 
 
 app.post('/getKnownWordsByUnitId', async (req, res) => {

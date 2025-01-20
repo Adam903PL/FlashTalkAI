@@ -115,7 +115,7 @@ function LearnTopics() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white">
+    <div className="min-h-screen text-white">
       <NavBar />
       <main className="flex flex-col items-center p-5 min-h-screen font-sans">
         {gaveAcces(LearnWithAilist[0].level)}

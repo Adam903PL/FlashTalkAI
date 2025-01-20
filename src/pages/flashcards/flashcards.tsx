@@ -32,7 +32,7 @@ function Flashcards() {
       <NavBar></NavBar>
 
       {/* Flashcards */}
-      <div className="bg-gradient-to-r from-gray-800 to-black min-h-screen text-white py-10">
+      <div className="min-h-screen text-white py-10">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {units.map((data: string, index) => (
