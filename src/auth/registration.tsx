@@ -12,6 +12,7 @@ type FormData = {
   cvv?: string;
   billing_address?: string;
   card_type?: string;
+  enable2FA?: boolean; // Optional two-factor authentication field
 };
 
 function Registration() {
@@ -20,28 +21,35 @@ function Registration() {
     handleSubmit,
     formState: { errors },
     watch,
+    setError,
+    clearErrors,
   } = useForm<FormData>();
   const navigate = useNavigate();
   const [showMainData, setShowMainData] = useState<boolean>(true);
   const [showError, setShowError] = useState<boolean>(false);
   const [isPremium, setIsPremium] = useState<boolean>(false);
+  const [is2FA, setIs2FA] = useState<boolean>(false);
   const email = watch("email");
   const password = watch("password");
   const confirmPassword = watch("confirmPassword");
   const profileType = watch("profileType");
+  const enable2FA = watch("enable2FA");
 
   const sendData = (data: FormData) => {
+    // Ensure all the optional fields are set to null if they are not provided
     const updatedFormData = {
       email: data.email,
       password: data.password,
       profileType: data.profileType,
-      card_number: data.card_number,
-      expiration_date: data.expiration_date,
-      cvv: data.cvv,
-      billing_address: data.billing_address,
-      card_type: data.card_type,
+      card_number: data.card_number || null,
+      expiration_date: data.expiration_date || null,
+      cvv: data.cvv || null,
+      billing_address: data.billing_address || null,
+      card_type: data.card_type || null,
+      enable2FA: data.enable2FA || null,  // Ensure 2FA preference is set to null if not provided
     };
 
+    // Send the data to the backend
     fetch("http://localhost:4444/registerData", {
       method: "POST",
       credentials: "include",
@@ -67,19 +75,33 @@ function Registration() {
   };
 
   const handleNext = () => {
+    // Validate if passwords match
+    if (password !== confirmPassword) {
+      setError("confirmPassword", {
+        type: "manual",
+        message: "Hasła muszą być identyczne",
+      });
+      return;
+    }
+
     if (email && password && confirmPassword) {
       setShowMainData(false);
       setShowError(false);
       if (profileType === "premium") {
-        setIsPremium(true);
+        setIsPremium(true); // Show the payment section if premium is selected
       }
     } else {
       setShowError(true);
     }
   };
 
+  const handlePrev = () => {
+    setShowMainData(true);
+    setIsPremium(false); // Hide the payment section if they go back
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tl from-indigo-900 to-blue-700">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tl min-h-screen">
       <div className="bg-opacity-90 bg-gray-800 p-10 rounded-xl shadow-xl max-w-md w-full">
         <h1 className="text-3xl text-center text-white mb-8">Create Account</h1>
         <form onSubmit={handleSubmit(sendData)} className="space-y-4">
@@ -134,6 +156,15 @@ function Registration() {
                   <option value="normal">Normal</option>
                   <option value="premium">Premium - $10.99</option>
                 </select>
+              </div>
+
+              <div className="mt-4 flex items-center">
+                <input
+                  type="checkbox"
+                  {...register("enable2FA")}
+                  className="w-4 h-4 mr-2"
+                />
+                <label className="text-white text-sm">Enable Two-Factor Authentication</label>
               </div>
 
               {showError && (
@@ -218,6 +249,14 @@ function Registration() {
                   {errors.card_type && (
                     <span className="text-red-500 text-sm">{errors.card_type.message}</span>
                   )}
+
+                  <button
+                    type="button"
+                    onClick={handlePrev}
+                    className="w-full py-3 mt-4 bg-gray-600 text-white rounded-md hover:bg-gray-500 transition"
+                  >
+                    Prev
+                  </button>
                 </>
               )}
 

@@ -1,7 +1,8 @@
-const axios = require("axios");
-const dotenv = require("dotenv");
-const WebSocket = require("ws");
-const { Pool } = require("pg");
+const axios = require('axios');
+const dotenv = require('dotenv');
+const WebSocket = require('ws');
+const { Pool } = require('pg');
+
 
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
@@ -118,7 +119,7 @@ async function callChatGPT(messages) {
     const url = "https://api.openai.com/v1/chat/completions";
     const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
     };
 
     const data = {

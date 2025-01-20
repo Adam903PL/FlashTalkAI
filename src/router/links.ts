@@ -1,0 +1,16 @@
+export enum Link {
+    HOME = '/home',
+    LOGIN = '/login',
+    REGISTER = '/register',
+    FORGOT_PASSWORD = '/forgot-password',
+    SETTINGS = '/settings',
+    FLASHCARDS = '/home/flashcards',
+    FLASHCARD = '/home/flashcards/:unit',
+    LEARN = '/home/learn',
+    LEARN_AI = '/home/learn/:lesson',
+    TEST_LIST = '/home/test',
+    TEST = '/home/test/:unit',
+    ERROR_404 = '/404',
+    ERROR_401 = '/401',
+    ERROR_405 = '/405',
+}

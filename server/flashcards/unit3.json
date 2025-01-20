@@ -19,7 +19,7 @@
     },
     {
         "id": 204,
-        "word": "Ende, das, -n",
+        "word": "Ende, das, ",
         "translation": "end"
     },
     {
@@ -29,7 +29,7 @@
     },
     {
         "id": 206,
-        "word": "Million, die, -en",
+        "word": "Million, die,",
         "translation": "million"
     },
     {
@@ -39,7 +39,7 @@
     },
     {
         "id": 208,
-        "word": "Schule, die, -n",
+        "word": "Schule, die, ",
         "translation": "school"
     },
     {
@@ -79,12 +79,12 @@
     },
     {
         "id": 216,
-        "word": "Vater, der, -(ä)",
+        "word": "Vater, der, ",
         "translation": "father"
     },
     {
         "id": 217,
-        "word": "Seite, die, -n",
+        "word": "Seite, die, ",
         "translation": "side, page"
     },
     {
@@ -134,7 +134,7 @@
     },
     {
         "id": 227,
-        "word": "Mutter, die, -(ü)",
+        "word": "Mutter, die, ",
         "translation": "mother"
     },
     {
@@ -149,7 +149,7 @@
     },
     {
         "id": 230,
-        "word": "Grund, der, -(ü)-e",
+        "word": "Grund, der, ",
         "translation": "reason, basis"
     },
     {
@@ -179,7 +179,7 @@
     },
     {
         "id": 236,
-        "word": "Auge, das, -n",
+        "word": "Auge, das,",
         "translation": "eye"
     },
     {
@@ -214,7 +214,7 @@
     },
     {
         "id": 243,
-        "word": "Wort, das, -e/-(ö)-er",
+        "word": "Wort, das,",
         "translation": "word"
     },
     {
@@ -284,7 +284,7 @@
     },
     {
         "id": 257,
-        "word": "Bereich, der, -e",
+        "word": "Bereich, der, ",
         "translation": "area, region"
     },
     {
@@ -309,7 +309,7 @@
     },
     {
         "id": 262,
-        "word": "Stunde, die, -n",
+        "word": "Stunde, die,",
         "translation": "hour"
     },
     {
