@@ -18,20 +18,25 @@ function WordContainer({ word, known, unit, fromTo }: WordContainerProps) {
   const [speaking, setSpeaking] = useState(false);
 
   const handleSpeak = () => {
-    const text = word.word;
-    if (text.trim()) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-GB"; 
+    const cleanText = (text: string) => {
+      // Remove non-alphabetic characters, for example, punctuation marks
+      return text.replace(/[^a-zA-Z\s]/g, "      ");
+    };
+  
+    const wordToSpeak = cleanText(word.word);
+    if (wordToSpeak.trim()) {
+      const utterance = new SpeechSynthesisUtterance(wordToSpeak);
+      utterance.lang = "de-DE"; 
       utterance.onend = () => {
         setSpeaking(false); 
       };
       speechSynthesis.speak(utterance);
     }
-
-    const text2 = word.translation;
-    if (text2.trim()) {
-      const utterance2 = new SpeechSynthesisUtterance(text2);
-      utterance2.lang = "de-DE"; 
+  
+    const translationToSpeak = cleanText(word.translation);
+    if (translationToSpeak.trim()) {
+      const utterance2 = new SpeechSynthesisUtterance(translationToSpeak);
+      utterance2.lang = "en-GB"; 
       utterance2.onend = () => {
         setSpeaking(false); 
       };
@@ -50,12 +55,16 @@ function WordContainer({ word, known, unit, fromTo }: WordContainerProps) {
   };
 
   return (
-    <div className={`flex items-center justify-between p-4 w-4/5 mx-auto mb-4 rounded-lg shadow-lg ${known ? 'border-green-500 bg-green-400' : 'border-red-500 bg-red-400'}`}>
+    <div
+      className={`flex items-center justify-between p-6 w-4/5 mx-auto mb-6 rounded-xl shadow-lg
+        ${known ? 'border-4 border-green-500 animate-glow-green' : 'border-4 border-red-500 animate-glow-red'}
+        bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500`}
+    >
       {/* Left side - Word and Translation */}
       <div className="flex-1 pr-4">
-        <p className="text-2xl font-bold text-gray-800">{word.word}</p>
-        <div className="border-b border-gray-300 my-2"></div>
-        <p className="text-xl text-gray-600">{word.translation}</p>
+        <p className="text-3xl font-extrabold text-white">{word.word}</p>
+        <div className="border-b border-gray-200 my-2"></div>
+        <p className="text-2xl text-gray-200">{word.translation}</p>
       </div>
 
       {/* Right side - Emoji and Volume Icon */}
@@ -63,7 +72,7 @@ function WordContainer({ word, known, unit, fromTo }: WordContainerProps) {
         <div className="mb-4">
           <button
             onClick={() => { known ? handleChangeUnKnown(word.id, false) : handleChangeKnown(word.id, true) }}
-            className="text-3xl text-white bg-transparent hover:bg-blue-500 p-2 rounded-full transition"
+            className="text-4xl text-white bg-transparent hover:bg-blue-600 p-4 rounded-full transition-all transform hover:scale-110"
           >
             {known ? "✔️" : "❌"}
           </button>
@@ -72,7 +81,7 @@ function WordContainer({ word, known, unit, fromTo }: WordContainerProps) {
           <button
             onClick={handleSpeak}
             disabled={speaking}
-            className="p-2 bg-blue-500 rounded-lg transition-all transform hover:scale-110"
+            className="p-4 bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 rounded-lg shadow-lg transition-all transform hover:scale-110"
           >
             <DotLottieReact
               src="https://lottie.host/5b55fdd1-aa4d-4008-bbe6-59453193ddb7/xlDrOQjOEQ.lottie"

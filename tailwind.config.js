@@ -12,10 +12,12 @@ export default {
         'neon-yellow': '#ffeb3b',
       },
       boxShadow: {
-        'neon-blue': '0 0 10px #00f0ff, 0 0 20px #00f0ff',
-        'neon-pink': '0 0 10px #ff00e6, 0 0 20px #ff00e6',
-        'neon-green': '0 0 10px #00ff87, 0 0 20px #00ff87',
-        'neon-yellow': '0 0 10px #ffeb3b, 0 0 20px #ffeb3b',
+        'glow-green': '0 0 10px rgba(0, 255, 0, 0.8), 0 0 20px rgba(0, 255, 0, 0.6)',
+        'glow-red': '0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.6)',
+      },
+      animation: {
+        'glow-green': 'glow-green 4s ease-in-out infinite',
+        'glow-red': 'glow-red 4s ease-in-out infinite',
       },
     },
   },

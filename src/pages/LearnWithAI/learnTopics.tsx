@@ -5,7 +5,7 @@ import { usePoint } from "../../contexts/points/usePoints";
 import Lottie, { useLottie } from "lottie-react";
 import loadingAnimation from "../../assets/animations/loading1.json";
 import { LockClosedIcon } from "@heroicons/react/solid";
-
+import BgAnimation from "../../assets/animations/backround.json"
 
 const style = {
   height: 450,

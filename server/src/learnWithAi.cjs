@@ -6,6 +6,7 @@ const { Pool } = require('pg');
 
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
+
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',

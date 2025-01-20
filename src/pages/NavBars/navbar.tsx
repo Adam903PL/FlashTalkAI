@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
 import { useSpring, animated } from "react-spring"; // Importujemy react-spring
 
+import Logo from "../../assets/LogoLewe.png" // Dodajemy import logo
 
 type getData = {
   succes: boolean;
@@ -14,7 +15,6 @@ function NavBar() {
   const [navMenuVisible, setNavMenuVisible] = useState<boolean>(false);
   const [userId, setUserId] = useState();
 
-  // const { userId } = useUserId();
   const [pfpPossession, setPfpPossession] = useState<boolean>(false);
   const [pfpUrl, setpfpUrl] = useState<string>("");
   useEffect(() => {
@@ -102,20 +102,21 @@ function NavBar() {
       <header className="flex justify-between items-center bg-gray-900 text-white p-4 rounded-xl shadow-lg mx-4 sm:mx-6">
         {/* Logo */}
         <div
-          className="text-lg font-bold text-blue-400 cursor-pointer"
+          className="flex items-center cursor-pointer"
           onClick={() => navigate("/home")}
         >
-          FlashTalkAI
+          <img src={Logo} alt="Logo" className="w-12 h-12 mr-2" />
+          <div className="text-lg font-bold text-blue-400">FlashTalkAI</div>
         </div>
 
         {/* Search Bar (visible on larger screens) */}
-        <div className="hidden md:flex flex-1 justify-center mx-4">
+        <div className="hidden md:flex flex-1 justify-start mx-4">
           <input
             type="text"
             placeholder="Wyszukaj..."
             value={searchQuery}
             onChange={handleSearchChange}
-            className="w-3/5 p-3 rounded-full bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-4/5 p-3 rounded-full bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
