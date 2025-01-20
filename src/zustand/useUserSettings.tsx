@@ -1,5 +1,9 @@
 import { create } from "zustand";
 
+
+
+// nie uzywany był plan ale nie zdążyłem
+
 type CardDetails = {
   cardNumber: string;
   expiryDate: string;

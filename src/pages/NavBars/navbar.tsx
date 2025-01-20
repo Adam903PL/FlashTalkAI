@@ -2,23 +2,25 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
 import { useSpring, animated } from "react-spring"; // Importujemy react-spring
+import useUserId from "../../zustand/useUserId";
+
+type getData = {
+  succes: boolean;
+  files: string[];
+};
 
 function NavBar() {
-  const [userMenuVisible, setUserMenuVisible] = useState(false);
-  const [navMenuVisible, setNavMenuVisible] = useState(false);
+  const [userMenuVisible, setUserMenuVisible] = useState<boolean>(false);
+  const [navMenuVisible, setNavMenuVisible] = useState<boolean>(false);
   const [userId, setUserId] = useState();
 
+  // const { userId } = useUserId();
+  const [pfpPossession, setPfpPossession] = useState<boolean>(false);
+  const [pfpUrl, setpfpUrl] = useState<string>("");
   useEffect(() => {
-    fetch("http://localhost:4444/get-userid", {
-      credentials: "include",
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        console.log(data.userId);
-        setUserId(data.userId);
-      })
-      .catch((err) => console.error("Błąd podczas pobierania userId:", err));
-  }, []);
+    console.log(userId, "pfpPossession");
+  }, [userId]);
+
   const { loged, setloged } = useLoged();
   const navigate = useNavigate();
 
@@ -26,6 +28,43 @@ function NavBar() {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
+  useEffect(()=>{
+    fetch("http://localhost:4444/loginsucces", {
+      credentials: "include",
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data.message.user.userid,"this")
+        setUserId(data.message.user.userid)
+      })
+  },[])
+
+  useEffect(() => {
+    fetch("http://localhost:4444/google-cloud-storm-files")
+    .then((resp) => resp.json())
+    .then((data) => {
+      const files = data.files;
+      
+      const idList = files.map((ele) => {
+        return   parseInt(ele.replace("user", "").replace(".png", "").replace("default", "").replace("ProfilePictures/",''))
+      });
+      console.log(idList.includes(userId),idList,userId); 
+
+      if (idList.includes(userId)) {
+        setpfpUrl(
+          `https://storage.googleapis.com/flashtalkai/ProfilePictures/user${userId}.png?timestamp=${Date.now()}`
+        );
+      } else {
+        setpfpUrl(
+          `https://storage.googleapis.com/flashtalkai/ProfilePictures/userdefault.png?timestamp=${Date.now()}`
+        );
+      }
+    })
+    .catch((error) => {
+      console.error("Błąd podczas ładowania zdjęcia:", error);
+      setPfpPossession(false);
+    });
+  }, [userId]);
 
   const handleSearchSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -100,7 +139,7 @@ function NavBar() {
               className="w-12 h-12 rounded-full border-4 border-blue-400 overflow-hidden cursor-pointer"
             >
               <img
-                src={`https://storage.googleapis.com/flashtalkai/ProfilePictures/user${userId}.png?timestamp=${Date.now()}`} // Wstaw URL zdjęcia użytkownika
+                src={pfpUrl} // Wstaw URL zdjęcia użytkownika
                 alt="User Profile"
                 className="w-full h-full object-cover"
               />

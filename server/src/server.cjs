@@ -390,6 +390,69 @@ app.get("/usersettings", async (req, res) => {
     }
   });
   
+
+
+
+  async function listFilesInFolder(folderName) {
+    try {
+        const projectId = 661203166313;
+        const keyFilename = path.join(__dirname, 'passwords-437219-b892ec591698.json');
+        const storage = new Storage({ projectId, keyFilename });
+
+        const [files] = await storage.bucket("flashtalkai").getFiles({
+            prefix: folderName, 
+        });
+        
+        let result = []; 
+        if (files.length > 0) {
+            files.forEach(file => {
+                result.push(file.name);
+            });
+        } else {
+            console.log('No files found in folder.');
+        }
+
+        return result;
+    } catch (err) {
+        console.error("Error:", err);
+    }
+}
+
+// Funkcja wywołująca listowanie plików
+async function getFiles() {
+    const files = await listFilesInFolder('ProfilePictures/'); // Wywołujemy listFilesInFolder z odpowiednim folderem
+    console.log(files); // Wypisujemy wynik w konsoli
+    return files; 
+}
+
+// Wywołanie getFiles, aby uzyskać listę plików
+getFiles().then(files => {
+    console.log('Lista plików:', files); 
+});
+
+
+app.get('/google-cloud-storm-files', async (req, res) => {
+    try {
+        const files = await getFiles();
+        if(files.length > 0 ){
+            res.json({succes:true,files }); 
+        }else{
+            res.json({succes:false})
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Something went wrong' });
+    }
+});
+
+
+
+
+
+
+
+
+
+
  
   app.post("/delete-account", async (req, res) => {
     const { password } = req.body;
@@ -469,6 +532,12 @@ app.get("/usersettings", async (req, res) => {
   
 
       const result = await client.query(query, values);
+
+
+      const query2 = 'update users set profiletype = premium where id = $1'
+      const values2 = [req.session.user.userid]
+
+      const result2 = await client.query(query2,values2)
       client.release();
   
       if (result.rows && result.rows.length > 0) {

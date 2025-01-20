@@ -1,7 +1,8 @@
-const axios = require("axios");
-const dotenv = require("dotenv");
-const WebSocket = require("ws");
-const { Pool } = require("pg");
+const axios = require('axios');
+const dotenv = require('dotenv');
+const WebSocket = require('ws');
+const { Pool } = require('pg');
+
 
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
