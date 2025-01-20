@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
 import { useSpring, animated } from "react-spring"; // Importujemy react-spring
-import useUserId from "../../zustand/useUserId";
+
 
 type getData = {
   succes: boolean;
