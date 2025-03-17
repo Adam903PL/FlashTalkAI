@@ -30,6 +30,6 @@ const ENV = {
 };
 
 
-console.log("Loaded ENV.DATABASE:", ENV.DATABASE);
+
 
 module.exports = { ENV };

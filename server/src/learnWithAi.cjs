@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const WebSocket = require('ws');
 const { Pool } = require('pg');
 const { ENV } = require('../../src/config/env.cjs');
-
+// cos
 
 dotenv.config();
 const apiKey = ENV.API.OPENAI_API_KEY;
