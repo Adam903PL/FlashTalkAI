@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLoged } from "../../contexts/loged/useLoged";
 import { useSpring, animated } from "react-spring"; // Importujemy react-spring
 
-import Logo from "../../assets/LogoLewe.png" // Dodajemy import logo
+// import Logo from "../../assets/LogoLewe.png" // Dodajemy import logo
 
 type getData = {
   succes: boolean;
@@ -105,7 +105,7 @@ function NavBar() {
           className="flex items-center cursor-pointer"
           onClick={() => navigate("/home")}
         >
-          <img src={Logo} alt="Logo" className="w-12 h-12 mr-2" />
+          {/* <img src={Logo} alt="Logo" className="w-12 h-12 mr-2" /> */}
           <div className="text-lg font-bold text-blue-400">FlashTalkAI</div>
         </div>
 

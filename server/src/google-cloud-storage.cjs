@@ -1,10 +1,11 @@
 const {Storage} = require('@google-cloud/storage')
 require("dotenv").config();
 const projectId = process.env.PROJECT_ID
+
 const keyFilename = process.env.KEYFILENAME
 const storage = new Storage({projectId,keyFilename})
 
-
+console.log(projectId,keyFilename,storage)
 // async function uploadFiles(bucketName,file,fileOutputNmae){
 //     try{
 

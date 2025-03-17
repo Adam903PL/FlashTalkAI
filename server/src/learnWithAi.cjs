@@ -2,20 +2,21 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 const WebSocket = require('ws');
 const { Pool } = require('pg');
+const { ENV } = require('../../src/config/env.cjs');
 
 
 dotenv.config();
-const apiKey = process.env.OPENAI_API_KEY;
+const apiKey = ENV.API.OPENAI_API_KEY;
 
+// Use environment variables for database connection
 const pool = new Pool({
-    user: 'flashtalkai_user',
-    host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
-    database: 'flashtalkai',
-    password: 'HgFSozb5BSqc6EZDDau4uJy0gLV9uPTU',
-    port: 5432,
-    ssl: { rejectUnauthorized: false }
+    user: ENV.DATABASE.DB_USER,
+    host: ENV.DATABASE.DB_HOST,
+    database: ENV.DATABASE.DB_DATABASE,
+    password: ENV.DATABASE.DB_PASSWORD,
+    port: ENV.DATABASE.DB_PORT || 5432,
+    ssl: { rejectUnauthorized: ENV.SSL.REJECT_UNAUTHORIZED }
 });
-
 const server = new WebSocket.Server({ port: 8080 });
 
 const offensiveWords = [
@@ -108,22 +109,21 @@ const offensiveWords = [
     "wkurwiony",
     "pierdole",
     "wypierdalaj"
-    
-  ]
-  
+];
+
 function containsOffensiveLanguage(message) {
     return offensiveWords.some((word) => message.toLowerCase().includes(word));
 }
 
-async function callChatGPT(messages) {
-    const url = "https://api.openai.com/v1/chat/completions";
+async function callDeepSeekAPI(messages) {
+    const url = "https://api.deepseek.com/v1/chat/completions";
     const headers = {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${apiKey}`,
     };
 
     const data = {
-        model: "gpt-4",
+        model: "deepseek-chat",  // Using DeepSeek's chat model
         messages: messages,
     };
 
@@ -131,7 +131,7 @@ async function callChatGPT(messages) {
         const response = await axios.post(url, data, { headers });
         return response.data.choices[0].message.content;
     } catch (error) {
-        console.error("Error calling ChatGPT API:", error.response ? error.response.data : error.message);
+        console.error("Error calling DeepSeek API:", error.response ? error.response.data : error.message);
         throw error;
     }
 }
@@ -174,7 +174,7 @@ server.on("connection", (socket) => {
                 `;
 
                 const messages = [{ role: "assistant", content: chatFunction }, { role: "user", content: `Topic: ${topicDescription}` }];
-                const botResponse = await callChatGPT(messages);
+                const botResponse = await callDeepSeekAPI(messages);
 
                 const match = botResponse.match(/Messages_count:\s*(\d+)\s*Errors:\s*(\d+)/);
                 if (match) {
@@ -185,7 +185,7 @@ server.on("connection", (socket) => {
                 conversationHistory.push(`Question: ${botResponse.split("Question: ")[1]}`);
                 socket.send(JSON.stringify({ message: botResponse, maker: "FlashAI" }));
             } catch (error) {
-                console.error("Error fetching topic or calling ChatGPT:", error);
+                console.error("Error fetching topic or calling DeepSeek:", error);
             }
         } else if (message.type === "message") {
 
@@ -217,7 +217,7 @@ server.on("connection", (socket) => {
             ];
 
             try {
-                const botResponse = await callChatGPT(messages);
+                const botResponse = await callDeepSeekAPI(messages);
                 const match = botResponse.match(/Errors_counter:\s*(\d+)\s*Question:\s*(.+)/);
                 if (match) {
                     const errorsCounter = parseInt(match[1], 10);

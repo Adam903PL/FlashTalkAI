@@ -29,7 +29,7 @@
             {/* Główna struktura strony */}
             <div className="relative min-h-screen text-white  ">
               {/* Tło z animacją */}
-              <div className="bg-gradient-to-r from-gray-800 to-black absolute inset-0 -z-10 bg-repeat w-full h-full flex items-center justify-center">{View}</div>
+              <div className="  absolute inset-0 -z-10 bg-repeat w-full h-full flex items-center justify-center">{View}</div>
 
               {/* Treść aplikacji */}
               <MainRouter />

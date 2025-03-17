@@ -11,22 +11,18 @@ const { default: axios } = require("axios");
 const nodemailer = require("nodemailer");
 const multer = require('multer');
 const { Storage } = require('@google-cloud/storage');
-require('dotenv').config();
+const dotenv  = require('dotenv')
 const bodyParser = require("body-parser");
-
-
-
+const { ENV } =  require("../../src/config/env.cjs");
 
 const pool = new Pool({
-    user: 'flashtalkai_user',
-    host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
-    database: 'flashtalkai',
-    password: 'HgFSozb5BSqc6EZDDau4uJy0gLV9uPTU',
-    port: 5432,
-    ssl: { rejectUnauthorized: false }
+    user: ENV.DATABASE.DB_USER,
+    host: ENV.DATABASE.DB_HOST,
+    database: ENV.DATABASE.DB_DATABASE,
+    password: ENV.DATABASE.DB_PASSWORD,
+    port: ENV.DATABASE.DB_PORT || 5432,
+    ssl: { rejectUnauthorized: ENV.SSL.REJECT_UNAUTHORIZED }
 });
-
-
 app.use(session({
     secret: "secret-key",
     resave: false,
@@ -40,7 +36,7 @@ app.use(session({
 
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: ['http://localhost:5173',"https://flashtalkai.netlify.app/"],
     credentials: true,
     methods: "GET,POST,PUT,DELETE"
 }));
@@ -75,37 +71,39 @@ app.post("/upload-profile-picture", upload.single('profilePicture'), async (req,
         if (!req.file) {
           return res.status(400).json({ success: false, message: "No file uploaded." });
         }
-        const projectId = 661203166313;
-        const keyFilename = path.join(__dirname, 'passwords-437219-b892ec591698.json');
+        
+        // Use environment variables instead of hardcoded values
+        const projectId = process.env.PROJECT_ID;
+        const keyFilename = path.join(__dirname, process.env.KEYFILENAME);
         const storage = new Storage({ projectId, keyFilename });
-
-        const bucket = storage.bucket("flashtalkai");
-        const file = req.file; 
-        const userId = req.body.userid || 'default'; 
+        const bucket = storage.bucket(process.env.BUCKET_NAME);
+        
+        const file = req.file;
+        const userId = req.body.userid || 'default';
         const destination = `ProfilePictures/user${req.session.user.userid}.png`;
-        console.log(`${bucket},${file},${req.session.user.userid},${destination}`) 
+        
+        console.log(`${bucket},${file},${req.session.user.userid},${destination}`)
+        
         const blob = bucket.file(destination);
         const blobStream = blob.createWriteStream({
             resumable: false,
             metadata: {
                 cacheControl: 'no-cache, max-age=0',
-                contentType: file.mimetype, 
+                contentType: file.mimetype,
             },
         });
-
+        
         blobStream.on('error', (err) => {
             console.error("BlobStream error:", err);
             res.status(500).json({ success: false, message: 'File upload error', error: err.message });
         });
-
-        
+       
         blobStream.on('finish', () => {
             const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
             console.log(`File uploaded to ${publicUrl}`);
             res.status(200).json({ success: true, message: 'File uploaded successfully', url: publicUrl });
         });
-
-
+        
         blobStream.end(file.buffer);
     } catch (error) {
         console.error("Error during file upload:", error);

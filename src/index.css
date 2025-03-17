@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+  background: linear-gradient(to right, #1f2937, #000000);
+}
 /* Świecąca obramówka na zielono */
 @keyframes glow-green {
   0% {
