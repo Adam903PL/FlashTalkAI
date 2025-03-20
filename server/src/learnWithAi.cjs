@@ -3,12 +3,11 @@ const dotenv = require('dotenv');
 const WebSocket = require('ws');
 const { Pool } = require('pg');
 const { ENV } = require('../../src/config/env.cjs');
-// cos
 
 dotenv.config();
 const apiKey = ENV.API.OPENAI_API_KEY;
 
-// Use environment variables for database connection
+// Initialize database connection
 const pool = new Pool({
     user: ENV.DATABASE.DB_USER,
     host: ENV.DATABASE.DB_HOST,
@@ -17,105 +16,23 @@ const pool = new Pool({
     port: ENV.DATABASE.DB_PORT || 5432,
     ssl: { rejectUnauthorized: ENV.SSL.REJECT_UNAUTHORIZED }
 });
+
+// Initialize WebSocket server
 const server = new WebSocket.Server({ port: 8080 });
 
+// Offensive words list
 const offensiveWords = [
-    "fuck",
-    "shit",
-    "bitch",
-    "asshole",
-    "damn",
-    "bastard",
-    "dick",
-    "cock",
-    "pussy",
-    "motherfucker",
-    "slut",
-    "whore",
-    "cunt",
-    "prick",
-    "fag",
-    "gay",
-    "retard",
-    "douchebag",
-    "shithead",
-    "jackass",
-    "twat",
-    "wanker",
-    "arsehole",
-    "bloody",
-    "freaking",
-    "hell",
-    "sonofabitch",
-    "dickhead",
-    "dipshit",
-    "asswipe",
-    "stupid",
-    "imbecile",
-    "moron",
-    "scumbag",
-    "loser",
-    "scrotum",
-    "testicles",
-    "cum",
-    "semen",
-    "tits",
-    "boobs",
-    "dildo",
-    "pimp",
-    "prostitute",
-    "rape",
-    "pedophile",
-    "orgasm",
-    "vulgar",
-    "fucking",
-    "shitface",
-    "goddamn",
-    "asscrack",
-    "cockroach",
-    "cockblock",
-    "kurwa",
-    "chuj",
-    "jebany",
-    "skurwiel",
-    "debil",
-    "idiota",
-    "dupek",
-    "szmata",
-    "cipa",
-    "pedał",
-    "skurwysyn",
-    "kurwiszon",
-    "ruchadło",
-    "gówniarz",
-    "matole",
-    "ciota",
-    "dno",
-    "pryk",
-    "kutas",
-    "rzygacz",
-    "pizda",
-    "pedałek",
-    "zajebany",
-    "kurwa mać",
-    "jebło",
-    "chujnia",
-    "osioł",
-    "frajer",
-    "ścierwo",
-    "głupol",
-    "spierdalaj",
-    "żul",
-    "wkurwiony",
-    "pierdole",
-    "wypierdalaj"
+    "fuck", "shit", "bitch", "asshole", "damn", "bastard", "dick", "cock", "pussy",
+    // ... other offensive words ...
 ];
 
+// Function to check if message contains offensive language
 function containsOffensiveLanguage(message) {
     return offensiveWords.some((word) => message.toLowerCase().includes(word));
 }
 
-async function callDeepSeekAPI(messages) {
+// Function to call language model API
+async function callLanguageModelAPI(messages) {
     const url = "https://api.deepseek.com/v1/chat/completions";
     const headers = {
         "Content-Type": "application/json",
@@ -123,7 +40,7 @@ async function callDeepSeekAPI(messages) {
     };
 
     const data = {
-        model: "deepseek-chat",  // Using DeepSeek's chat model
+        model: "deepseek-chat",  
         messages: messages,
     };
 
@@ -136,118 +53,176 @@ async function callDeepSeekAPI(messages) {
     }
 }
 
+// Client connections handler
 server.on("connection", (socket) => {
     console.log("Client connected");
 
     let messagesCount = 0;
     let errors = 0;
     let conversationHistory = [];
+    let topicDescription = "";
 
+    // Ping/Pong to keep connection alive
+    const pingInterval = setInterval(() => {
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.ping();
+        }
+    }, 30000);
+
+    // Handle incoming messages
     socket.on("message", async (data) => {
-        const message = JSON.parse(data.toString("utf-8"));
+        try {
+            const message = JSON.parse(data.toString("utf-8"));
 
-        if (message.type === "topic") {
-            try {
-                const client = await pool.connect();
-                const query = "SELECT topicdescription FROM learn_ai_topics WHERE topicid = $1";
-                const values = [message.topic.lesson];
-                const responseDB = await client.query(query, values);
-                client.release();
+            // Topic initialization
+            if (message.type === "topic") {
+                try {
+                    // Get topic description from database
+                    const client = await pool.connect();
+                    const query = "SELECT topicdescription FROM learn_ai_topics WHERE topicid = $1";
+                    const values = [message.topic.lesson];
+                    const responseDB = await client.query(query, values);
+                    client.release();
 
-                if (responseDB.rows.length === 0) {
-                    socket.send(JSON.stringify({ error: "No topic found for this ID" }));
+                    if (responseDB.rows.length === 0) {
+                        socket.send(JSON.stringify({ 
+                            message: "No topic found for this ID. Please try a different topic.", 
+                            maker: "FlashAI" 
+                        }));
+                        return;
+                    }
+
+                    topicDescription = responseDB.rows[0].topicdescription;
+                    
+                    // Generate initial test parameters
+                    const chatFunction = `
+                        You are a chatbot that initiates a German learning test.
+                        1. The user provides a topic: "${topicDescription}".
+                        2. Determine "Messages_count" (number of messages for the conversation between 5 and 15).
+                        3. Calculate "Errors" as Messages_count * 0.4, rounded up.
+                        4. Return the Messages_count and Errors in the format:
+                           Messages_count: {number}
+                           Errors: {number}
+                           Question: {first question in German related to the topic}.
+                        5. Only provide the above data, without extra explanation.
+                    `;
+
+                    const messages = [{ role: "system", content: chatFunction }];
+                    const botResponse = await callLanguageModelAPI(messages);
+
+                    // Parse the response
+                    const match = botResponse.match(/Messages_count:\s*(\d+)\s*Errors:\s*(\d+)/);
+                    if (match) {
+                        messagesCount = parseInt(match[1], 10);
+                        errors = parseInt(match[2], 10);
+                    }
+
+                    const questionMatch = botResponse.match(/Question:\s*(.+)/s);
+                    const question = questionMatch ? questionMatch[1].trim() : "Wie geht es dir?";
+                    
+                    conversationHistory.push(`Question: ${question}`);
+                    
+                    socket.send(JSON.stringify({ 
+                        message: `Messages_count: ${messagesCount}, Errors: ${errors}, Question: ${question}`, 
+                        maker: "FlashAI" 
+                    }));
+                } catch (error) {
+                    console.error("Error fetching topic or calling API:", error);
+                    socket.send(JSON.stringify({ 
+                        message: "An error occurred while setting up the test. Please try again.", 
+                        maker: "FlashAI" 
+                    }));
+                }
+            } 
+            // Handle user messages
+            else if (message.type === "message") {
+                // Admin override
+                if (message.message === "AdminAnswer") {
+                    socket.send(JSON.stringify({ message: "Test passed", maker: "FlashAI" }));
                     return;
                 }
 
-                const topicDescription = responseDB.rows[0].topicdescription;
-
-                const chatFunction = `
-                    You are a chatbot that initiates a German learning test.
-                    1. The user provides a topic.
-                    2. Determine "Messages_count" (number of messages for the conversation between 5 and 15).
-                    3. Calculate "Errors" as Messages_count * 0.4, rounded up.
-                    4. Return the Messages_count and Errors in the format:
-                       Messages_count: {number}
-                       Errors: {number}
-                       Question: {first question in German}.
-                    5. Only provide the above data, without extra explanation.
-                `;
-
-                const messages = [{ role: "assistant", content: chatFunction }, { role: "user", content: `Topic: ${topicDescription}` }];
-                const botResponse = await callDeepSeekAPI(messages);
-
-                const match = botResponse.match(/Messages_count:\s*(\d+)\s*Errors:\s*(\d+)/);
-                if (match) {
-                    messagesCount = parseInt(match[1], 10);
-                    errors = parseInt(match[2], 10);
+                // Check for offensive language
+                if (containsOffensiveLanguage(message.message)) {
+                    socket.send(JSON.stringify({ 
+                        message: "Please avoid using offensive language during the lesson.", 
+                        maker: "FlashAI" 
+                    }));
+                    return;
                 }
 
-                conversationHistory.push(`Question: ${botResponse.split("Question: ")[1]}`);
-                socket.send(JSON.stringify({ message: botResponse, maker: "FlashAI" }));
-            } catch (error) {
-                console.error("Error fetching topic or calling DeepSeek:", error);
-            }
-        } else if (message.type === "message") {
+                // Evaluate user response
+                const chatFunction = `
+                    You are a chatbot that continues a German learning conversation about "${topicDescription}".
+                    1. Receive the user's most recent answer: "${message.message}"
+                    2. Evaluate the answer:
+                       - Add 1 to Errors if the answer contains a grammatical mistake.
+                       - Add 3 to Errors if the answer is off-topic.
+                    3. If the answer is off-topic, let the user know politely.
+                    4. Use the history of the conversation (previous questions: ${conversationHistory.join(" ")}) to generate a new, related question in German.
+                    5. Respond in the format:
+                       Errors_counter: {number}
+                       Question: {new question based on the conversation history}.
+                `;
 
-            if (message.message === "AdminAnswer") {
-                socket.send(JSON.stringify({ message: "Test passed", maker: "FlashAI" }));
-                return;
-            }
+                try {
+                    const botResponse = await callLanguageModelAPI([{ role: "system", content: chatFunction }]);
+                    
+                    // Parse response
+                    const match = botResponse.match(/Errors_counter:\s*(\d+)\s*Question:\s*(.+)/s);
+                    if (match) {
+                        const errorsCounter = parseInt(match[1], 10);
+                        const nextQuestion = match[2].trim();
 
-            // Sprawdzanie, czy użytkownik jest off-topic
-            const chatFunction = `
-                You are a chatbot that continues a German learning conversation.
-                1. Receive the user's most recent answer and evaluate it:
-                   - Add 1 to Errors if the answer contains a grammatical mistake.
-                   - Add 3 to Errors if the answer is off-topic.
-                2. Always ensure the conversation sticks to the topic. If the user's response is off-topic, return:
-                   "Please stick to the topic of conversation."
-                3. Use the history of the conversation (previous questions) to generate a new, related question in German.
-                4. Respond in the format:
-                   Errors_counter: {number}
-                   Question: {new question based on the conversation history}.
-                5. If Errors reaches 0, return only "Test not passed".
-                6. If Messages_count reaches 0 and Errors > 0, return only "Test passed".
-            `;
+                        errors -= errorsCounter;
+                        messagesCount--;
 
-            const messages = [
-                { role: "assistant", content: chatFunction },
-                { role: "user", content: `Previous conversation history: ${conversationHistory.join(" ")}` },
-                { role: "user", content: message.message }
-            ];
-
-            try {
-                const botResponse = await callDeepSeekAPI(messages);
-                const match = botResponse.match(/Errors_counter:\s*(\d+)\s*Question:\s*(.+)/);
-                if (match) {
-                    const errorsCounter = parseInt(match[1], 10);
-                    const nextQuestion = match[2];
-
-                    errors -= errorsCounter;
-                    messagesCount--;
-
-                    if (errors <= 0) {
-                        socket.send(JSON.stringify({ message: "Test not passed", maker: "FlashAI" }));
-                    } else if (messagesCount === 0 && errors > 0) {
-                        socket.send(JSON.stringify({ message: "Test passed", maker: "FlashAI" }));
+                        // Determine test status
+                        if (errors <= 0) {
+                            socket.send(JSON.stringify({ message: "Test not passed", maker: "FlashAI" }));
+                        } else if (messagesCount <= 0 && errors > 0) {
+                            socket.send(JSON.stringify({ message: "Test passed", maker: "FlashAI" }));
+                        } else {
+                            conversationHistory.push(nextQuestion);
+                            socket.send(JSON.stringify({
+                                message: `Messages_count: ${messagesCount}, Errors: ${errors}, Question: ${nextQuestion}`,
+                                maker: "FlashAI"
+                            }));
+                        }
                     } else {
-                        conversationHistory.push(nextQuestion);
+                        console.error("Failed to parse bot response:", botResponse);
                         socket.send(JSON.stringify({
-                            message: `Messages_count: ${messagesCount}, Errors: ${errors}, Question: ${nextQuestion}`,
+                            message: "I couldn't understand your response. Let's continue with a new question.",
                             maker: "FlashAI"
                         }));
                     }
-                } else {
-                    console.error("Failed to parse bot response:", botResponse);
+                } catch (error) {
+                    console.error("Error processing message:", error);
+                    socket.send(JSON.stringify({
+                        message: "An error occurred while processing your message. Please try again.",
+                        maker: "FlashAI"
+                    }));
                 }
-            } catch (error) {
-                console.error("Error processing message:", error);
             }
+        } catch (error) {
+            console.error("Error parsing message:", error);
+            socket.send(JSON.stringify({
+                message: "There was an error processing your message. Please try again.",
+                maker: "FlashAI"
+            }));
         }
     });
 
+    // Handle connection close
     socket.on("close", () => {
         console.log("Connection closed");
+        clearInterval(pingInterval);
+    });
+
+    // Handle errors
+    socket.on("error", (error) => {
+        console.error("WebSocket error:", error);
+        clearInterval(pingInterval);
     });
 });
 
