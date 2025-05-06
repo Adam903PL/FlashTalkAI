@@ -15,8 +15,6 @@ require('dotenv').config();
 const bodyParser = require("body-parser");
 
 
-
-
 const pool = new Pool({
     user: 'flashtalkai_user',
     host: 'dpg-csn4nc0gph6c73ft3neg-a.frankfurt-postgres.render.com',
@@ -27,16 +25,17 @@ const pool = new Pool({
 });
 
 
+
 app.use(session({
     secret: "secret-key",
-    resave: false,
+    resave: false,  
     saveUninitialized: false,
     cookie: {
-
         domain: 'localhost',
         maxAge: 7 * 24 * 60 * 60 * 1000,
     }
 }));
+
 
 
 app.use(cors({
@@ -44,6 +43,7 @@ app.use(cors({
     credentials: true,
     methods: "GET,POST,PUT,DELETE"
 }));
+
 
 
 app.use(bodyParser.json());
@@ -149,6 +149,7 @@ generateFlashcardEndpoints(path.join(__dirname, '../test'));
 
 
 function sendVerificationEmail(receiverEmail) {
+    const AUTH_TOKEN = process.env.GOOGLE_AUTH 
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let verificationCode = '';
     for (let i = 0; i < 8; i++) {
@@ -158,7 +159,7 @@ function sendVerificationEmail(receiverEmail) {
       service: "gmail", 
       auth: {
         user: "pukaluk.adam505@gmail.com", 
-        pass: "rkev ztlc xwcr splo", 
+        pass: "", 
       },
     });
     const htmlContent = `

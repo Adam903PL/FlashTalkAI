@@ -7,9 +7,14 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 dist-ssr
+
+# Local files
 *.local
 
 # Editor directories and files
@@ -22,5 +27,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-./src/pages/testing
-FlashTalkAI.git/
+
+# Test folders
+src/pages/testing/
+
+# Environment and sensitive files
+*.env
+*.env.local
+*.env.*.local
+passwords-*.json
